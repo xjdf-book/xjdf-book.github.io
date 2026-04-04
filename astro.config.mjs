@@ -6,25 +6,17 @@ import starlight from '@astrojs/starlight';
 export default defineConfig({
 	integrations: [
 		starlight({
-			title: 'My Docs',
-			social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/withastro/starlight' }],
+			title: 'XJDF Book',
+			social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/xjdf-book/xjdf-book.github.io' }],
 			sidebar: [
 				{
-					label: 'Abstract',
-					items: [
-						// Each item here is one entry in the navigation menu.
-						{ label: 'Abstract', slug: 'abstract/abstract' },
-					],
-				},
-								{
 					label: 'Introduction',
 					autogenerate: { directory: 'introduction' },
 				},
 				{
-					label: 'Guides',
+					label: 'Major Changes in XJDF',
 					items: [
-						// Each item here is one entry in the navigation menu.
-						{ label: 'Example Guide', slug: 'guides/example' },
+						{ label: 'Major Changes', slug: 'major-changes/major-changes' },
 					],
 				},
 				{

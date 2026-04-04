@@ -1,0 +1,263 @@
+---
+title: XJDF Essentials
+---
+
+import productVsProcessView from '../../../assets/diagram/product-vs-process-view.jpg';
+import grayBoxes from '../../../assets/diagram/gray-boxes.jpg'
+
+import { Image } from 'astro:assets';
+
+The Exchange Job Definition Format (XJDF) is designed to be a pure data interchange format. XJDF Documents are generated during application runtime in order to communicate with applications and devices. Each XJDF Document contains dedicated information optimized exclusively for the recipient. 
+
+Technically, XJDF specifies two views on print which are related but not identical - the product view and the process view. The product view is the process independent product description and describes the final product from the perspective of the print buyer“ [@xjdf_ip1, chap. 2.2.1 "Product Intent and Processes"]. The customer or product designer will typically describe the desired final product without any knowledge of the manufacturing process.” The product description includes, for instance, the size of the desired product, its paper quality, and the folding details if required. The product description is unconcerned with production details such as the production size of the sheet on which the product is later printed, or how the product is positioned on that sheet. All process-specific details are defined in the process view of the XJDF Document. The process view might describe in a very accurate way how each step in the production workflow process has to be accomplished, on which device, and at what time. The following figure illustrates both perspectives specified in an XJDF Document:
+
+
+<figure>
+  <Image src={productVsProcessView} alt="Product view vs. process view" />
+  <figcaption>Figure: Product view vs. process view in XJDF</figcaption>
+</figure>
+
+The product view is based on Product elements containing a set of multiple Intent elements, such as FoldingIntent, LayoutIntent, BindingIntent, etc. Each Intent element is a container for a specific type of information. FoldingIntent contains, for example, all folding details of the desired product. The XJDF Specification provides a set of individual intent types in order to specify a wide range of print products. In addition to the product description, XJDF also defines the process steps executed in a printing house in order to manufacture the final product. **In XJDF, process steps are called processes.** A production workflow is a concatenation of processes. Each process defined in the XJDF Specification is “assumed to be executed by a single-purpose device” [@xjdf_ip1, chap. 5.1 "Combining Individual Process Steps"]. Examples of processes are ConventionalPrinting, DigitalPrinting, Cutting, Folding, etc. The XJDF Specification comes with a broad amount of individual processes. Each individual process is defined by its unique name, a description, and a set of input and output resources. A complete list of all processes are specified in chapter 5 “Processes” of the XJDF Specification. 
+
+The two different views of XJDF enable users to write either a pure product description without any production knowledge, or to define detailed instructions for a production device. A combination of both is also valid. This makes the data format very adaptable to many situations in various environments. 
+
+
+## Gray Boxes
+Gray Box is a commonly used term in XJDF. The term has been taken over from JDF 1.x and describes something between a Black Box and a White Box. By definition, a Black Box is a device or a system where only the input and output parameters (interfaces) are known. In contrast, a White Box describes a device or a system in which the internals are also known. The term Gray Box describes something in between.
+As XJDF enabled devices and applications may not only allow for the definition of input and output but for some additional internal configurations as well, devices and applications are conceptually Gray Boxes. **Although most of the XJDF integration is Black Box integration, XJDF does not differentiate. From the perspective of XJDF, each system being integrated is a Gray Box, and the corresponding XJDF document describes it.**
+
+Even the simplest product description document for job submission describes a Gray Box. XJDF Documents containing a pure product description are primarily used in Web-To-Print environments, for example, to link a printing house with a Webshop, a public print broker platform, or even a customer’s ERP system with an MIS system for the purpose of automating the customer’s supply chain of print products. The following is an XJDF stub of a product description Gray Box:
+
+```xml title="Example: Gray Box “product description""
+<xjdf:XJDF JobID="JOB-42" Types="Product"
+        xmlns:xjdf="http://www.CIP4.org/JDFSchema_2_0">
+    [...]
+</xjdf:XJDF>
+```
+
+The `@Types` attribute is the attribute for defining Gray Boxes. When reading an XJDF Document, this attribute is one of the first attributes to be analyzed. Product description Gray Boxes can be recognized by `@Types` = "Product". The attribute value "`Product` specifies that the products that are described shall be produced without complete knowledge of the production workflow" [@xjdf_ip1, chap. 3 Table 3.1]. On job submission in a Web-To-Print environment, the definition of the product workflow is the primary task of the MIS system. The MIS system is the leading system for the entire production. Therefore, it is responsible for computing or selecting a production workflow in order to produce the desired product.
+
+The production workflow defined by the MIS is nothing more than a concatenation of single processes. Each production device or application can cover both single and multiple processes. For instance, a folding machine covers the single process Folding, whereas a modern collecting machine may combine the processes of Collecting, Stitching and Trimming in order to finalize a magazine in one shot. Conceptually, the folding machine, as well as the collecting machine, are both Gray Boxes: 
+
+<figure>
+  <Image src={grayBoxes} alt="Gray Boxes 'Folding' and 'Collecting Stitching Trimming'" />
+  <figcaption>Figure: Gray Boxes 'Folding' and 'Collecting Stitching Trimming'</figcaption>
+</figure>
+
+Once a production workflow is defined, the MIS system has to route the job from one Gray Box to the next. Each Gray Box has to be addressed by an individual XJDF Document. 
+
+All processes needing to be executed by the receiving Gray Box have to be declared in the `@Types` attribute. The attribute `@Types` can either define the value “Product” as shown in the example before, or one or multiple process names. Here, an XJDF stub is used to address a Gray Box “Folding” (Folding Machine):
+
+```xml title="Example: Gray Box 'Folding'"
+<xjdf:XJDF JobID="JOB-42" Types="Folding" 
+        xmlns:xjdf="http://www.CIP4.org/JDFSchema_2_0">
+    [...]
+</xjdf:XJDF>
+```
+
+In order to define an XJDF document addressing a Gray Box containing a single folding process, the `@Types` attribute value has to be set to the process’ name “Folding”. However, an XJDF Document can not only address a single process. The `@Types` attribute allows also a whitespace separated list of process names. When addressing a collecting machine which provides the processes Collecting, Stitching and Trimming, the XJDF stub is as follows:
+
+```xml title="Example: Gray Box 'Collecting Stitching Trimming'"
+<xjdf:XJDF JobID="JOB-42" Types="Collecting Stitching Trimming" 
+        xmlns:xjdf="http://www.CIP4.org/JDFSchema_2_0">
+    [...]
+</xjdf:XJDF>
+```
+
+The attribute `@Types` can not only define one single attribute value. A whitespace separated list of process names is also valid. The upper stub defines the processes Collecting, Stitching and Trimming. The order of the items is relevant to the order in which the processes have to be executed. This example stipulates that Collecting has to be the first process in the row. After Collecting, the semi-product has to be stitched and, finally, trimmed.
+
+A combination of process names along with the value “Product” is also valid. The following is a stub demonstrating this:
+
+```xml title="Example: Combination of Gray Box and product description"
+<xjdf:XJDF JobID="JOB-42" Types="ConventionalPrinting Cutting Product"      
+        xmlns:xjdf="http://www.CIP4.org/JDFSchema_2_0">
+    [...]
+</xjdf:XJDF>
+```
+
+The combination of process names accompanying the value “Product” means that the production process is partially defined. In some cases, a partial definition of workflows is needed in specific XJDF production lines.
+
+
+## Common XML Structure
+Let’s start with an abstract XJDF Document which outlines the common XML structure. Elements which are only rarely used in real-world scenarios have been ignored in this context. 
+
+Most examples in this chapter are excerpts of real-world documents and contain many details. However, the focus of this chapter lies in the structure of the XJDF documents. This means that, in this chapter, it is important to get an understanding of the structure of the XML elements in an XJDF document, rather than the exact details and their meaning. Most examples are picked up later again in order to dive deeper into the details. Here: An abstract XJDF element tree as a representation of the common XML structure in XJDF Documents:
+
+```xml title="Example: Common XJDF Structure"
+<XJDF JobID="5" Types="ProcessName_1 ProcessName_2" 
+        xmlns="http://www.CIP4.org/JDFSchema_2_0">
+    <AuditPool />
+    <Comment />
+    <GeneralID />
+    <ProductList>
+        <Product>
+            <Intent Name="SpecificIntent">
+                <SpecificIntent />
+            </Intent>
+            <!-- further product intents go here -->
+
+        </Product>
+        <!-- further products go here -->
+
+    </ProductList>
+    <ResourceSet Name="SpecificResource">
+        <Resource>
+            <AmountPool />
+            <Part />
+            <SpecificResource />
+        </Resource>
+        <!-- further resources of the same type may go here -->
+
+    </ResourceSet>
+    <!-- further ResourceSets go here -->
+
+</XJDF>
+```
+
+The four main elements in an XJDF Document are Product, Intent, ResourceSet, and Resource. All product and process information are structured and organized mainly by these four elements. There are clearly defined locations where each of these elements has to be written. Basically, each XJDF Document is organized as a list of Product, Intent, ResourceSet and Resource elements.
+
+The order of all elements is given by the specification. “In general the order of elements is lexically sorted in ascending order. Exceptions to alphabetical sorting will be explicitly called out in the relevant sections. [...] Attributes NEED NOT be sorted within an element" [@xjdf_ip1, chap. 1.3.5.1 "Order of Child Elements"]. 
+
+### XJDF Element
+Each XJDF Document starts with the XJDF root node. The XJDF node can only occur once per document. The following is an example of an XJDF root node:
+
+```xml title="Example: XJDF Element"
+<xjdf:XJDF JobID="JOB-42" Types="Folding" 
+        xmlns:xjdf="http://www.CIP4.org/JDFSchema_2_0">
+    [...]
+</xjdf:XJDF>
+
+```
+
+As an XJDF Document is always in the context of a particular job and is aimed at a specific Gray Box or product description, the attributes `@Types` and `@JobID` are mandatory. The attribute `@JobID` contains the unique identifier of the current job, whereas the attribute @Types contains the names of a logical processes covered by the Gray Box which the document is directed towards. “Product” is also a valid value for `@Types` when defining a product description.
+
+The attribute `@xmlns` is a standard XML attribute and defines the namespace of an XML document. “XML namespaces provide a simple method for qualifying element and attribute names used in Extensible Markup Language documents by associating them with namespaces identified by URI references” [@xml_namespaces_2009]. The qualified namespace url for XJDF Documents in version 2.0 is `http://www.CIP4.org/JDFSchema_2_0`. The url will be unique for future XJDF versions. 
+
+The XJDF root node can contain up to five different types of subnodes. All subnodes are optional. The subnodes AuditPool and ProductList can only appear once per document. The elements GeneralID, Comment, and ResourceSet may occur multiple times. 
+
+### AuditPool Element
+The element AuditPool can only occur once and is a container element, primarily for the post facto recorded results of a Gray Box. Most items listed in the AuditPool have already been published to the managing system as XJMF message as well in real-time when the event has occurred. XJMF is a messaging system that comes with XJDF and is explained in detail later in the chapter dealing with XJMF. 
+
+Results in the AuditPool element are, for instance, logs of notifications that have occurred during processing of the job, resource consumption, or status information with the appropriate start and end times. The AuditPool is the relevant element for production data acquisition. "In contrast to most other elements in XJDF the child elements of AuditPool SHALL be ordered chronologically from oldest to newest rather than alphabetically" [@xjdf_ip1, chap. 3.4.1 "AuditPool"]. AuditPool Elements are typically part of XJDF Documents which are sent back to the management application after job completion. The following is an example of an AuditPool element:
+
+```xml title="Example: AuditPool Element"
+[...]
+<AuditPool>
+    <AuditCreated>
+        <Header ID="I42" DeviceID="DEV_ID" Time="2016-12-28T10:45:05Z" />
+    </AuditCreated>
+    <AuditStatus>
+        <Header ID="I43" DeviceID="DEV_ID" Time="2016-12-28T10:47:19Z" />
+        <DeviceInfo Status="Production" Speed="6000">
+            <JobPhase JobID="Job-42" JobPartID="Front" Status="InProgress"
+                StartTime="2016-12-28T10:40:00Z" PercentCompleted="31.66"
+                QueueEntryID="I434" Amount="1343" Waste="85"/>
+        </DeviceInfo>
+    </AuditStatus>
+    <AuditNotification>
+        <Header ID="I44" DeviceID="DEV_ID" Time="2016-12-28T10:49:26Z" />
+        <Notification Class="Information">
+            <Event EventID="3092" EventValue="Paper stock is low." />
+        </Notification>
+    </AuditNotification>
+    [...]
+</AuditPool>
+[...]
+```
+
+Each status change, notification, etc. is listed chronologically in the AuditPool element. The AuditPool element allows multiple types of specific sub elements in order to protocol the production process of a Gray Box. The structure of the sub elements is streamlined to the structure of XJMF messages. In many situations, the AuditPool is just an aggregation of all XJMF messages produced and published by the system.
+
+Examples of valid sub elements in the AuditPool element are, for instance, AuditNotification or AuditStatus. The AuditNotification element “logs individual events that occurred during processing” [@xjdf_ip1, chap. 3 Table 3.6 "AuditPool/AuditNotification"], whereas the AuditStatus “logs start and end times of any process states and sub-states” [@xjdf_ip1, chap. 3 Table 3.6 "AuditPool/AuditStatus"]. The full list of all sub elements can be read in the XJDF Specification.
+
+Each specific Audit element contains at least a Header element. The Header element provides meta information about the specific audit entry such as the exact creation time or the identifier of the producing device. The log information itself is specified in an additional sub element of the specific audit element. For instance, the AuditStatus element requires another element DeviceInfo in order to specify the status information to be logged. 
+
+### Comment Element
+The element Comment is a common XJDF element. This means that there are multiple locations where this element can be written. One major location is as a child element of the XJDF element. The Comment element may exist multiple times at each location. 
+
+Using comments always requires human interactions. Writing a comment assumes somebody will be reading and interpreting the comment during production. From the automation point of view, comments lead to less automated systems. The following is an example of a Comment element:
+
+```xml title="Example: Comment Element"
+<XJDF ...>
+    [...]
+    <Comment Type="Instruction" TimeStamp="2016-08-20T14:44:02+02:00" 
+            PersonalID="cnorris">
+        Please take a special care for the image on the upper right.
+        This is the leading motive of the product.
+    </Comment>
+    <Comment Type="JobDescription" TimeStamp="2016-08-20T14:44:02+02:00" 
+           PersonalID="cnorris">
+       Flyer A6 
+       4c both sides
+       135 gsm glossy paper
+    </Comment>
+    <!-- further comments may go here -->
+    [...]
+</XJDF>
+```
+
+The metadata of the comment, such as the author or the timestamp, has to be written as attributes of the appropriate Comment element. The comment itself is an unformatted plain text and is the XML text value of the Comment element.
+Comments are for human information only. A comment shall not influence the behavior of an application or device in any way. A device or application should not parse the comment for keywords in order to provide presettings or change its behavior based on this information. Doing so would cause compatibility issues between systems and increase the maintenance effort over time. 
+
+
+### GeneralID Element
+The third child node in the XJDF structure above is GeneralID. Just as the Comment element is a common one, so too is the GeneralID element. Apart from the depicted location in the common XML structure, there are additional locations where a GeneralID element can be written. A GeneralID element may also appear multiple times per location.
+
+“GeneralID describes a generic identifier. The name or usage of the identifier is specified in `@IDUsage`, and the specific value of the variable is specified in @IDValue. The data type is specified in `@DataType`” [@xjdf_ip1, chap. 8.15 "GeneralID"].
+
+```xml title="Example: GeneralID Element"
+[...]
+<GeneralID IDUsage="Height" DataType="integer" IDValue="1440"/>
+<GeneralID IDUsage="Width" DataType="integer" IDValue="720"/>
+[...]
+```
+
+The GeneralID example above shows two elements. The first element defines a height value and the second one a width value. This is just one usage of GeneralID. GeneralID is a very generic element and can be used as a key-value pair for almost any purpose. This is exactly what makes GeneralIDs susceptible to compatibility issues. When developing a new XJDF interface, developers tend to gladly use the GeneralID because they are able to externally map internal requirements on a one by one basis. This makes it very easy to design an XJDF interface but decreases the compatibility with standard applications enormously. Before using GeneralIDs, a better approach is to extend XJDF by a private namespace. Introducing and working with private namespaces is explained later in the chapter “Extensibility”.
+
+
+### ProductList Element
+The ProductList element can only exist once per document and contains the process independent product descriptions. It is recommended to provide a full product description of all products being processed within a Gray Box. This places each production step in the proper context. For example, when folding, it actually seems to be sufficient to provide only a JobID and some folding parameters. However, giving the full product description to the operator enables him/her to understand the final product, especially when working on just a single product part of a complex product. People need to know what they are working on. The product description provides the operator with the job context. This allows him to make ready more quickly and recognize irregularities in production more easily. Although the amount of automation in printing is increasing, manual workers are still dominating the production lines in printing houses. Most of the applications and devices are being controlled by humans. The XJDF Specification does not require a ProductList for each XJDF Document. At any rate, it is recommended to provide one and publish it to the operator. The following is an XJDF snippet of a ProductList element containing two individual print jobs:
+
+```xml title="Example: ProductList Element"
+[...]
+<ProductList>
+    <Product Amount="250" IsRoot="true">
+        <Intent Name="ColorIntent">
+            <ColorIntent>
+                <SurfaceColor ColorsUsed="Cyan Magenta Yellow Black" 
+                    Surface="Front"/>
+            </ColorIntent>
+        </Intent>
+        <Intent Name="LayoutIntent">
+            <LayoutIntent FinishedDimensions="1683.779 2383.937 0.0" 
+                Sides="OneSided"/>
+        </Intent>
+        <Intent Name="MediaIntent">
+            <MediaIntent MediaQuality="135_GLOSS"/>
+        </Intent>
+    </Product>
+    <Product Amount="1000" IsRoot="true">
+        <Intent Name="ColorIntent">
+            <ColorIntent>
+                <SurfaceColor ColorsUsed="Cyan Magenta Yellow Black" 
+                    Surface="Front"/>
+            </ColorIntent>
+        </Intent>
+        <Intent Name="LayoutIntent">
+            <LayoutIntent FinishedDimensions="841.889 1190.551 0.0" 
+                Sides="OneSided"/>
+        </Intent>
+        <Intent Name="MediaIntent">
+            <MediaIntent MediaQuality="135_GLOSS"/>
+        </Intent>
+    </Product>
+</ProductList>
+[...]
+```
+
+The ProductList element contains two individual print products. The first product describes 250 posters in DIN A1 (594 mm x 841 mm), printed in four colors, one sided, on a 135 gsm glossy paper. The second product describes 1,000 posters in DIN A3 (297 mm x 420 mm), printed in four colors, one sided, on a 135 gsm glossy paper as well. Technically, each Product element contains an @Amount attribute as well as a list of Intent elements which defines the characteristics of the respective product. The ColorIntent describes all color issues, the LayoutIntent defines the details of the layout, while the MediaIntent is the container for customer requirements regarding the printing substrate. Beyond that, the XJDF Specification provides further intent types for the specification of a broad range of individual product characterizations. The full list of all intents can be found in the XJDF Specification in chapter 4 “Product Intent”. 
+
+As soon as a ProductList contains more than a single Product element, the attribute //Product/@IsRoot has to be defined. If `@IsRoot` = “true”, “this Product element is a self-contained product. If false, this Product element is a child product of another one, such as a cover or insert” [@xjdf_ip1, chap. 4 Table 4.1 "Product/IsRoot"]. Using child products, more complex products can be expressed, such as a magazine with a special cover. Product descriptions are discussed in broad detail later. 
+
+
+### ResourceSet Element
+to be continued...

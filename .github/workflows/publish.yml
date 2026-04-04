@@ -12,6 +12,7 @@ jobs:
       - name: Build static files
         id: build
         run: |
+          npm install
           npm run build
 
       - name: Upload static files as artifact

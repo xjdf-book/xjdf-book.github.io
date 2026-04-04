@@ -1,6 +1,7 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
+import rehypeCitation from 'rehype-citation';
 
 // https://astro.build/config
 export default defineConfig({
@@ -18,12 +19,13 @@ export default defineConfig({
 					items: [
 						{ label: 'Major Changes', slug: 'major-changes/major-changes' },
 					],
-				},
-				{
-					label: 'Reference',
-					autogenerate: { directory: 'reference' },
-				},
+				}
 			],
 		}),
 	],
+	markdown: {
+		rehypePlugins: [
+			[rehypeCitation, { bibliography: './src/data/references.bib' }]
+		],
+	},
 });

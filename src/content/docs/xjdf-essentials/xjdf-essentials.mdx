@@ -4,13 +4,13 @@ title: XJDF Essentials
 
 import productVsProcessView from '../../../assets/diagram/product-vs-process-view.jpg';
 import grayBoxes from '../../../assets/diagram/gray-boxes.jpg'
+import f62 from '../../../assets/diagram/F6-2.jpg'
 
 import { Image } from 'astro:assets';
 
 The Exchange Job Definition Format (XJDF) is designed to be a pure data interchange format. XJDF Documents are generated during application runtime in order to communicate with applications and devices. Each XJDF Document contains dedicated information optimized exclusively for the recipient. 
 
 Technically, XJDF specifies two views on print which are related but not identical - the product view and the process view. The product view is the process independent product description and describes the final product from the perspective of the print buyer“ [@xjdf_ip1, chap. 2.2.1 "Product Intent and Processes"]. The customer or product designer will typically describe the desired final product without any knowledge of the manufacturing process.” The product description includes, for instance, the size of the desired product, its paper quality, and the folding details if required. The product description is unconcerned with production details such as the production size of the sheet on which the product is later printed, or how the product is positioned on that sheet. All process-specific details are defined in the process view of the XJDF Document. The process view might describe in a very accurate way how each step in the production workflow process has to be accomplished, on which device, and at what time. The following figure illustrates both perspectives specified in an XJDF Document:
-
 
 <figure>
   <Image src={productVsProcessView} alt="Product view vs. process view" />
@@ -260,4 +260,123 @@ As soon as a ProductList contains more than a single Product element, the attrib
 
 
 ### ResourceSet Element
-to be continued...
+Both product descriptions, as well as process descriptions, require additional resources. In order to describe resources, XJDF specifies the Resource elements. Resource elements are child elements of ResourceSet elements and describe the physical or logical entities in a print production workflow. Resources of the same logical group such as the four printing plates of a print run or the artwork files provided by the customer for a single print job are sub elements of the same ResourceSet element. All ResourceSet elements are usually associated with a specific process but can also be associated with products. 
+
+The following is an example of a RunList input resource. RunList resources reference the input and output files of processes, or can also be used in a product description in order to reference the files of the customer's original artwork, etc. 
+
+```xml title="Example: RunList Resource"
+[...]
+<xjdf:ResourceSet Name="RunList" Usage="Input" >
+    <xjdf:Resource>
+        <xjdf:RunList>
+            <xjdf:FileSpec URL="http://example.org/artwork/my.pdf"/>
+        </xjdf:RunList>
+    </xjdf:Resource>
+</xjdf:ResourceSet>
+[...]
+```
+
+Most XJDF Documents contain several ResourceSet elements. A ResourceSet element is a container for a single resource or for a logical group of resources. ResourceSets are mainly used to describe input or output resources of processes. Each process normally has one or several input ResourceSets, but only a single output ResourceSet. ResourceSets can also be associated with a product description.
+
+
+### XJDF Example: Folding
+To conclude this chapter, a real-world XJDF folding example is presented. Folding is a very common finishing process in printing. The input resources of a folding machine are the flat paper plus some parameters of how to fold the flat paper (FoldingParams). The output resource is the folded product or product part. 
+
+Since a folding machine is a single-purpose device it can be covered by a Gray Box containing only a single process “Folding”. Videos and images of what a folding machine looks like or how it works can be found online. Common search terms of folding machines are “Buckle Folding Machine”, or “Knife Folding Machine.”
+
+In the following example, all XJDF nodes are prefixed with “xjdf:”. XJDF is often used in combination with or within other XML languages such as PrintTalk. Therefore, the “xjdf:”-prefix is often written in XJDF Documents. CIP4s XJDF library “xJdfLib”, for example, can currently only write documents containing the “xjdf:”-prefix for each element. This book illustrates both methods. 
+
+This XJDF example anticipates many details of XJDF which are explained in detail later. Nevertheless, it makes sense to get an early preview of a real-world XJDF Document in order to place all items learned in the proper context. The snippet need not be understood completely at this point. Extracts of this example are presented again later in the book in order to explain the details and mechanisms behind XJDF.
+
+```xml title="Example: XJDF Gray Box Folding"
+<xjdf:XJDF JobID="JOB-42" Types="Folding" 
+        xmlns:xjdf="http://www.CIP4.org/JDFSchema_2_0">
+    <xjdf:AuditPool>
+        <xjdf:AuditCreated>
+            <xjdf:Header AgentName="MIS" AgentVersion="1.0" 
+                    Time="2016-05-30T21:49:47Z" />
+        </xjdf:AuditCreated>
+    </xjdf:AuditPool>
+    <xjdf:ProductList>
+        <xjdf:Product Amount="2500" DescriptiveName="My Folded Leaflet">
+            <xjdf:Intent Name="LayoutIntent">
+                <xjdf:LayoutIntent Dimensions="841.88 595.27" 
+                        Sides="TwoSidedHeadToHead" Pages="2"
+                        FinishedDimensions="280.69 595.27 0.0"/>
+            </xjdf:Intent>
+            <xjdf:Intent Name="FoldingIntent">
+                <xjdf:FoldingIntent FoldCatalog="F6-2"/>
+            </xjdf:Intent>
+            <xjdf:Intent Name="ColorIntent">
+                <xjdf:ColorIntent>
+                    <xjdf:SurfaceColor Surface="Front"
+                            ColorsUsed="Cyan Magenta Yellow Black"/>
+                    <xjdf:SurfaceColor Surface="Back" 
+                            ColorsUsed="Cyan Magenta Yellow Black" />
+                </xjdf:ColorIntent>
+            </xjdf:Intent>
+            <xjdf:Intent Name="MediaIntent">
+                <xjdf:MediaIntent MediaQuality="135_MATT"/>
+            </xjdf:Intent>
+        </xjdf:Product>
+    </xjdf:ProductList>
+    <xjdf:ResourceSet Name="Component" Usage="Input">
+        <xjdf:Resource ExternalID="COMP_ID_UNFOLDED">
+            <xjdf:Component Dimensions="841.88 595.27 0.42" 
+                    MediaRef="MEDIA-ID" />
+        </xjdf:Resource>
+    </xjdf:ResourceSet>
+    <xjdf:ResourceSet Name="Component" Usage="Output">
+        <xjdf:Resource ExternalID="COMP_ID_FOLDED">
+            <xjdf:AmountPool>
+                <xjdf:PartAmount Amount="2580" />
+            </xjdf:AmountPool>
+            <xjdf:Component Dimensions="280.69 595.27 1.26" 
+                    MediaRef="MEDIA-ID" />
+        </xjdf:Resource>
+    </xjdf:ResourceSet>
+    <xjdf:ResourceSet Name="FoldingParams" Usage="Input">
+        <xjdf:Resource>
+            <xjdf:FoldingParams FoldCatalog="F6-2"/>
+        </xjdf:Resource>
+    </xjdf:ResourceSet>
+    <xjdf:ResourceSet Name="Media">
+        <xjdf:Resource ID="MEDIA-ID">
+            <xjdf:Media MediaType="Paper" Thickness="150" Weight="135" 
+                    ISOPaperSubstrate="PS3" />
+        </xjdf:Resource>
+    </xjdf:ResourceSet>
+    <xjdf:ResourceSet Name="NodeInfo" Usage="Input">
+        <xjdf:Resource>
+            <xjdf:NodeInfo Start="2016-08-30T15:00:00Z" />
+        </xjdf:Resource>
+    </xjdf:ResourceSet>
+</xjdf:XJDF>
+```
+
+The XJDF example begins with the XJDF root node. In the root node there is an attribute @JobID specifying the job’s unique identifier and an attribute @Types which defines the Gray Box of the device the XJDF is addressed to. The AuditPool element keeps the metadata of the creator of the document, as well as the timestamp of the creation.
+
+The ProductList element contains only one Product element which describes the final product. The final product consists of 2,500 6-panel folded leaflets printed in four colors, double sided on 135 gsm matt paper. All features of the desired product are defined as Intent elements. 
+
+The LayoutIntent defines the open (unfolded) size of the folded leaflet (`@Dimensions`) as well as closed (folded) size (@FinishedDimensions). The sizes are defined in units of “desktop publishing points” (dtp). More details about dtp are presented later in the chapter “Measurements, Units and Data Types”. The attribute @Sides defines the orientation of the front page against the back page. The value “TwoSidedHeadToHead” means that, when turning the product sideways, it remains in the reader's orientation.
+FoldingIntent defines how the product has to be folded. The exact fold is defined by the XJDF fold catalog (`@FoldCatalog`). The attribute value “F6-2” defines a 6-panel zig-zag-fold as shown below:
+
+<figure>
+  <Image src={f62} alt="Sketch of a F6-2 fold" />
+  <figcaption>Figure: Sketch of a F6-2 fold</figcaption>
+</figure>
+
+The XJDF fold catalog defines a set of various standardized folding schemes. More details about the fold catalog will be revealed later. 
+The ColorIntent specifies that the product has to printed using the four process colors Cyan, Magenta, Yellow and Black (CMYK) on both sides. MediaIntent defines a 135 gsm substrate of matt paper for the product. 
+
+As previously mentioned, Product elements define the customer's perspective of the desired product. Product descriptions are process independent. Process relevant data has to be defined as resources. This XJDF folding example contains the resources Component, FoldingParams, Media, and NodeInfo.
+
+“Component is used to describe the various versions of semi-finished goods in the press and postpress area, such as a pile of folded sheets that have been collected and are then be joined and trimmed. Nearly every postpress process has a Component resource as an input as well as an output. Typically the first components in the process chain are some printed sheets or ribbons, while the last Component is a book or a brochure” [@xjdf_ip1, chap. 6.18 "Component"]. The folding process consumes a flat sheet as input (`//ResourceSet/@Usage=”Input”`) and produces a folded sheet as output (`//ResourceSet/@Usage=”Output”`). The output Component resource also contains an element AmountPool which is a container for the amount-related metadata. In this example it defines the production of 2,580 copies of the folded leaflets as a result of the folding process (eighty copies more than what was required in the customer order).
+
+A further input of the folding process is the FoldingParams resource. The FoldingParams “describes the folding parameters, including the sequence of folding steps” [@xjdf_ip1, chap. 6.37 "FoldingParams"]. They describe the digital fold settings of the job. In this example, these settings are quite similar to those previously defined in the FoldingIntent element. There is only a reference to the “F6-2” folding scheme of the XJDF fold catalog. 
+
+A Media resource “represents the properties of a raw, unexposed printable surface such as sheet, film or plate” [@xjdf_ip1, chap. 6.58 "Media"]. In this context, Media describes paper (@MediaType=”Paper”). In contrast to the MediaIntent, the Media resource defines the paper in quite a bit more detail. Media is not a direct input or output resource of the folding process. Instead, the Media resource is referenced by the two Components using ID / IDRefs (see `//Component/@MediaRef=”MEDIA-ID”` and
+`//ResourceSet[@Name=’Media’]/Resource/@ID=”MEDIA-ID”`) in order to get more information on the component’s paper such as weight, type, etc. Therefore, the Media resource is the only resource with an attribute `@ID` in the example.
+
+The last resource in the XJDF example is the input resource NodeInfo. “The NodeInfo Resource contains information about planned scheduling. It allows MIS systems to plan, schedule and invoice Jobs or Job Parts” [@xjdf_ip1, chap. 6.60 "NodeInfo"].
+

@@ -20,7 +20,7 @@ export default defineConfig({
 						{ label: 'Introduction', slug: 'introduction/introduction' },
 						{ label: 'Major Changes in XJDF', slug: 'major-changes/major-changes' },
 						{ label: 'XJDF Essentials', slug: 'xjdf-essentials/xjdf-essentials' },
-
+						{ label: 'Resources', slug: 'resources/resources' }
 					],
 				}
 			],

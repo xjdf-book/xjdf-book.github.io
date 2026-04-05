@@ -3,6 +3,7 @@ title: Identifiers
 ---
 
 import screenPartSeparation from '../../../assets/spec-screen/part-separation.png'
+import screenLayoutIntent from '../../../assets/spec-screen/layout-intent.png'
 
 import { Image } from 'astro:assets';
 
@@ -112,7 +113,7 @@ Among others, there is one value specified per color separation. The data type o
 
 
 ## JobID, JobPartID, DeviceID...
-Apart from the identifiers mentioned above, XJDF comes with a huge bunch of identifiers for many different applications. The usages of these IDs are explained in the specification and do not require additional explanations. The IDs - JobID, JobPartID, and the DeviceID - which are frequently used in XJDF, are explained in the following paragraph.
+Apart from the identifiers mentioned above, XJDF comes with a huge bunch of identifiers for many different applications. The usages of these IDs are explained in the specification and do not require additional ex planations. The IDs - JobID, JobPartID, and the DeviceID - which are frequently used in XJDF, are explained in the following paragraph.
 
 The JobID is the “Job identification used by the application that created the XJDF Job. Typically, a Job is identified by the internal order number of the MIS system that created the Job” [@xjdf_ip1, chap. 3 Table 3.1: XJDF/JobID]. An example value would be “674R834”. A JobID has to be unique within a production workflow and should not be changed once it has been defined.
 The ”JobPartID SHALL identify one or more worksteps of the same type that can be described as one XJDF. `@JobPartID` is internal to the MIS system that created the XJDF” [@xjdf_ip1, chap. 3 Table 3.1: XJDF/JobPartID]. Example values are “Front” and “Back”.
@@ -122,4 +123,79 @@ The explanations of all three identifiers are successively taken from the XJDF S
 
 
 ## Measurements, Units, and Data Types
+“XJDF specifies most values in default units. That means that an implementation SHALL use the defined default units and SHALL NOT use alternate units [...]. Processors SHOULD NOT specify a unit unless no default exists, such as when new resources are defined. Then the units SHALL be based on metric units. Overriding the default units that are defined [...] is non-standard and MAY lead to undefined behavior. Any exceptions are specified in the appropriate descriptive tables” [@xjdf_ip1, chap. 1.9.1 "Units"]. All default units, their representation, and related remarks can be found in the XJDF Specification in chapter 1.9.1, Units.
+
+The most significant measurement in XJDF is the length. With the exception of microscopic lengths, all length values are defined in desktop publishing points (dtp points). Examples are width, height, dimensions, positions, etc. A point is defined as 1/72nd of an inch. The following gives instructions on the conversion of millimeters to points and vice versa:
+
+```java title="Conversion dtp points (dtp) to millimeter (mm) and vice versa"
+// Conversion dtp points (dtp) to millimeter (mm)
+mm = dtp * 72.0 / 25.4 
+
+// Conversion millimeter (mm) to dtp points (dtp)
+dtp = mm * 25.4 / 72.0 
+```
+
+Length values are used in various data structures, depending on the particular case they are used in. This table is an excerpt of common XJDF data types which are relevant with respect to  length expressions:
+
+| Data Type | Description | Example |
+| --------- | ----------- | ------- |
+| `float` | A float is a single value expression as used for width or height expressions. | `"595.27"` |
+| `rectangle` | Attributes of type rectangle are used to describe rectangular locations on the page, Sheet or other printable surface. A rectangle is represented as an array of four float numbers - llx lly urx ury - specifying the lower-left x, lower-left y, upper-right x and upper-right y coordinates of the rectangle, in that order. The origin for positioning is always the lower left corner of the parent object. | `"10.0 10.0 290.69 605.27"` |
+| `shape` | A shape is represented as an array of three (positive or zero) float numbers - x y z - specifying the width x, height y and depth z coordinates of the shape, in that order. A shape is typically used for three-dimensional objects such as a book block. | `"280.69 595.27 1.26"` |
+| `XYPair` | Attributes of type XYPair are mainly used to describe sizes like @Dimensions [...]. They can also be used to describe positions on a page. An XYPair is typically used for two-dimensional definitions such as page size. | `"290.69 605.27"` |
+
+
+The table is an excerpt of data types as defined in the XJDF Specification whose relevance pertains to lengths. A data type is defined for each attribute in the specification. The following is an extract of the Folding example which contains some length expressions:
+
+```xml title="Example: Common data types which are relevant in combination with lengths"
+[...]
+<ResourceSet Name="ExposedMedia" Usage="Input" ProcessUsage="Plate">
+    <Resource>
+        <Part Separation="Cyan"/>
+        <ExposedMedia MediaRef="MEDIA-PLATE-ID" PlateType="Exposed" />
+    </Resource>
+    <Resource>
+        <Part Separation="Magenta"/>
+        <ExposedMedia MediaRef="MEDIA-PLATE-ID" PlateType="Exposed" />
+    </Resource>
+    <Resource>
+        <Part Separation="Yellow"/>
+        <ExposedMedia MediaRef="MEDIA-PLATE-ID" PlateType="Exposed" />
+    </Resource>
+    <Resource>
+        <Part Separation="Black"/>
+        <ExposedMedia MediaRef="MEDIA-PLATE-ID" PlateType="Exposed" />
+    </Resource>
+</ResourceSet>
+[...]
+```
+
+In the upper example, there are three attributes containing length related expressions. The two attributes `@Dimensions` and `@FinishedDimensions` in LayoutIntent element and the attribute `@Dimensions` in the Component element. The attribute `//LayoutIntent/@Dimensions` is of datatype XYPair, whereas the attributes `//LayoutIntent/@FinishedDimensions` and `//Component/@Dimensions` are of datatype shape. The table below lists the corresponding definitions of the LayoutIntent attributes from the XJDF Specification:
+
+<figure>
+  <Image src={screenLayoutIntent} alt="Excerpt of the LayoutIntent definition in the XJDF Specification" />
+  <figcaption>Figure: Excerpt of the LayoutIntent definition in the XJDF Specification</figcaption>
+</figure>
+
+The major part of the XJDF Specification is precisely these kind of tables. Each table defines attributes and subelements of an element. The image above shows the first three attributes of the LayoutIntent element. The left column defines the attribute’s name, the appropriate datatype is defined in the middle, and the right column is an exact definition of how to deal with the attribute. As shown in the image, attributes may also be interrelated. In this case, `@Dimensions` and `@FinishedDimensions` are closely related to each other. In both descriptions there is detailed information on how to distinguish between both attributes, and how they work together. 
+
+As the excerpt of the specification also illustrates, `@Bleed` is another valid attribute of LayoutIntent. If needed, the LayoutIntent could be extended by this kind of information:
+
+```xml title="Example: Extension of attribute @Bleed in LayoutIntent"
+[...]
+<xjdf:Intent Name="LayoutIntent">
+    <xjdf:LayoutIntent Dimensions="841.88 595.27" 
+        Sides="TwoSidedHeadToHead" Bleed="5.67"
+        FinishedDimensions="280.69 595.27 0.0" />
+</xjdf:Intent>
+[...]
+```
+
+This example shows the LayoutIntent element which contains an additional attribute `@Bleed` of type float. The value of `@Bleed` is 5.67 dtp points (two millimeters) and defines the bleed required for a print product.
+The attribute `@Bleed` is just one example of how XJDF Documents can be extended and customized. As previously mentioned, the major part of the XJDF Specification is exactly these tables which defines the whole XML structure, the attributes, their corresponding data types, and a precise definition of when to use which element or attribute.
+
+
+## Folding Schemes and Pagination
+
+
 ...to be continued...

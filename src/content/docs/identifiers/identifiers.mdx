@@ -2,6 +2,10 @@
 title: Identifiers
 ---
 
+import screenPartSeparation from '../../../assets/spec-screen/part-separation.png'
+
+import { Image } from 'astro:assets';
+
 The XJDF Specification defines several types of identifiers (IDs) in order to identify resources, jobs, devices etc. This section gives a brief introduction to the most important IDs, what they are responsible for, and their appropriate scope. An identifier has to be unique within its scope. For instance, the scope “Production” means the identifier has to be unique within the whole production system. A production system may cover several sites. The following table contains the most significant XJDF IDs:
 
 
@@ -67,5 +71,48 @@ This example is also an extract of the Folding Example. The first ResourceSet co
 
 The `MEDIA-ID` is NOT the global identifier of the paper or pile in the company. The IDs value is for internal document references only and may change from one transaction to the next. A global media identifier would have to be written as the value of the @ExternalID attribute. 
 
+
 ## Partition Key
-... to be continued...
+Whenever a ResourceSet contains several Resource elements which are NOT referenced using ID / IDRefs, the subselection of the appropriate resources is based on partitioning. Partitioning is an XJDF specific mechanism and is explained in the chapter “Resources”.
+Partition keys are called the attributes of the Part element. In contrast to ExternalIDs and the ID / IDRefs references, the values of these attributes are normally given by the specification.
+
+```xml title="Example: Selection by Partition Keys"
+[...]
+<ResourceSet Name="ExposedMedia" Usage="Input" ProcessUsage="Plate">
+    <Resource>
+        <Part Separation="Cyan"/>
+        <ExposedMedia MediaRef="MEDIA-PLATE-ID" PlateType="Exposed" />
+    </Resource>
+    <Resource>
+        <Part Separation="Magenta"/>
+        <ExposedMedia MediaRef="MEDIA-PLATE-ID" PlateType="Exposed" />
+    </Resource>
+    <Resource>
+        <Part Separation="Yellow"/>
+        <ExposedMedia MediaRef="MEDIA-PLATE-ID" PlateType="Exposed" />
+    </Resource>
+    <Resource>
+        <Part Separation="Black"/>
+        <ExposedMedia MediaRef="MEDIA-PLATE-ID" PlateType="Exposed" />
+    </Resource>
+</ResourceSet>
+[...]
+```
+
+The example above has already been shown in the Resources chapter and outlines an ResourceSet ExposedMedia containing four different kinds of ExposedMedia resources. All four items are distinguished by their Partition Key `@Separation` (Cyan, Magenta, Yellow and Black). 
+
+The values of the partition key @Separation are given by the specification:
+
+<figure>
+  <Image src={screenPartSeparation} alt="The Definition of the Separation Partition Key (XJDF Spec Extract" />
+  <figcaption>Figure: The Definition of the Separation Partition Key (XJDF Spec Extract)</figcaption>
+</figure>
+
+Among others, there is one value specified per color separation. The data type of the partition key `@Separation` is “NMTOKEN”. This indicates that the partition key is an open list. The specification defines a standard set of the most common values, but each vendor is free to add additional values (see the chapter “Extensibility”).
+
+
+## JobID, JobPartID, DeviceID...
+Apart from the identifiers mentioned above, XJDF comes with a huge bunch of identifiers for many different applications. The usages of these IDs are explained in the specification and do not require additional explanations. The IDs - JobID, JobPartID, and the DeviceID - which are frequently used in XJDF, are explained in the following paragraph.
+
+
+...to be continued...

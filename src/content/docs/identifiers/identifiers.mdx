@@ -114,5 +114,12 @@ Among others, there is one value specified per color separation. The data type o
 ## JobID, JobPartID, DeviceID...
 Apart from the identifiers mentioned above, XJDF comes with a huge bunch of identifiers for many different applications. The usages of these IDs are explained in the specification and do not require additional explanations. The IDs - JobID, JobPartID, and the DeviceID - which are frequently used in XJDF, are explained in the following paragraph.
 
+The JobID is the “Job identification used by the application that created the XJDF Job. Typically, a Job is identified by the internal order number of the MIS system that created the Job” [@xjdf_ip1, chap. 3 Table 3.1: XJDF/JobID]. An example value would be “674R834”. A JobID has to be unique within a production workflow and should not be changed once it has been defined.
+The ”JobPartID SHALL identify one or more worksteps of the same type that can be described as one XJDF. `@JobPartID` is internal to the MIS system that created the XJDF” [@xjdf_ip1, chap. 3 Table 3.1: XJDF/JobPartID]. Example values are “Front” and “Back”.
+The DeviceID is the “identifier of the Device. The @DeviceID SHALL be unique within the workflow. `@DeviceID` SHALL be the same over time for a specific Device instance (i.e., SHALL survive reboots)” [@xjdf_ip1, chap. 6 Table 6.58: Device/DeviceID]. A example value would be “SM-162-8”.
 
+The explanations of all three identifiers are successively taken from the XJDF Specification. The specification defines the exact purpose of an ID, its data type, as well as the scope of the identifier. “The word ‘Unique’ without further scope details means ‘Unique within the job, message or file depending on the context’” [@xjdf_ip1, chap. 1 Table 1.4: Glossay (Unique)].
+
+
+## Measurements, Units, and Data Types
 ...to be continued...

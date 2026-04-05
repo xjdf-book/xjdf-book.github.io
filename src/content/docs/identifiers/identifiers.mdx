@@ -4,6 +4,8 @@ title: Identifiers
 
 import screenPartSeparation from '../../../assets/spec-screen/part-separation.png'
 import screenLayoutIntent from '../../../assets/spec-screen/layout-intent.png'
+import diagramBrochureProductParts from '../../../assets/diagram/brochure-product-parts.jpg'
+
 
 import { Image } from 'astro:assets';
 
@@ -196,6 +198,21 @@ The attribute `@Bleed` is just one example of how XJDF Documents can be extended
 
 
 ## Folding Schemes and Pagination
+Folding and pagination are major tasks in a print production. Folding describes how a sheet or a final product has to be folded (e. g. zig-zag fold) and pagination defines how the single pages have to be ordered and positioned. Both are closely related, as folding schemes have a major effect on the positioning and orientation of pages on a sheet. 
+
+In XJDF, each print product is described as a set of one or multiple product parts. A simple flyer or a folded leaflet consists of just one single product part, whereas a complex product consists of at least two or even more product parts. The following drawing outlines the product parts of a brochure containing 24 pages with two different types of papers - one for the cover and one for the body. Therefore, the brochure consists of the two product parts “Cover” and “Body”. The cover has four pages and is printed on premium paper, whereas the body consists of 20 pages and is printed on a more common type of paper:
+
+<figure>
+  <Image src={diagramBrochureProductParts} alt="Product parts of a softcover-brochure" />
+  <figcaption>Figure: Product parts of a softcover-brochure</figcaption>
+</figure>
+
+In order to produce the desired print product, each product part has to be separated into one or several bindery signatures. “A BinderySignature represents both sides of a folding signature, a die cut surface or a flat product such as a postcard, each with one or more pages” [@xjdf_ip1, chap. 6.6 "BinderySignature"]. Each bindery signature is defined by a specific folding scheme. The exact distribution of the product parts in bindery signatures depends on the machinery of the appropriate printing house and the exact production plan of how the brochure is intended to be produced. 
+
+Note: The bindery signature is only the logical description of how to fold and how to position the single pages on a component. Each logical bindery signature is related to a physical component in the production process. Components specify “the various versions of semi-finished goods in the press and postpress area, such as a pile of folded sheets that have been collected and are then be joined and trimmed” [@xjdf_ip1, chap. 6.18 "Component"]. 
+
+A brochure with sixteen pages and only one product part can be separated into either a 16-page bindery signature, two 8-page bindery signatures, or into four 4-page bindery signatures. Combinations thereof are also permissible. The production plan is automatically calculated by the Management Information System, or manually by a production operator for the purpose of determining the most efficient production plan. 
+The brochure in the example above may be separated into three bindery signatures. A 4-page bindery signature for the cover, and both a 16-page and a 4-page bindery signature for the body. The exact type of the bindery signatures is defined by the `@FoldCatalog` identifier. More about the `@FoldCatalog` identifiers and their respective meanings later in this chapter. The following is a drawing which outlines the bindery signatures and their corresponding folding scheme for the example brochure:
 
 
 ...to be continued...

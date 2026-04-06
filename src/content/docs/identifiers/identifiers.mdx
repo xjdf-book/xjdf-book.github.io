@@ -4,8 +4,19 @@ title: Identifiers
 
 import screenPartSeparation from '../../../assets/spec-screen/part-separation.png'
 import screenLayoutIntent from '../../../assets/spec-screen/layout-intent.png'
-import diagramBrochureProductParts from '../../../assets/diagram/brochure-product-parts.jpg'
+import screenFoldCatalog from '../../../assets/spec-screen/fold-catalog.jpg'
+import screenF186 from '../../../assets/spec-screen/f18-6.png'
+import screenFoldCatalogLine from '../../../assets/spec-screen/fold-catalog-line.png'
+import screenFoldCatalogDashed from '../../../assets/spec-screen/fold-catalog-dashed.png'
+import screenFoldCatalogFinalSize from '../../../assets/spec-screen/fold-catalog-final-size.png'
+import screenFoldCatalogOrder from '../../../assets/spec-screen/fold-catalog-order.png'
+import screenFoldCatalogLay from '../../../assets/spec-screen/fold-catalog-lay.png'
+import screenFoldCatalogOpenSize from '../../../assets/spec-screen/fold-catalog-open-size.png'
 
+import diagramBrochureProductParts from '../../../assets/diagram/brochure-product-parts.jpg'
+import diagramBrochureBsOverview from '../../../assets/diagram/brochure-bs-overview.jpg'
+import diagramBrochureGathering from '../../../assets/diagram/brochure-gathering.jpg'
+import diagramF186Drawing from '../../../assets/diagram/F18-6-drawing.jpg'
 
 import { Image } from 'astro:assets';
 
@@ -214,5 +225,81 @@ Note: The bindery signature is only the logical description of how to fold and h
 A brochure with sixteen pages and only one product part can be separated into either a 16-page bindery signature, two 8-page bindery signatures, or into four 4-page bindery signatures. Combinations thereof are also permissible. The production plan is automatically calculated by the Management Information System, or manually by a production operator for the purpose of determining the most efficient production plan. 
 The brochure in the example above may be separated into three bindery signatures. A 4-page bindery signature for the cover, and both a 16-page and a 4-page bindery signature for the body. The exact type of the bindery signatures is defined by the `@FoldCatalog` identifier. More about the `@FoldCatalog` identifiers and their respective meanings later in this chapter. The following is a drawing which outlines the bindery signatures and their corresponding folding scheme for the example brochure:
 
+<figure>
+  <Image src={diagramBrochureBsOverview} alt="Example of BinderySignatures for a softcover-brochure" />
+  <figcaption>Figure: Example of BinderySignatures for a softcover-brochure</figcaption>
+</figure>
+
+The first bindery signature on the left (gray) represents the cover of the brochure. This bindery signature has four pages and contains the first and the last two pages. The largest bindery signature is the second one. This one contains sixteen pages of the body (pages 3 to 10 and 15 to 22). The pages are positioned in two rows and four columns. Because of folding, all pages in the lower row are rotated by 180 degrees. The third bindery signature on the right has four pages and contains the center pages (pages 11 to 14).
+Each component, described by a BinderySignature element, is printed and folded individually. In order to produce the final product, the three components are assembled and stitched together:
+
+<figure>
+  <Image src={diagramBrochureGathering} alt="Collecting of Components for a Softcover-Brochure" />
+  <figcaption>Figure: Collecting of Components for a Softcover-Brochure</figcaption>
+</figure>
+
+The distribution, positioning and orientation of the single pages on the different components is crucial. Pagination determines “the distribution and orientation of pages on a BinderySignature [...]" [@xjdf_ip1, chap. 5.4.22.1 "Pagination in Stripping"].
+The pagination depends on the finishing process, that is, the planning for how the final product will be produced. It depends on the number, size, and types of bindery signatures, as well as on how the individual bindery signatures are supposed to be bound (collecting or gathering). Collecting means that the bindery signatures are collected on a spine and are placed within one another. The first bindery signature is on the outside of the final product (as shown in the example). Gathering is the alternative method of assembling. When gathering, all bindery signatures are gathered on a pile and placed on top of one another so that the first one is on the top of the final product. This method is used for non stitching binding types.
+
+A bindery signature is conceptually the smallest physical component in which all print products have to be separated. Even a simple two-sided flyer has to be described as an F2-1 bindery signature. Therefore, bindery signatures play a major role in a print production workflow. At a minimum, a bindery signature is defined by its FoldCatalog attribute value and the partition key `@BinderySignatureID`. 
+
+```xml title="Example: A BinderySignature ResourceSet"
+[...]
+<xjdf:ResourceSet Name="BinderySignature" Usage="Input">
+    <xjdf:Resource>
+        <xjdf:Part BinderySignatureID="BS-1" ProductPart="COVER-ID" />
+        <xjdf:BinderySignature FoldCatalog="F4-1"/>
+    </xjdf:Resource>
+    <xjdf:Resource>
+        <xjdf:Part BinderySignatureID="BS-2" ProductPart="BODY-ID" />
+        <xjdf:BinderySignature FoldCatalog="F16-7"/>
+    </xjdf:Resource>
+    <xjdf:Resource>
+        <xjdf:Part BinderySignatureID="BS-3" ProductPart="BODY-ID" />
+        <xjdf:BinderySignature FoldCatalog="F4-1"/>
+    </xjdf:Resource>
+</xjdf:ResourceSet>
+[...]
+```
+This snippet is an extract of the XJDF Collecting example to be presented later and can be analyzed in detail at that point. The relevant details here are the `@BinderySignatureID` partition key, the `@FoldCatalog` attribute, and the XML element structure.
+The `@BinderySignatureID` partition key is the “master identifier of a BinderySignature” [@xjdf_ip1, chap. 6 Table 6.6 Part/BinderySignatureID] within the production workflow. The value of the `@FoldCatalog` attribute is a fold catalog identifier which refers to a predefined standard fold scheme in the XJDF fold catalog. The format of the fold catalog identifier is “‘Fn-i’ where ‘n’ is the number of finished pages and ‘i’ is either an integer, which identifies a particular fold or the letter ‘X’ which identifies a generic fold” [@xjdf_ip1, chap. A.3.3 "Fold Catalogs"]. 
+
+In the following illustration, an extract of the XJDF fold catalog which describes the most common fold schemes is depicted. These fold schemes are predefined in many JDF and XJDF enabled applications and devices, such as imposition software and folding machines. The method of interpreting the XJDF fold catalog is discussed below.
+
+<figure>
+  <Image src={screenFoldCatalog} alt="Excerpt of the XJDF Fold Catalog" />
+  <figcaption>Figure: Excerpt of the XJDF Fold Catalog [@xjdf_ip1, A-1 "Fold Catalog Part 1"]</figcaption>
+</figure>
+
+All folding schemes in the XJDF fold catalog are grouped by the number of finished pages. Each group is visualized using a common background color. Within a single group, there is no specific order according to technical aspects. 
+
+<figure>
+  <Image src={screenF186} alt="Technical Drawing of the F18-6 Folding Scheme" />
+  <figcaption>Figure: Technical Drawing of the F18-6 Folding Scheme [@xjdf_ip1, A-2 "Fold Catalog Part 2"]</figcaption>
+</figure>
+
+Each box in the fold catalog represents an individual folding scheme. This example shows an “F18-6” fold scheme. “F18-6” is the fold catalog identifier. The first part of the identifier (“F18”) indicates that the folding scheme produces eighteen finished pages. The number six in the fold catalog identifier is a sequential number within the “F18” - group.
+The term “3x3” denotes the positioning of the pages on a sheet when using the folding scheme. This value is just for information purposes and provides an initial orientation in order to facilitate finding folding schemes more quickly. “3x3” means there are three by three pages.
+
+The technical specification of the folding scheme is expressed by a drawing. The table below outlines a legend of how the drawings in the XJDF fold catalog have to be interpreted. When applying a folding scheme, it is crucial to correctly identify which section is folded over or under some other one. The upper right corner of the open sheet is the fixed point during the whole folding process. The gray area denotes the final position of the signature when all folds have been applied.
+
+
+| Sign | Name | Description |
+| --- | ---- | ----------- |
+| <Image src={screenFoldCatalogLine} alt="Fold Catalog Legende: Line" /> | Fold Up | The **bottom** section is folded such that it **remains upon** the top section. When the "Fold up" is drawn vertically, the **left** section **remains above** the **right** section after folding. |
+| <Image src={screenFoldCatalogDashed} alt="Fold Catalog Legende: Dashed Line" /> | Fold Down | The **bottom** section is folded such that it **remains below** the **top** section. When the "Fold down" is drawn vertically, the **left** section **remains under** the **right** section after folding. |
+| <Image src={screenFoldCatalogFinalSize} alt="Fold Catalog Legende: Final Size" /> | Final Size | The final size of the folded signature after all folds have been applied. The gray area also shows the final position of the folded signature after the last fold. |
+| <Image src={screenFoldCatalogOrder} alt="Fold Catalog Legende: Order" /> | Fold Order | The numbers define the chronological order of the folds being applied. |
+| <Image src={screenFoldCatalogLay} alt="Fold Catalog Legende: Lay" /> | Lay | The lay of the open sheet. |
+| <Image src={screenFoldCatalogOpenSize} alt="Fold Catalog Legende: Open Size" /> | Open Size | The open sheet size of the bindery signature. The green (upper) line indicates the length of the open sheet whereas the red (right) one corresponds to the width of the open sheet. |
+
+In the following, a sequence of a “F18-6” fold scheme is discussed. The dot on the upper right corner of the sheet indicates the fixed point during the folding process. As defined in the specification, all folds have to be applied in the direction of the dot. The gray line indicates the next step.
+
+<figure>
+  <Image src={diagramF186Drawing} alt="Visual instruction of how to fold a F18-6 folding scheme" />
+  <figcaption>Figure: Visual instruction of how to fold a F18-6 folding scheme</figcaption>
+</figure>
+
+In addition to the technical drawing, the XJDF fold catalog also provides a technical expression for the purpose of defining a folding scheme. Below is one for the “F18-6” fold scheme:
 
 ...to be continued...

@@ -12,6 +12,7 @@ import screenFoldCatalogFinalSize from '../../../assets/spec-screen/fold-catalog
 import screenFoldCatalogOrder from '../../../assets/spec-screen/fold-catalog-order.png'
 import screenFoldCatalogLay from '../../../assets/spec-screen/fold-catalog-lay.png'
 import screenFoldCatalogOpenSize from '../../../assets/spec-screen/fold-catalog-open-size.png'
+import screenFoldCatalogArrows from '../../../assets/spec-screen/fold-catalog-arrows.png'
 
 import diagramBrochureProductParts from '../../../assets/diagram/brochure-product-parts.jpg'
 import diagramBrochureBsOverview from '../../../assets/diagram/brochure-bs-overview.jpg'
@@ -302,4 +303,150 @@ In the following, a sequence of a “F18-6” fold scheme is discussed. The dot 
 
 In addition to the technical drawing, the XJDF fold catalog also provides a technical expression for the purpose of defining a folding scheme. Below is one for the “F18-6” fold scheme:
 
-...to be continued...
+<figure>
+  <Image src={screenFoldCatalogArrows} alt="Technical expression of the F18-6 folding scheme" />
+  <figcaption>Figure: Technical expression of the F18-6 folding scheme</figcaption>
+</figure>
+
+
+Arrow up (⬆) means the left section has to be folded over the right section or the bottom section has to be folded over the top section. Arrow down (⬇) indicates that the left section has to be folded under the right section or the bottom section has to be folded under the top section. The size of the appropriate section is expressed by a fraction of the open sheet size. Fractions of horizontal folds refer to the width of the open sheet, while vertical folds refer to the height. The first fold is always a horizontal fold. The plus sign ( + ) is used to toggle between the horizontal and the vertical folds.
+The XJDF fold catalog provides folding schemes for the most standard situations in a print production workflow. In the event that there is no match, XJDF provides generic fold schemes. An example of a generic 18-pages bindery signature would be “F18-X”. 
+Custom folds are also supported. The procedure for extending the XJDF by a custom folding scheme is explained in the chapter “Extensibility”. However, the disadvantage of both methods is that they pose limitations on automation. 
+
+### XJDF Example: Collecting
+Many collecting devices do not only collect pre-folded components, but also provide stitching and trimming. The input of such machines is a set of pre-folded bindery signature components, while the output is a finished brochure.
+
+From the XJDF perspective, such devices are described by a Gray Box covering the processes Collecting, Stitching, and Trimming. The process Collecting “collects folded sheets or partial products[...]. The first component to enter the workflow lies at the bottom of the pile collected on a saddle, and the sequence of the input components that follows depends upon the produced component” [@xjdf_ip1, chap. 5.6.7 "Collecting"]. The process Stitching defines how “gathered or collected sheets or signatures are stitched together” [@xjdf_ip1, chap. 5.6.33 "Stitching"]. After collecting and stitching, the semi-finished magazines have to be trimmed on the head, the foot, and the face. This is done by the Trimming process. “The Trimming process is performed to adjust a book block or sheet to its final size” [@xjdf_ip1, chap. 5.6.37 "Trimming"].
+The following example illustrates an XJDF Document describing a “Collecting Stitching Trimming” Gray Box:
+
+```xml title="Example: XJDF Gray Box for a Collecting Device"
+<xjdf:XJDF JobID="JOB-1234" Types="Collecting Stitching Trimming"
+        xmlns:xjdf="http://www.CIP4.org/JDFSchema_2_0">
+    <xjdf:AuditPool>
+        <xjdf:AuditCreated>
+            <xjdf:Header AgentName="MIS" AgentVersion="1.0"
+                Time="2017-04-21T22:06:47Z" />
+        </xjdf:AuditCreated>
+    </xjdf:AuditPool>
+    <xjdf:ProductList>
+        <xjdf:Product Amount="1000" DescriptiveName="My Magazine A4" 
+                IsRoot="true">
+            <xjdf:Intent Name="BindingIntent">
+                <xjdf:BindingIntent BindingOrder="Collecting" 
+                    BindingSide="Left" BindingType="SaddleStitch"
+                    ChildRefs="COVER-ID BODY-ID"/>
+            </xjdf:Intent>
+        </xjdf:Product>
+        <xjdf:Product ID="COVER-ID" IsRoot="false">
+            <xjdf:Intent Name="ColorIntent">
+                <xjdf:ColorIntent>
+                    <xjdf:SurfaceColor Surface="Front"
+                        ColorsUsed="Cyan Magenta Yellow Black" />
+                    <xjdf:SurfaceColor Surface="Back"
+                        ColorsUsed="Cyan Magenta Yellow Black" />
+                </xjdf:ColorIntent>
+            </xjdf:Intent>
+            <xjdf:Intent Name="LayoutIntent">
+                <xjdf:LayoutIntent Sides="TwoSidedHeadToHead" Pages="4"
+                    FinishedDimensions="841.88 595.27 0.0"/>
+            </xjdf:Intent>
+            <xjdf:Intent Name="MediaIntent">
+                <xjdf:MediaIntent MediaQuality="135_MATT"/>
+            </xjdf:Intent>
+        </xjdf:Product>
+        <xjdf:Product ID="BODY-ID" IsRoot="false">
+            <xjdf:Intent Name="ColorIntent">
+                <xjdf:ColorIntent>
+                    <xjdf:SurfaceColor Surface="Front" 
+                        ColorsUsed="Black" />
+                    <xjdf:SurfaceColor Surface="Back" 
+                        ColorsUsed="Black" />
+                </xjdf:ColorIntent>
+            </xjdf:Intent>
+            <xjdf:Intent Name="LayoutIntent">
+                <xjdf:LayoutIntent Sides="TwoSidedHeadToHead" Pages="20"
+                    FinishedDimensions="841.88 595.27 0.0"/>
+            </xjdf:Intent>
+            <xjdf:Intent Name="MediaIntent">
+                <xjdf:MediaIntent MediaQuality="80_MATT"/>
+            </xjdf:Intent>
+        </xjdf:Product>
+    </xjdf:ProductList>
+    <xjdf:ResourceSet Name="Assembly" Usage="Input">
+        <xjdf:Resource>
+            <xjdf:Assembly BinderySignatureIDs="BS-1 BS-2 BS-3" 
+                Order="Collecting" />
+        </xjdf:Resource>
+    </xjdf:ResourceSet>
+    <xjdf:ResourceSet Name="BinderySignature" Usage="Input">
+        <xjdf:Resource>
+            <xjdf:Part BinderySignatureID="BS-1" 
+                ProductPart="COVER-ID" />
+            <xjdf:BinderySignature FoldCatalog="F4-1"/>
+        </xjdf:Resource>
+        <xjdf:Resource>
+            <xjdf:Part BinderySignatureID="BS-2" ProductPart="BODY-ID" />
+            <xjdf:BinderySignature FoldCatalog="F16-7"/>
+        </xjdf:Resource>
+        <xjdf:Resource>
+            <xjdf:Part BinderySignatureID="BS-3" ProductPart="BODY-ID" />
+            <xjdf:BinderySignature FoldCatalog="F4-1"/>
+        </xjdf:Resource>
+    </xjdf:ResourceSet>
+    <xjdf:ResourceSet Name="Component" Usage="Input">
+        <xjdf:Resource ExternalID="COMP-BS-1">
+            <xjdf:Part BinderySignatureID="BS-1" />
+            <xjdf:Component Dimensions="852.68 603.67 1.42" 
+                MediaRef="MEDIA-COVER-ID" />
+        </xjdf:Resource>
+        <xjdf:Resource ExternalID="COMP-BS-2">
+            <xjdf:Part BinderySignatureID="BS-2" />
+            <xjdf:Component Dimensions="852.68 603.67 3.34" 
+                MediaRef="MEDIA-BODY-ID" />
+        </xjdf:Resource>
+        <xjdf:Resource ExternalID="COMP-BS-3">
+            <xjdf:Part BinderySignatureID="BS-3" />
+            <xjdf:Component Dimensions="852.68 603.67 0.92" 
+                MediaRef="MEDIA-BODY-ID" />
+        </xjdf:Resource>
+    </xjdf:ResourceSet>
+    <xjdf:ResourceSet Name="Component" Usage="Output">
+        <xjdf:Resource ExternalID="COMP-MAGAZINE">
+            <xjdf:AmountPool>
+                <xjdf:PartAmount Amount="1050" />
+            </xjdf:AmountPool>
+            <xjdf:Component Dimensions="841.88 595.27 5.26" />
+        </xjdf:Resource>
+    </xjdf:ResourceSet>
+    <xjdf:ResourceSet Name="StitchingParams" Usage="Input">
+        <xjdf:Resource>
+            <xjdf:StitchingParams StitchType="Saddle" 
+                StapleShape="Eyelet"/>
+        </xjdf:Resource>
+    </xjdf:ResourceSet>
+    <xjdf:ResourceSet Name="TrimmingParams" Usage="Input">
+        <xjdf:Resource>
+            <xjdf:TrimmingParams Height="841.88" Width="595.27"/>
+        </xjdf:Resource>
+    </xjdf:ResourceSet>
+    <xjdf:ResourceSet Name="Media">
+        <xjdf:Resource ID="MEDIA-COVER-ID">
+            <xjdf:Media MediaType="Paper" Thickness="150" Weight="135" 
+                ISOPaperSubstrate="PS3" />
+        </xjdf:Resource>
+        <xjdf:Resource ID="MEDIA-BODY-ID">
+            <xjdf:Media MediaType="Paper" Thickness="90" Weight="80" 
+                ISOPaperSubstrate="PS3" />
+        </xjdf:Resource>
+    </xjdf:ResourceSet>
+    <xjdf:ResourceSet Name="NodeInfo" Usage="Input">
+        <xjdf:Resource>
+            <xjdf:NodeInfo Start="2016-09-26T22:00:00Z" />
+        </xjdf:Resource>
+    </xjdf:ResourceSet>
+</xjdf:XJDF>
+```
+The collecting example is quite similar to the folding example. One difference here is that the ProductList describes a complex product as opposed to a simple one. The complex product consists of a root product and two child products. The root product describes the overall brochure, whereas the two child products describe both product parts of the brochure - cover and body. More about complex products will be explained in the next chapter.
+Since a collecting device provides more processes than a simple folding machine, the number of input resources is higher. The primary resources of interest here are Assembly and BinderySignature. As defined, the magazine has been separated into three bindery signatures. A four-page bindery signature for the cover and two bindery signatures (16 and 4 pages respectively) for the body. Using the `@ProductPart` partition key, each BinderySignature element references a child product. The Assembly element defines how the single bindery signatures have to be assembled in order to obtain the final product. The attribute `@BinderySignatureIDs` refers to the bindery signatures to be assembled. The order of the IDs within the attribute corresponds to the order in which all bindery signatures are to be assembled. The attribute `@Order` = “Collecting” defines the first ID mentioned and is the outer component, while the following ones are bonded within one another (see the figure “Collecting of BinderySignatures for a softcover-brochure”).
+Each BinderySignature element of the magazine is linked to a Component using the `@BinderySignatureID` partition key. A component is the physical representation of a bindery signature.
+StitchingParams and TrimmingParams are specific input resources for the processes Stitching and Trimming. In this example, StitchingParams defines an eyelet staple on the saddle of the magazine. TrimmingParams defines the final size of the magazine. The rest of the collecting example is quite similar to the folding example. 

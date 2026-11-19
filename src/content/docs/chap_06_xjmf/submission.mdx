@@ -1,0 +1,94 @@
+---
+title: Submission of XJDF Documents
+---
+
+import diagramXjmfQueueEntry from '../../../assets/diagram/xjmf-queue-entry.jpg';
+import { Image } from 'astro:assets';
+
+In order to transfer XJDF Documents between the MIS, controllers, and devices, XJMF provides a set of Command Messages. Each XJDF Document represents a job for a specific Gray Box. “In XJMF, a controller or device is assumed to have one input queue that accepts submitted jobs” [@xjdf_ip1, chap. 4.7 "Queue Support"]. “A queue is a representation of a device that receives, manipulates and stores multiple queue entry items for execution” [@xjdf_ip1, chap. 1 Table 1.4: Glossary (Queue)]. From the perspective of XJMF, an XJDF Document is a queue entry of a device. The XJDF Specification defines the following Command Messages and their corresponding Response Messages for queue entry handling:
+
+| MessageType | Description |
+| --- | --- |
+| `CommandSubmitQueueEntry`<br/>`ResponseSubmitQueueEntry` | “A job is submitted to a queue in order to be executed” [@xjdf_ip1, chap. 7 Table 7.9: List of XJMF Messages]. |
+| `CommandReturnQueueEntry`<br/>`ResponseReturnQueueEntry` | “Returns a job that had been submitted with a SubmitQueueEntry to the queue that represents the controller that originally submitted the job” [@xjdf_ip1, chap. 7 Table 7.9: List of XJMF Messages]. |
+| `CommandResubmitQueueEntry`<br/>`ResponseResubmitQueueEntry` | “Replaces a queue entry without affecting the entry’s parameters. The command is used, for example, for late changes to a submitted XJDF” [@xjdf_ip1, chap. 7 Table 7.9: List of XJMF Messages]. |
+| `CommandModifyQueueEntry`<br/>`ResponseModifyQueueEntry` | “Modifies the properties of one or more QueueEntry elements” [@xjdf_ip1, chap. 7 Table 7.9: List of XJMF Messages]. |
+| `CommandRequestQueueEntry`<br/>`ResponseRequestQueueEntry` | “A new Job is requested by the Device. This message is used to signal that a device has processing resources available” [@xjdf_ip1, chap. 7 Table 7.9: List of XJMF Messages]. |
+
+“SubmitQueueEntry initially submits a QueueEntry to a device. Modifications to a QueueEntry can be applied by using the ResubmitQueueEntry or ModifyQueueEntry command” [@xjdf_ip1, chap. 7.20 "SubmitQueueEntry"].
+
+“The ReturnQueueEntry Message returns a job that had been submitted with a SubmitQueueEntry to the controller that originally submitted the job. Note that this command is sent from the device to a controller and not from controller to device as is the case with most other queue handling commands” [@xjdf_ip1, chap. 7.16 "ReturnQueueEntry"].
+
+“Queue entries are accessed using a `@QueueEntryID` attribute, which the queue’s controller or device generates when it receives the submitted job, and which is returned in the SubmitQueueEntry Response Message.
+
+`@QueueEntryID` SHALL uniquely identify an entry within the scope of one queue. An implementation is free to choose the algorithm that generates `@QueueEntryID` values” [@xjdf_ip1, chap. 9.1.1 "Queue Entry ID Generation"].
+
+<figure>
+  <Image src={diagramXjmfQueueEntry} alt="XJMF QueueEntry Submission and Return" />
+  <figcaption>Figure: XJMF QueueEntry Submission and Return</figcaption>
+</figure>
+
+The drawing in the above figure shows the most simple queue entry handling in an XJDF workflow. The XJDF Document is submitted to a controller (or device) and is returned at the end of the execution process. The following snippet contains the corresponding XJMF SubmitQueueEntry Command Messages:
+
+```xml title="Example: XJMF SubmitQueueEntry Command Message"
+<xjdf:XJMF xmlns:xjdf="http://www.CIP4.org/JDFSchema_2_0">
+    <xjdf:Header ID="XJMF_ID" DeviceID="DEVICE_ID_MIS"
+            Time="2016-11-12T12:11:39+02:00" />
+    <xjdf:CommandSubmitQueueEntry>
+        <xjdf:Header ID="MESSAGE_ID" DeviceID="DEVICE_ID_MIS"
+                Time="2016-11-12T12:11:39+02:00" />
+        <xjdf:QueueSubmissionParams
+                URL="http://mis.example.org/xjdf/job-1234.xjdf"
+                ReturnJMF="http://mis.example.org/xjmf" Priority="42"/>
+    </xjdf:CommandSubmitQueueEntry>
+</xjdf:XJMF>
+```
+
+In the XJDF SubmitQueueEntry Command Message, all submission relevant details are defined in the subelement QueueSubmissionParams. The attribute `@URL` references the XJDF Document to be submitted. The attribute `@ReturnJMF` specifies the URL to which the receiving device or controller has to send the asynchronous feedback as soon as the processing of the job has been accomplished. Additionally, the QueueSubmissionParams element allows the specification of job metadata as the priority. `@Priority` is a “number from 0 to 100, where ‘0’ = lowest priority and ‘100’ = maximum priority” [@xjdf_ip1, chap. 7 Table 7.81: QueueSubmissionParams/@Priority]. The way in which the priority influences the production order of the single jobs is explained in the XJDF Specification.
+
+When sending this message to a controller or device, the corresponding Response Message might look something like the following:
+
+```xml title="Example: XJMF SubmitQueueEntry Response Message"
+<xjdf:XJMF xmlns:xjdf="http://www.CIP4.org/JDFSchema_2_0">
+    <xjdf:Header ID="XJMF_ID" DeviceID="DEVICE_ID_CONTROLLER"
+            Time="2016-11-12T12:11:39+02:00" />
+    <xjdf:ResponseSubmitQueueEntry ReturnCode="0">
+        <xjdf:Header ID="I1234" refID="MESSAGE_ID"
+                DeviceID="DEVICE_ID_CONTROLLER"
+                Time="2016-11-12T12:11:39+02:00"/>
+        <xjdf:QueueEntry QueueEntryID="1" Priority="42"
+                Status="Waiting" />
+    </xjdf:ResponseSubmitQueueEntry>
+</xjdf:XJMF>
+```
+
+The corresponding XJDF SubmitQueueEntry Response Message references the Command Message in the `@refID` attribute. Furthermore, there is a QueueEntry subelement which contains details about the newly created queue entry. The `@QueueEntryID` attribute defines the identifier of the queue entry as defined above. The `@Priority` has been adapted on a 1:1 ratio, while the attribute `@Status` defines the current status of the queue entry.
+
+After the successful execution of the job, the queue entry is sent back to the MIS. Following is a snippet containing the XJMF ReturnQueueEntry Command Message:
+
+```xml title="Example: XJMF ReturnQueueEntry Command Message"
+<xjdf:XJMF xmlns:xjdf="http://www.CIP4.org/JDFSchema_2_0">
+    <xjdf:Header ID="XJMF_ID" DeviceID="DEVICE_ID_CONTROLLER"
+            Time="2016-11-12T12:11:39+02:00" />
+    <xjdf:CommandReturnQueueEntry>
+        <xjdf:Header ID="MESSAGE_ID" DeviceID="DEVICE_ID_CONTROLLER"
+                Time="2016-11-12T12:11:39+02:00" />
+        <xjdf:ReturnQueueEntryParams QueueEntryID="1"
+                URL="http://controller.example.org/xjdf/job-1234.xjdf" />
+    </xjdf:CommandReturnQueueEntry>
+</xjdf:XJMF>
+```
+
+The XJMF ReturnQueueEntry Command Message is initiated by the controller (or device) and contains a ReturnQueueEntryParams subelement. The subelement specifies the queue entries identifier (`@QueueEntryID`) in addition to the reference to where to locate the XJDF Document to send back. As feedback, the MIS returns the Response Message seen below in order to confirm the successful processing of the Command Message. The response does not specify any specific details:
+
+```xml title="Example: XJMF ReturnQueueEntry Response Message"
+<xjdf:XJMF xmlns:xjdf="http://www.CIP4.org/JDFSchema_2_0">
+    <xjdf:Header ID="XJMF_ID" DeviceID="DEVICE_ID_CONTROLLER"
+            Time="2016-11-12T12:11:39+02:00" />
+    <xjdf:ResponseReturnQueueEntry ReturnCode="0">
+        <xjdf:Header ID="I1234" refID="MESSAGE_ID"
+                DeviceID="DEVICE_ID_CONTROLLER"
+                Time="2016-11-12T12:11:39+02:00" />
+    </xjdf:ResponseReturnQueueEntry>
+</xjdf:XJMF>
+```

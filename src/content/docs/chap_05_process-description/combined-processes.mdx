@@ -1,0 +1,304 @@
+---
+title: Combined Processes
+---
+
+import diagramPrepressGrayBox from '../../../assets/diagram/prepress-gray-box.jpg';
+import diagramRelativePositioning from '../../../assets/diagram/relative-positioning.jpg';
+import diagramAbsolutePositioning from '../../../assets/diagram/absolute-positioning.jpg';
+import { Image } from 'astro:assets';
+
+All processes described in the XJDF Specification “are assumed to be executed by a single-purpose device. Some controllers and devices are able to combine the functionality of multiple single-purpose devices and execute more than one process type” [@xjdf_ip1, chap. 5.1 "Combining Individual Process Steps"]. One example of a typical Combined Process in a print production workflow is the prepress workflow system. In general, such a system is responsible for preparing the customer's artwork to be exposed on a printing plate, or to be printed by a digital press. This includes, for instance, the way in which single pages of the final product are positioned on the sheet, or any kind of data optimization such as color management, trapping, etc. Each printing technology (sheet-fed offset, web offset, inkjet etc.) places specific demands on the print data. Furthermore, the planned finishing process of the product may also affect the data preparation. The result of the Combined Process of a prepress workflow system is the digital data to be printed on the planned printing system, byte by byte.
+
+A prepress workflow system is an absolute necessity for any kind of printing system. Even a common desktop printer has some internal data optimization systems for the purpose of translating the objects of the digital document into colored dots to be printed. In commercial printing, this translation is carried out by prepress workflow systems.
+
+As the data preparation can be very specific for each printing technology there are many individual workflow solutions available. Systems can be specialized on packaging printing, banners printing, newspaper printing etc.
+
+In the production workflow diagram of a folded leaflet, the “Gray Box 2” covers processes which are provided by a prepress workflow system. The Gray Box contains the four processes Stripping, Imposition, Interpreting and Rendering. Stripping is an abstract description of Imposition. “The Imposition process is responsible for combining pages of input graphical content onto surfaces of the physical output media. Static or dynamic printer's marks can be added to the surface in order to facilitate various aspects of the production process. Among other things, these marks are used for press alignment, color calibration, job identification and as guides for cutting and folding. Note that the Imposition process specifies the task of combining pages and marks on sheets. The task of setting up the parameters needed for Imposition is defined by Stripping” [@xjdf_ip1, chap. 5.4.8 "Imposition"].
+
+“The Stripping process specifies the process of translating a high level structured description of the imposition of one or multiple job parts [...] for the Imposition process” [@xjdf_ip1, chap. 5.4.22 "Stripping"].
+
+Interpreting and Rendering normally occur pairwise and are covered by a Raster Imaging Processor (RIP). The combination of the processes Interpreting and Rendering is also known as ripping. These processes “consume page descriptions and instructions for producing the graphical output. It parses the graphical contents in the page descriptions, renders the contents, and produces a rasterized image of the page” [@jdf_1_5, chap. 6.2.33 "RIPing"]. The following graphic shows an extract of the folded leaflets production workflow for only the Gray Box 2:
+
+<figure>
+  <Image src={diagramPrepressGrayBox} alt="Example PrePress Gray Box" />
+  <figcaption>Figure: Example PrePress Gray Box</figcaption>
+</figure>
+
+“Each XJDF SHALL contain a `@Types` attribute, which in turn contains an ordered list of values of each of processes that the XJDF specifies. The ordering of the process names in the `@Types` attribute specifies the ordering in which the processes SHOULD be executed. If the final product result would be indistinguishable, the device MAY change the execution order of the processes from that given in the `@Types` attribute” [@xjdf_ip1, chap. 5.1 "Combining Individual Process Steps"].
+
+Here, the corresponding XJDF Document has to be sent from the MIS to the GrayBox of the prepress workflow system, in order to execute the combined processes:
+
+```xml title="Example: XJDF Gray Box of Combined Process 'PrePress'"
+<xjdf:XJDF JobID="JOB-1234"
+        Types="Stripping Imposition Interpreting Rendering"
+        xmlns:xjdf="http://www.CIP4.org/JDFSchema_2_0">
+    <xjdf:AuditPool>
+        <xjdf:AuditCreated>
+            <xjdf:Header AgentName="MIS" AgentVersion="1.0"
+                Time="2016-11-02T09:52:24Z"/>
+        </xjdf:AuditCreated>
+    </xjdf:AuditPool>
+    <xjdf:ProductList>
+        <xjdf:Product Amount="2500" DescriptiveName="My Folded Leaflet">
+            <xjdf:Intent Name="LayoutIntent">
+                <xjdf:LayoutIntent Dimensions="841.88 595.27"
+                    Sides="TwoSidedHeadToHead" Pages="2"
+                    FinishedDimensions="280.69 595.27 0.0"/>
+            </xjdf:Intent>
+            <xjdf:Intent Name="FoldingIntent">
+                <xjdf:FoldingIntent FoldCatalog="F6-2"/>
+            </xjdf:Intent>
+            <xjdf:Intent Name="ColorIntent">
+                <xjdf:ColorIntent>
+                    <xjdf:SurfaceColor Surface="Front"
+                        ColorsUsed="Cyan Magenta Yellow Black" />
+                    <xjdf:SurfaceColor Surface="Back"
+                        ColorsUsed="Cyan Magenta Yellow Black" />
+                </xjdf:ColorIntent>
+            </xjdf:Intent>
+            <xjdf:Intent Name="MediaIntent">
+                <xjdf:MediaIntent MediaQuality="135_MATT"/>
+            </xjdf:Intent>
+        </xjdf:Product>
+    </xjdf:ProductList>
+    <xjdf:ResourceSet Name="Layout" Usage="Input">
+        <xjdf:Resource>
+            <xjdf:Layout SurfaceContentsBox="0.0 0.0 1293.31 907.09"
+                    WorkStyle="WorkAndBack">
+                <xjdf:Position RelativeBox="0.0 0.0 0.5 1.0"
+                    Orientation="Rotate90" BinderySignatureID="BS-1" />
+                <xjdf:Position RelativeBox="0.5 0.0 1.0 1.0"
+                    Orientation="Rotate90" BinderySignatureID="BS-1" />
+            </xjdf:Layout>
+        </xjdf:Resource>
+    </xjdf:ResourceSet>
+    <xjdf:ResourceSet Name="RunList" Usage="Input"
+            ProcessUsage="Document">
+        <xjdf:Resource>
+            <xjdf:RunList>
+                <xjdf:FileSpec URL="http://example.org/artwork/my.pdf"/>
+            </xjdf:RunList>
+        </xjdf:Resource>
+    </xjdf:ResourceSet>
+    <xjdf:ResourceSet Name="RunList" Usage="Output">
+        <xjdf:Resource>
+            <xjdf:Part Separation="Cyan" />
+            <xjdf:RunList>
+                <xjdf:FileSpec URL="http://example.org/cyan.tif"/>
+            </xjdf:RunList>
+        </xjdf:Resource>
+        <xjdf:Resource>
+            <xjdf:Part Separation="Magenta" />
+            <xjdf:RunList>
+                <xjdf:FileSpec URL="http://example.org/magenta.tif"/>
+            </xjdf:RunList>
+        </xjdf:Resource>
+        <xjdf:Resource>
+            <xjdf:Part Separation="Yellow" />
+            <xjdf:RunList>
+                <xjdf:FileSpec URL="http://example.org/yellow.tif"/>
+            </xjdf:RunList>
+        </xjdf:Resource>
+        <xjdf:Resource>
+            <xjdf:Part Separation="Black" />
+            <xjdf:RunList>
+                <xjdf:FileSpec URL="http://example.org/black.tif"/>
+            </xjdf:RunList>
+        </xjdf:Resource>
+    </xjdf:ResourceSet>
+</xjdf:XJDF>
+```
+
+A Gray Box of a combined process is quite similar to address, just as a Gray Box covering only a single process. Generally, the input resources of such a combined Gray Box is the aggregation of the input resources of the containing processes. The output resources match the output resources of the last process executed in the Gray Box. “A ResourceSet that is produced by one process and immediately consumed by the following process NEED NOT be explicitly specified in the XJDF. Any such ResourceSet MAY be completely under the control of the receiving device” [@xjdf_ip1, chap. 5.1.1 "Exchange ResourceSets in combined processes"].
+
+In this specific example, the XJDF document defines the input resource of the Stripping process as input and the output resources of the Rendering process as output. The input is a RunList resource referencing the (preflighted) customer artwork in addition to a Layout resource defining a high level description of the digital print data. The output is a RunList resource referencing the ripped separations partitioned by their Separations. There are no intermediate resources defined in the XJDF Document.
+
+In order to obtain more control of the internals of the Gray Box, a reasonable approach is to extend the XJDF Document by additional input resources provided by the covered processes. For instance, the RenderingParams resource can be added in order to control the Rendering process from the outside.
+
+Since the definition of the layout is a major requirement in many systems, an explanation of how a Layout element can be defined is provided here. A very high level definition of a layout, deemed as input by the Stripping process, can be expressed using the paper size, including a `@RelativeBox` attribute. This mechanism has also being used in the Gray Box example above:
+
+```xml title="Example: Layout definition with RelativeBox"
+[...]
+<xjdf:ResourceSet Name="Layout" Usage="Input">
+    <xjdf:Resource>
+        <xjdf:Layout SurfaceContentsBox="0.0 0.0 1293.31 907.09"
+                WorkStyle="WorkAndBack">
+            <xjdf:Position RelativeBox="0.0 0.0 0.5 1.0"
+                    Orientation="Rotate90" BinderySignatureID="BS-1" />
+            <xjdf:Position RelativeBox="0.5 0.0 1.0 1.0"
+                    Orientation="Rotate90" BinderySignatureID="BS-1" />
+        </xjdf:Layout>
+    </xjdf:Resource>
+</xjdf:ResourceSet>
+[...]
+```
+
+The paper size is defined in the attribute `//Layout/@SurfaceContentsBox`, and the folded leaflet is placed on the sheet twice - once on the left half, and once on the right. There is no exact position defined where the leaflet has to be placed. Instead, the exact position has to be calculated by the Stripping process. However, for pricing reasons, the MIS needs to communicate that the product has to be placed twice on that sheet. The attribute `//Position/@RelativeBox` defines exactly this. In the first Position element, the left part of the sheet is defined and in the second one the right part. All length expressions are defined relative to the paper’s size. The figure below illustrates the high level Layout definition using relative boxes:
+
+<figure>
+  <Image src={diagramRelativePositioning} alt="Relative Positioning of the Folded Leaflet" />
+  <figcaption>Figure: Relative Positioning of the Folded Leaflet</figcaption>
+</figure>
+
+In some situations, the relative positioning method is not sufficient - in particular, when the MIS is able to compute complex layouts. In this case, XJDF also provides an absolute positioning method using `//Position/@AbsoluteBox`. This method allows a very precise definition of the layout. The following variant can also be an input for the Stripping process:
+
+```xml title="Example: Layout definition with AbsoluteBox"
+[...]
+<xjdf:ResourceSet Name="Layout" Usage="Input">
+    <xjdf:Resource>
+        <xjdf:Layout SurfaceContentsBox="0.0 0.0 1293.31 907.09"
+            WorkStyle="WorkAndBack">
+            <xjdf:Position AbsoluteBox="25.51 42.42 637.79 901.42"
+                Orientation="Rotate90" BinderySignatureID="BS-1" />
+            <xjdf:Position AbsoluteBox="637.79 42.52 1250.07 901.42"
+                Orientation="Rotate90" BinderySignatureID="BS-1" />
+        </xjdf:Layout>
+    </xjdf:Resource>
+</xjdf:ResourceSet>
+[...]
+```
+
+The result of this Layout definition is a very precise positioning as shown below:
+
+<figure>
+  <Image src={diagramAbsolutePositioning} alt="Absolute Positioning of the Folded Leaflet" />
+  <figcaption>Figure: Absolute Positioning of the Folded Leaflet</figcaption>
+</figure>
+
+Gray Boxes of Combined Processes are not only limited to prepress systems. A collecting machine can also be a Combined Process as well. Here is the collecting example previously shown in the Essentials chapter:
+
+```xml title="Example: XJDF Gray Box for a Collecting Device"
+<xjdf:XJDF JobID="JOB-1234" Types="Collecting Stitching Trimming"
+        xmlns:xjdf="http://www.CIP4.org/JDFSchema_2_0">
+    <xjdf:AuditPool>
+        <xjdf:AuditCreated>
+            <xjdf:Header AgentName="MIS" AgentVersion="1.0"
+                Time="2017-04-21T22:06:47Z" />
+        </xjdf:AuditCreated>
+    </xjdf:AuditPool>
+    <xjdf:ProductList>
+        <xjdf:Product Amount="1000" DescriptiveName="My Magazine A4"
+                IsRoot="true">
+            <xjdf:Intent Name="BindingIntent">
+                <xjdf:BindingIntent BindingOrder="Collecting"
+                        BindingSide="Left" BindingType="SaddleStitch"
+                        ChildRefs="COVER-ID BODY-ID"/>
+            </xjdf:Intent>
+        </xjdf:Product>
+        <xjdf:Product ID="COVER-ID" IsRoot="false">
+            <xjdf:Intent Name="ColorIntent">
+                <xjdf:ColorIntent>
+                    <xjdf:SurfaceColor Surface="Front"
+                            ColorsUsed="Cyan Magenta Yellow Black" />
+                    <xjdf:SurfaceColor Surface="Back"
+                            ColorsUsed="Cyan Magenta Yellow Black" />
+                </xjdf:ColorIntent>
+            </xjdf:Intent>
+            <xjdf:Intent Name="LayoutIntent">
+                <xjdf:LayoutIntent Sides="TwoSidedHeadToHead" Pages="4"
+                        FinishedDimensions="841.88 595.27 0.0"/>
+            </xjdf:Intent>
+            <xjdf:Intent Name="MediaIntent">
+                <xjdf:MediaIntent MediaQuality="135_MATT"/>
+            </xjdf:Intent>
+        </xjdf:Product>
+        <xjdf:Product ID="BODY-ID" IsRoot="false">
+            <xjdf:Intent Name="ColorIntent">
+                <xjdf:ColorIntent>
+                    <xjdf:SurfaceColor Surface="Front"
+                           ColorsUsed="Black" />
+                    <xjdf:SurfaceColor Surface="Back"
+                            ColorsUsed="Black" />
+                </xjdf:ColorIntent>
+            </xjdf:Intent>
+            <xjdf:Intent Name="LayoutIntent">
+                <xjdf:LayoutIntent Sides="TwoSidedHeadToHead" Pages="20"
+                        FinishedDimensions="841.88 595.27 0.0"/>
+            </xjdf:Intent>
+            <xjdf:Intent Name="MediaIntent">
+                <xjdf:MediaIntent MediaQuality="80_MATT"/>
+            </xjdf:Intent>
+        </xjdf:Product>
+    </xjdf:ProductList>
+    <xjdf:ResourceSet Name="Assembly" Usage="Input">
+        <xjdf:Resource>
+            <xjdf:Assembly BinderySignatureIDs="BS-1 BS-2 BS-3"
+                    Order="Collecting" />
+        </xjdf:Resource>
+    </xjdf:ResourceSet>
+    <xjdf:ResourceSet Name="BinderySignature" Usage="Input">
+        <xjdf:Resource>
+            <xjdf:Part BinderySignatureID="BS-1"
+                    ProductPart="COVER-ID" />
+            <xjdf:BinderySignature FoldCatalog="F4-1"/>
+        </xjdf:Resource>
+        <xjdf:Resource>
+            <xjdf:Part BinderySignatureID="BS-2" ProductPart="BODY-ID" />
+            <xjdf:BinderySignature FoldCatalog="F16-7"/>
+        </xjdf:Resource>
+        <xjdf:Resource>
+            <xjdf:Part BinderySignatureID="BS-3" ProductPart="BODY-ID" />
+            <xjdf:BinderySignature FoldCatalog="F4-1"/>
+        </xjdf:Resource>
+    </xjdf:ResourceSet>
+    <xjdf:ResourceSet Name="Component" Usage="Input">
+        <xjdf:Resource ExternalID="COMP-BS-1">
+            <xjdf:Part BinderySignatureID="BS-1" />
+            <xjdf:Component Dimensions="852.68 603.67 1.42"
+                    MediaRef="MEDIA-COVER-ID" />
+        </xjdf:Resource>
+        <xjdf:Resource ExternalID="COMP-BS-2">
+            <xjdf:Part BinderySignatureID="BS-2" />
+            <xjdf:Component Dimensions="852.68 603.67 3.34"
+                    MediaRef="MEDIA-BODY-ID" />
+        </xjdf:Resource>
+        <xjdf:Resource ExternalID="COMP-BS-3">
+            <xjdf:Part BinderySignatureID="BS-3" />
+            <xjdf:Component Dimensions="852.68 603.67 0.92"
+                    MediaRef="MEDIA-BODY-ID" />
+        </xjdf:Resource>
+    </xjdf:ResourceSet>
+    <xjdf:ResourceSet Name="Component" Usage="Output">
+        <xjdf:Resource ExternalID="COMP-MAGAZINE">
+            <xjdf:AmountPool>
+                <xjdf:PartAmount Amount="1050" />
+            </xjdf:AmountPool>
+            <xjdf:Component Dimensions="841.88 595.27 5.26" />
+        </xjdf:Resource>
+    </xjdf:ResourceSet>
+    <xjdf:ResourceSet Name="StitchingParams" Usage="Input">
+        <xjdf:Resource>
+            <xjdf:StitchingParams StitchType="Saddle"
+                    StapleShape="Eyelet"/>
+        </xjdf:Resource>
+    </xjdf:ResourceSet>
+    <xjdf:ResourceSet Name="TrimmingParams" Usage="Input">
+        <xjdf:Resource>
+            <xjdf:TrimmingParams Height="841.88" Width="595.27"/>
+        </xjdf:Resource>
+    </xjdf:ResourceSet>
+    <xjdf:ResourceSet Name="Media">
+        <xjdf:Resource ID="MEDIA-COVER-ID">
+            <xjdf:Media MediaType="Paper" Thickness="150" Weight="135"
+                    ISOPaperSubstrate="PS3" />
+        </xjdf:Resource>
+        <xjdf:Resource ID="MEDIA-BODY-ID">
+            <xjdf:Media MediaType="Paper" Thickness="90" Weight="80"
+                    ISOPaperSubstrate="PS3" />
+        </xjdf:Resource>
+    </xjdf:ResourceSet>
+    <xjdf:ResourceSet Name="NodeInfo" Usage="Input">
+        <xjdf:Resource>
+            <xjdf:NodeInfo Start="2016-09-26T22:00:00Z" />
+        </xjdf:Resource>
+    </xjdf:ResourceSet>
+</xjdf:XJDF>
+```
+
+The XJDF Collecting example represents a Combined Process consisting of Collecting, Stitching, and Trimming. All three processes are listed in the `/XJDF/@Types` attribute. In contrast to the prepress example, this XJDF Document contains input resources of all three processes.
+
+The Assembly resource is the input resource of the Collecting process, the StitchingParams resource pertains to the input resource of the Stitching process, and TrimmingParams resource represents the input of Trimming process. The Component output resource is the output of the last process - Trimming. All of the intermediate Component resources are not defined in the XJDF Document.
+
+“Assembly describes how the sections of one or multiple Jobs or Job Parts are bound together” [@xjdf_ip1, chap. 6.4 "Assembly"]. In this case the Assembly resource specifies how the three input Components (“BS-1”, “BS-2” and “BS-3”) has to be assembled. The StitchingParams “resource provides the parameters for the Stitching process” [@xjdf_ip1, chap. 6.85 "StitchingParams"]. In the document, the StitchingParams specify the shape of the staple, as well as their position on the saddle. The TrimmingParams “resource provides the parameters for the Trimming process” [@xjdf_ip1, chap. 6.92 "TrimmingParams"] and specifies here the final size of the product.
+
+The given order of the three processes within the Gray Box represents the usual way of producing such a magazine. However, from an internal standpoint, it is up to the device as to when to execute which process - the only thing that counts is the result. As long as the result is identical, the device can pretty much do as it pleases.

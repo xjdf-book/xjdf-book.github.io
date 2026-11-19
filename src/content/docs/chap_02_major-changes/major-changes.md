@@ -15,7 +15,7 @@ Further, XJDF no longer differentiates between resources and parameters. XJDF th
 Additionally, XJDF comes with some simplifications of diverse elements. For example, the RunList Element has been simplified by directly making FileSpec a subelement of RunList:
 
 
-```xml title="Example: RunList in XJDF" showLineNumbers=true
+```xml title="Example: RunList in XJDF"
 <xjdf:RunList NPage="6" Pages="0 ~ 5" Run="1">
     <xjdf:FileSpec URL="File:///File1.pdf"/>
 </xjdf:RunList>

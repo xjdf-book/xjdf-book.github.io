@@ -10,7 +10,7 @@ import { Image } from 'astro:assets';
 
 The Exchange Job Definition Format (XJDF) is designed to be a pure data interchange format. XJDF Documents are generated during application runtime in order to communicate with applications and devices. Each XJDF Document contains dedicated information optimized exclusively for the recipient. 
 
-Technically, XJDF specifies two views on print which are related but not identical - the product view and the process view. The product view is the process independent product description and describes the final product from the perspective of the print buyer“ [@xjdf_ip1, chap. 2.2.1 "Product Intent and Processes"]. The customer or product designer will typically describe the desired final product without any knowledge of the manufacturing process.” The product description includes, for instance, the size of the desired product, its paper quality, and the folding details if required. The product description is unconcerned with production details such as the production size of the sheet on which the product is later printed, or how the product is positioned on that sheet. All process-specific details are defined in the process view of the XJDF Document. The process view might describe in a very accurate way how each step in the production workflow process has to be accomplished, on which device, and at what time. The following figure illustrates both perspectives specified in an XJDF Document:
+Technically, XJDF specifies two views on print which are related but not identical - the product view and the process view. The product view is the process independent product description and “describes the final product from the perspective of the print buyer. The customer or product designer will typically describe the desired final product without any knowledge of the manufacturing process” [@xjdf_ip1, chap. 2.2.1 "Product Intent and Processes"]. The product description includes, for instance, the size of the desired product, its paper quality, and the folding details if required. The product description is unconcerned with production details such as the production size of the sheet on which the product is later printed, or how the product is positioned on that sheet. All process-specific details are defined in the process view of the XJDF Document. The process view might describe in a very accurate way how each step in the production workflow process has to be accomplished, on which device, and at what time. The following figure illustrates both perspectives specified in an XJDF Document:
 
 <figure>
   <Image src={productVsProcessView} alt="Product view vs. process view" />
@@ -28,7 +28,7 @@ As XJDF enabled devices and applications may not only allow for the definition o
 
 Even the simplest product description document for job submission describes a Gray Box. XJDF Documents containing a pure product description are primarily used in Web-To-Print environments, for example, to link a printing house with a Webshop, a public print broker platform, or even a customer’s ERP system with an MIS system for the purpose of automating the customer’s supply chain of print products. The following is an XJDF stub of a product description Gray Box:
 
-```xml title="Example: Gray Box “product description""
+```xml title="Example: Gray Box 'product description'"
 <xjdf:XJDF JobID="JOB-42" Types="Product"
         xmlns:xjdf="http://www.CIP4.org/JDFSchema_2_0">
     [...]
@@ -129,7 +129,7 @@ Each XJDF Document starts with the XJDF root node. The XJDF node can only occur 
 
 ```
 
-As an XJDF Document is always in the context of a particular job and is aimed at a specific Gray Box or product description, the attributes `@Types` and `@JobID` are mandatory. The attribute `@JobID` contains the unique identifier of the current job, whereas the attribute @Types contains the names of a logical processes covered by the Gray Box which the document is directed towards. “Product” is also a valid value for `@Types` when defining a product description.
+As an XJDF Document is always in the context of a particular job and is aimed at a specific Gray Box or product description, the attributes `@Types` and `@JobID` are mandatory. The attribute `@JobID` contains the unique identifier of the current job, whereas the attribute `@Types` contains the names of a logical processes covered by the Gray Box which the document is directed towards. “Product” is also a valid value for `@Types` when defining a product description.
 
 The attribute `@xmlns` is a standard XML attribute and defines the namespace of an XML document. “XML namespaces provide a simple method for qualifying element and attribute names used in Extensible Markup Language documents by associating them with namespaces identified by URI references” [@xml_namespaces_2009]. The qualified namespace url for XJDF Documents in version 2.0 is `http://www.CIP4.org/JDFSchema_2_0`. The url will be unique for future XJDF versions. 
 
@@ -202,7 +202,7 @@ Comments are for human information only. A comment shall not influence the behav
 ### GeneralID Element
 The third child node in the XJDF structure above is GeneralID. Just as the Comment element is a common one, so too is the GeneralID element. Apart from the depicted location in the common XML structure, there are additional locations where a GeneralID element can be written. A GeneralID element may also appear multiple times per location.
 
-“GeneralID describes a generic identifier. The name or usage of the identifier is specified in `@IDUsage`, and the specific value of the variable is specified in @IDValue. The data type is specified in `@DataType`” [@xjdf_ip1, chap. 8.15 "GeneralID"].
+“GeneralID describes a generic identifier. The name or usage of the identifier is specified in `@IDUsage`, and the specific value of the variable is specified in `@IDValue`. The data type is specified in `@DataType`” [@xjdf_ip1, chap. 8.15 "GeneralID"].
 
 ```xml title="Example: GeneralID Element"
 [...]
@@ -254,9 +254,9 @@ The ProductList element can only exist once per document and contains the proces
 [...]
 ```
 
-The ProductList element contains two individual print products. The first product describes 250 posters in DIN A1 (594 mm x 841 mm), printed in four colors, one sided, on a 135 gsm glossy paper. The second product describes 1,000 posters in DIN A3 (297 mm x 420 mm), printed in four colors, one sided, on a 135 gsm glossy paper as well. Technically, each Product element contains an @Amount attribute as well as a list of Intent elements which defines the characteristics of the respective product. The ColorIntent describes all color issues, the LayoutIntent defines the details of the layout, while the MediaIntent is the container for customer requirements regarding the printing substrate. Beyond that, the XJDF Specification provides further intent types for the specification of a broad range of individual product characterizations. The full list of all intents can be found in the XJDF Specification in chapter 4 “Product Intent”. 
+The ProductList element contains two individual print products. The first product describes 250 posters in DIN A1 (594 mm x 841 mm), printed in four colors, one sided, on a 135 gsm glossy paper. The second product describes 1,000 posters in DIN A3 (297 mm x 420 mm), printed in four colors, one sided, on a 135 gsm glossy paper as well. Technically, each Product element contains an `@Amount` attribute as well as a list of Intent elements which defines the characteristics of the respective product. The ColorIntent describes all color issues, the LayoutIntent defines the details of the layout, while the MediaIntent is the container for customer requirements regarding the printing substrate. Beyond that, the XJDF Specification provides further intent types for the specification of a broad range of individual product characterizations. The full list of all intents can be found in the XJDF Specification in chapter 4 “Product Intent”. 
 
-As soon as a ProductList contains more than a single Product element, the attribute //Product/@IsRoot has to be defined. If `@IsRoot` = “true”, “this Product element is a self-contained product. If false, this Product element is a child product of another one, such as a cover or insert” [@xjdf_ip1, chap. 4 Table 4.1 "Product/IsRoot"]. Using child products, more complex products can be expressed, such as a magazine with a special cover. Product descriptions are discussed in broad detail later. 
+As soon as a ProductList contains more than a single Product element, the attribute `//Product/@IsRoot` has to be defined. If `@IsRoot` = “true”, “this Product element is a self-contained product. If false, this Product element is a child product of another one, such as a cover or insert” [@xjdf_ip1, chap. 4 Table 4.1 "Product/IsRoot"]. Using child products, more complex products can be expressed, such as a magazine with a special cover. Product descriptions are discussed in broad detail later. 
 
 
 ### ResourceSet Element
@@ -354,11 +354,11 @@ This XJDF example anticipates many details of XJDF which are explained in detail
 </xjdf:XJDF>
 ```
 
-The XJDF example begins with the XJDF root node. In the root node there is an attribute @JobID specifying the job’s unique identifier and an attribute @Types which defines the Gray Box of the device the XJDF is addressed to. The AuditPool element keeps the metadata of the creator of the document, as well as the timestamp of the creation.
+The XJDF example begins with the XJDF root node. In the root node there is an attribute `@JobID` specifying the job’s unique identifier and an attribute `@Types` which defines the Gray Box of the device the XJDF is addressed to. The AuditPool element keeps the metadata of the creator of the document, as well as the timestamp of the creation.
 
 The ProductList element contains only one Product element which describes the final product. The final product consists of 2,500 6-panel folded leaflets printed in four colors, double sided on 135 gsm matt paper. All features of the desired product are defined as Intent elements. 
 
-The LayoutIntent defines the open (unfolded) size of the folded leaflet (`@Dimensions`) as well as closed (folded) size (@FinishedDimensions). The sizes are defined in units of “desktop publishing points” (dtp). More details about dtp are presented later in the chapter “Measurements, Units and Data Types”. The attribute @Sides defines the orientation of the front page against the back page. The value “TwoSidedHeadToHead” means that, when turning the product sideways, it remains in the reader's orientation.
+The LayoutIntent defines the open (unfolded) size of the folded leaflet (`@Dimensions`) as well as closed (folded) size (`@FinishedDimensions`). The sizes are defined in units of “desktop publishing points” (dtp). More details about dtp are presented later in the chapter “Measurements, Units and Data Types”. The attribute `@Sides` defines the orientation of the front page against the back page. The value “TwoSidedHeadToHead” means that, when turning the product sideways, it remains in the reader's orientation.
 FoldingIntent defines how the product has to be folded. The exact fold is defined by the XJDF fold catalog (`@FoldCatalog`). The attribute value “F6-2” defines a 6-panel zig-zag-fold as shown below:
 
 <figure>
@@ -375,7 +375,7 @@ As previously mentioned, Product elements define the customer's perspective of t
 
 A further input of the folding process is the FoldingParams resource. The FoldingParams “describes the folding parameters, including the sequence of folding steps” [@xjdf_ip1, chap. 6.37 "FoldingParams"]. They describe the digital fold settings of the job. In this example, these settings are quite similar to those previously defined in the FoldingIntent element. There is only a reference to the “F6-2” folding scheme of the XJDF fold catalog. 
 
-A Media resource “represents the properties of a raw, unexposed printable surface such as sheet, film or plate” [@xjdf_ip1, chap. 6.58 "Media"]. In this context, Media describes paper (@MediaType=”Paper”). In contrast to the MediaIntent, the Media resource defines the paper in quite a bit more detail. Media is not a direct input or output resource of the folding process. Instead, the Media resource is referenced by the two Components using ID / IDRefs (see `//Component/@MediaRef=”MEDIA-ID”` and
+A Media resource “represents the properties of a raw, unexposed printable surface such as sheet, film or plate” [@xjdf_ip1, chap. 6.58 "Media"]. In this context, Media describes paper (`@MediaType`=”Paper”). In contrast to the MediaIntent, the Media resource defines the paper in quite a bit more detail. Media is not a direct input or output resource of the folding process. Instead, the Media resource is referenced by the two Components using ID / IDRefs (see `//Component/@MediaRef=”MEDIA-ID”` and
 `//ResourceSet[@Name=’Media’]/Resource/@ID=”MEDIA-ID”`) in order to get more information on the component’s paper such as weight, type, etc. Therefore, the Media resource is the only resource with an attribute `@ID` in the example.
 
 The last resource in the XJDF example is the input resource NodeInfo. “The NodeInfo Resource contains information about planned scheduling. It allows MIS systems to plan, schedule and invoice Jobs or Job Parts” [@xjdf_ip1, chap. 6.60 "NodeInfo"].

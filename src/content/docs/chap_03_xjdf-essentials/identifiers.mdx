@@ -36,7 +36,7 @@ The XJDF Specification defines several types of identifiers (IDs) in order to id
 
 
 ## ExternalID
-The @ExternalID is “an ID of the resource as defined in the MIS system. For instance item codes or article numbers or identifiers on semi-finished products or Resource elements. @ExternalID shall be used to uniquely identify resources and products for the purpose of inventory tracking” [@xjdf_ip1, chap. 6 Table 6.1: Resource/ExternalID].
+The `@ExternalID` is “an ID of the resource as defined in the MIS system. For instance item codes or article numbers or identifiers on semi-finished products or Resource elements. `@ExternalID` shall be used to uniquely identify resources and products for the purpose of inventory tracking” [@xjdf_ip1, chap. 6 Table 6.1: Resource/ExternalID].
 Generally, each resource can be assigned by an item code, article number, or identifiers. An ExternalID has to be unique within a whole production system. Once defined, the resource’s ExternalID should not be changed.
 
 ```xml title="Example: ExternalID in Resources"
@@ -84,7 +84,7 @@ ID / IDRef attributes are for internal document references only. The values of t
 
 This example is also an extract of the Folding Example. The first ResourceSet contains a Component resource and the second one a Media resource. The Media resource is referenced by the Components `@MediaRef` attribute. The value of the attribute `//Component/@MediaRef` is equals to the ID value of the Media Resource (see `//ResourceSet/Resource/@ID`). This reference is used to obtain additional information about the paper of the component.
 
-The `MEDIA-ID` is NOT the global identifier of the paper or pile in the company. The IDs value is for internal document references only and may change from one transaction to the next. A global media identifier would have to be written as the value of the @ExternalID attribute. 
+The `MEDIA-ID` is NOT the global identifier of the paper or pile in the company. The IDs value is for internal document references only and may change from one transaction to the next. A global media identifier would have to be written as the value of the `@ExternalID` attribute. 
 
 
 ## Partition Key
@@ -116,10 +116,10 @@ Partition keys are called the attributes of the Part element. In contrast to Ext
 
 The example above has already been shown in the Resources chapter and outlines an ResourceSet ExposedMedia containing four different kinds of ExposedMedia resources. All four items are distinguished by their Partition Key `@Separation` (Cyan, Magenta, Yellow and Black). 
 
-The values of the partition key @Separation are given by the specification:
+The values of the partition key `@Separation` are given by the specification:
 
 <figure>
-  <Image src={screenPartSeparation} alt="The Definition of the Separation Partition Key (XJDF Spec Extract" />
+  <Image src={screenPartSeparation} alt="The Definition of the Separation Partition Key (XJDF Spec Extract)" />
   <figcaption>Figure: The Definition of the Separation Partition Key (XJDF Spec Extract)</figcaption>
 </figure>
 
@@ -127,11 +127,11 @@ Among others, there is one value specified per color separation. The data type o
 
 
 ## JobID, JobPartID, DeviceID...
-Apart from the identifiers mentioned above, XJDF comes with a huge bunch of identifiers for many different applications. The usages of these IDs are explained in the specification and do not require additional ex planations. The IDs - JobID, JobPartID, and the DeviceID - which are frequently used in XJDF, are explained in the following paragraph.
+Apart from the identifiers mentioned above, XJDF comes with a huge bunch of identifiers for many different applications. The usages of these IDs are explained in the specification and do not require additional explanations. The IDs - JobID, JobPartID, and the DeviceID - which are frequently used in XJDF, are explained in the following paragraph.
 
 The JobID is the “Job identification used by the application that created the XJDF Job. Typically, a Job is identified by the internal order number of the MIS system that created the Job” [@xjdf_ip1, chap. 3 Table 3.1: XJDF/JobID]. An example value would be “674R834”. A JobID has to be unique within a production workflow and should not be changed once it has been defined.
 The ”JobPartID SHALL identify one or more worksteps of the same type that can be described as one XJDF. `@JobPartID` is internal to the MIS system that created the XJDF” [@xjdf_ip1, chap. 3 Table 3.1: XJDF/JobPartID]. Example values are “Front” and “Back”.
-The DeviceID is the “identifier of the Device. The @DeviceID SHALL be unique within the workflow. `@DeviceID` SHALL be the same over time for a specific Device instance (i.e., SHALL survive reboots)” [@xjdf_ip1, chap. 6 Table 6.58: Device/DeviceID]. A example value would be “SM-162-8”.
+The DeviceID is the “identifier of the Device. The `@DeviceID` SHALL be unique within the workflow. `@DeviceID` SHALL be the same over time for a specific Device instance (i.e., SHALL survive reboots)” [@xjdf_ip1, chap. 6 Table 6.58: Device/DeviceID]. A example value would be “SM-162-8”.
 
 The explanations of all three identifiers are successively taken from the XJDF Specification. The specification defines the exact purpose of an ID, its data type, as well as the scope of the identifier. “The word ‘Unique’ without further scope details means ‘Unique within the job, message or file depending on the context’” [@xjdf_ip1, chap. 1 Table 1.4: Glossay (Unique)].
 
@@ -156,7 +156,7 @@ Length values are used in various data structures, depending on the particular c
 | `float` | A float is a single value expression as used for width or height expressions. | `"595.27"` |
 | `rectangle` | Attributes of type rectangle are used to describe rectangular locations on the page, Sheet or other printable surface. A rectangle is represented as an array of four float numbers - llx lly urx ury - specifying the lower-left x, lower-left y, upper-right x and upper-right y coordinates of the rectangle, in that order. The origin for positioning is always the lower left corner of the parent object. | `"10.0 10.0 290.69 605.27"` |
 | `shape` | A shape is represented as an array of three (positive or zero) float numbers - x y z - specifying the width x, height y and depth z coordinates of the shape, in that order. A shape is typically used for three-dimensional objects such as a book block. | `"280.69 595.27 1.26"` |
-| `XYPair` | Attributes of type XYPair are mainly used to describe sizes like @Dimensions [...]. They can also be used to describe positions on a page. An XYPair is typically used for two-dimensional definitions such as page size. | `"290.69 605.27"` |
+| `XYPair` | Attributes of type XYPair are mainly used to describe sizes like `@Dimensions` [...]. They can also be used to describe positions on a page. An XYPair is typically used for two-dimensional definitions such as page size. | `"290.69 605.27"` |
 
 
 The table is an excerpt of data types as defined in the XJDF Specification whose relevance pertains to lengths. A data type is defined for each attribute in the specification. The following is an extract of the Folding example which contains some length expressions:

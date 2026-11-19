@@ -32,7 +32,7 @@ XJDF provides the ability to extend the data format by new private intents and r
 </xjdf:XJDF>
 ```
 
-In the first step, a new foreign namespace has been introduced in the XJDF root node. In this case, this namespace URI is *"http://example.org/foo”* and is prefixed by “foo”. The new custom specific resource element is a subelement of Resource. The full name of the element (including the prefix) is the value of the @Name attribute in ResourceSet.
+In the first step, a new foreign namespace has been introduced in the XJDF root node. In this case, this namespace URI is *"http://example.org/foo”* and is prefixed by “foo”. The new custom specific resource element is a subelement of Resource. The full name of the element (including the prefix) is the value of the `@Name` attribute in ResourceSet.
 
 The introduction of a new custom intent element is quite similar to the introduction of a custom resource. The following is an example as an illustration:
 
@@ -55,7 +55,7 @@ The introduction of a new custom intent element is quite similar to the introduc
 ## Custom Processes
 Processes can also be extended in XJDF. “XJDF defines a basic set of process types. However, because XJDF allows flexible encoding, this list, by definition, will not be complete. Vendors that have specific processes that do not fit in the general XJDF processes and that are not combinations of individual XJDF processes [...] can create process XJDF of their own type” [@xjdf_ip1, chap. 3.5.5 "Extending Process Types"].
 
-The company's standardized namespace URI and prefix should be written in the XJDF root element. In order to introduce the new process, the process’s name, including the company’s prefix, has to be written in the @Types attribute. Both values have to be separated by a colon (“:”). 
+The company's standardized namespace URI and prefix should be written in the XJDF root element. In order to introduce the new process, the process’s name, including the company’s prefix, has to be written in the `@Types` attribute. Both values have to be separated by a colon (“:”). 
 
 
 ## Custom Values in NMTOKEN lists.

@@ -1,0 +1,61 @@
+---
+title: Complex Products including Non-Print Product Parts
+---
+
+import diagramRollupDisplay from '../../../assets/diagram/rollup-display.jpg';
+import { Image } from 'astro:assets';
+
+Particularly in the case of Large Format Print, increasingly more printing products are being combined with non-print product parts. Examples for such products include Roll-up Displays or Beach Banners. Technically, these products consist of a print product which has to be assembled with a case or a metal or plastic structure (non-print product).
+
+In XJDF, such products are viewed as complex products as well. They consist of three product parts: the first one for the print product, and the second for the non-print product; the third product is the root product and describes the combined final product. In the case of a Roll-up Display or a Beach Banner, the root product contains only an AssemblingIntent element which refers to the print product and the non-print product. AssemblingIntent “specifies the creation of a composite component by providing page location, position and attachment method of the respective child products that shall be assembled with the parent product. The containing Product SHALL be referenced in `AssemblingIntent/@Container`. Note: The parent product is not identical to this product. For instance an empty envelope is not the same thing as a filled envelope” [@xjdf_ip1, chap. 4.3 "AssemblingIntent"].
+
+The print product part describes the print without any technical process details, such as technical margins, etc. In other words, the print product part describes the requirements for the customer's artwork. The non-print product part is a product part definition with only an `@ExternalID`. The `@ExternalID` represents the unique identifier of the third-party component in the warehouse management system (e. g. SAP).
+
+## Product: Roll-up Display
+
+<figure>
+  <Image src={diagramRollupDisplay} alt="Roll-up Display" />
+  <figcaption>Figure: Roll-up Display</figcaption>
+</figure>
+
+The XJDF example below exemplifies a product description of ten 80 cm x 200 cm sized Roll-up Displays printed in four colors on the front side on a 500 gsm PVC substrate. The print has to be inserted in a silver aluminium housing and is produced in-house, whereas the housing (third-party component) is on stock. The reference number of the housing (`@ExternalID`) is the article number of the third-party component in the warehouse management system.
+
+```xml title="Example: product description of a Roll-up Display"
+[...]
+<xjdf:ProductList>
+    <xjdf:Product Amount="10" DescriptiveName="Roll-Up Display"
+            IsRoot="true">
+        <xjdf:Intent Name="AssemblingIntent">
+            <xjdf:AssemblingIntent Container="HOUSING_ID">
+              <xjdf:AssemblyItem ChildRef="PRINT_ID" />
+           </xjdf:AssemblingIntent>
+        </xjdf:Intent>
+    </xjdf:Product>
+    <xjdf:Product ID="PRINT_ID" IsRoot="false">
+        <xjdf:Intent Name="LayoutIntent">
+            <xjdf:LayoutIntent FinishedDimensions="2267.72 5669.29 0.0"
+                Pages="2" Sides="OneSided"/>
+        </xjdf:Intent>
+        <xjdf:Intent Name="ColorIntent">
+            <xjdf:ColorIntent>
+                <xjdf:SurfaceColor ColorsUsed="Cyan Magenta Yellow Black"
+                    Surface="Front"/>
+            </xjdf:ColorIntent>
+        </xjdf:Intent>
+        <xjdf:Intent Name="MediaIntent">
+            <xjdf:MediaIntent MediaQuality="500_PVC"/>
+        </xjdf:Intent>
+    </xjdf:Product>
+    <xjdf:Product ID="HOUSING_ID" IsRoot="false"
+        ExternalID="ARTICLE_ID_HOUSING_SILVER"/>
+</xjdf:ProductList>
+[...]
+```
+
+Roll-up Displays with housings can be described using a root product and two child products. The root product describes the combined final product, while both child products specify the print and the housing.
+
+The child product describing the housing only contains an `@ExternalID` attribute which references the silver aluminium housing by its unique warehouse identifier. The warehouse system is an external system from the perspective of XJDF.
+
+The child product describing the print defines all details of how the customer has to create the artwork. Technical margins, such as the gripper edge of the metal housing, are not defined. If a bleed is required, there is an optional attribute `@Bleed` in LayoutIntent for defining a overlapping artwork.
+
+The root product defines the assembled final product. This product description specifies only an AssemblingIntent element. The containing child product (here: the housing) is referenced in the AssemblingIntent element directly using the `@Container` attribute. All items being assembled into the container are referenced using the AssemblyItem subelement. Per item, one AssemblyItem element is needed. The AssemblyItem subelement “describes any individual item that is assembled with the main Product” [@xjdf_ip1, chap. 4.3.1 "AssemblyItem"]. An AssemblyItem requires some kind of undefined (manual) work in order to combine the print product and the non-print product. The exact procedure of how to combine both parts is beyond the scope of XJDF.

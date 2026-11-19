@@ -1,0 +1,70 @@
+---
+title: XJMF - Exchange Job Messaging Format
+---
+
+import diagramArchWithController from '../../../assets/diagram/architecture-with-controller.jpg';
+import diagramArchWithoutController from '../../../assets/diagram/architecture-without-controller.jpg';
+import { Image } from 'astro:assets';
+
+The main actors involved in an XJDF Workflow are the Management Information System (MIS), Controllers, and Devices. “The highest level Controller in a workflow is known as Management Information Systems or MIS. It is responsible for dictating and monitoring the execution of all of the diverse aspects of the workflow. This task is facilitated by access to production information, either in real time using XJMF messaging or post facto using the audit records within a returned XJDF” [@xjdf_ip1, chap. 2.1.4.5 "Management Information System - MIS"].
+
+“Controllers route XJDF information to the appropriate devices. The minimum requirement of a Controller is that it can initiate processes on at least one Device [...]. Controllers can also determine process planning and scheduling data, such as process times and planned production amounts” [@xjdf_ip1, chap. 2.1.4.4 "Controller"].
+
+“The most basic function of a Device is to execute the information specified and routed by a Controller. Devices SHALL be able to execute the instructions that are specified in XJDF and [...] can perform the physical execution” [@xjdf_ip1, chap. 2.1.4.2 "Device"].
+
+In a typical XJDF system architecture, the devices are not connected to the MIS directly. A Controller is usually involved in the communication. The Controller and the Devices normally stem from one and the same vendor, and the Controller is required in order to integrate the Devices into an XJDF Workflow System:
+
+<figure>
+  <Image src={diagramArchWithController} alt="XJDF System Architecture WITH Controller" />
+  <figcaption>Figure: XJDF System Architecture WITH Controller</figcaption>
+</figure>
+
+As shown in the figure above, the Controller encapsulates the Device from the outside. In the real world, the communication between the devices and the controller is based on a non-standard data format, and the devices can only be addressed using the Controller as a proxy.
+
+For instance, when using a Heidelberg Press (Device), the “Heidelberg Prinect” (Controller) is additionally required in order to interact with the press. The same goes for KBA. A KBA press requires “KBA Logotronic” (Controller) to be addressed from the outside using an official standard. In such an architecture, the controller is always the single point of failure. A breakdown of the controller causes a breakdown of all devices connected by the controller. In particular, this poses a real problem in highly automated systems. Unfortunately, this architecture is the dominating one.
+
+A more flexible, robust, and more fail-safe architecture would be the ability to address the devices directly without any Controller at all:
+
+<figure>
+  <Image src={diagramArchWithoutController} alt="XJDF System Architecture WITHOUT Controller" />
+  <figcaption>Figure: XJDF System Architecture WITHOUT Controller</figcaption>
+</figure>
+
+Apart from the functionality of the proxy, many controllers provide additional functionality such as scheduling, etc. These features can be very useful, especially when no MIS exists or, the scheduling of the MIS is limited. However, the higher the level of automation in a printing house, the more important the stability and reliability of systems becomes. In highly automated systems, MIS systems are self-made, and controllers increasingly become more of an achilles heel for these systems.
+
+XJMF is the messaging system that accompanies XJDF in order to provide a communication infrastructure between the MIS, the controllers, and the devices. “A workflow is a dynamic set of interacting controllers and devices. For the workflow to run efficiently, these controllers and devices need to communicate and interact in a well defined manner. Whereas XJDF will typically be submitted to a device and only be returned after the process has been executed, XJMF messages MAY be exchanged at any time. Typical use cases for XJMF include but are not limited to:
+
+* System setup
+* Dynamic status and error tracking for Jobs and Devices
+* Pipe control
+* Device setup and Job changes
+* Queue handling and Job submission
+* Device Capability description” [@xjdf_ip1, chap. 7 "XJMF Messaging Format"]
+
+“XJMF and XJDF have inherently different structures. In order to allow immediate identification of messages, XJMF uses the unique name XJMF as its own root-element name. XJMF elements SHALL contain one or more messages that provide more detailed information” [@xjdf_ip1, chap. 7.1 "XJMF Root"]. XJMF Messages are essentially tiny XML structures. Many messages consist of only a few lines of code. In the following code snippet, an XJMF KnownDevices Query Message is shown to give an idea of the outline of the XML structure:
+
+```xml title="Example: XJMF KnownDevices Query Message"
+<xjdf:XJMF xmlns:xjdf="http://www.CIP4.org/JDFSchema_2_0">
+    <xjdf:Header ID="XJMF_ID" DeviceID="DEVICE_ID_MIS"
+            Time="2016-11-10T21:35:14+02:00" />
+    <xjdf:QueryKnownDevices>
+        <xjdf:Header ID="MESSAGE_ID" DeviceID="DEVICE_ID_MIS"
+                Time="2016-11-10T21:35:14+02:00" />
+        <xjdf:DeviceFilter DeviceDetails="Brief" />
+    </xjdf:QueryKnownDevices>
+</xjdf:XJMF>
+```
+
+“The KnownDevices Query Message requests information about the devices that are controlled by a controller. [...] The response is a list of device elements” [@xjdf_ip1, chap. 7.6 "KnownDevices"] guided by the controller. Such a message is usually sent from the MIS to a controller during discovery.
+
+The XJMF root element is a container for all kinds of messages. Each XJMF root element contains a Header element which specifies details about its sender. The attribute `@DeviceID` in the header contains the identifier of the sending device, and `@Time` contains the timestamp showing when the XJMF was generated. An unique identifier of the XJMF (`@ID`) is also required in the header.
+
+In the example above, there is only one message in the XJMF - the KnownDevices Query Message. The message element also contains a Header element specifying the attributes `@DeviceID`, `@Time`, and `@ID`. In this situation, the values of the attributes `@DeviceID` and `@Time` are equal to the values contained in the XJMF’s Header element, since both the XJMF and the KnownDevices Query Message have been generated by one and the same system at the same time.
+
+The attributes in the Header elements will differ as soon as a message is initiated by a device and proxied by a controller. In this situation, the XJMF the requesting system receives defines the controller’s DeviceID, as well as the timestamp of when the controller forwarded the messages in the XJMF Header element. The message’s header defines the DeviceID of the Device which originally initiated the message. The timestamp of the message also corresponds to the time it was initially generated. Even when the controller and the device communicate in a non-standard way, the message contains the header details of the initiating device.
+
+In addition to the device’s identifier and the time, the message’s header also contains an `@ID` attribute. Each message has to contain an unique identifier in order to identify the message. This identifier is used for asynchronous feedback messages. All messages initiated by another message contain that message’s unique identifier in their `Header/@refID` attribute. This method allows for the allocation of messages.
+
+The message's body is unique to each message. In the example above, it contains an element, DeviceFilter, and, additionally, a single attribute, `@DeviceDetails`. The attribute `@DeviceDetails` refines the level of provided information about the Devices listed in the Response message. The value “Brief” means “provide only `Device/@DeviceID`” [@xjdf_ip1, chap. 7 Table 7.18: DeviceFilter/@DeviceDetails].
+
+The KnownDevices Query Message is a message of the family “Query”. Technically, each query requires one response. “Response” is another message family in XJMF.

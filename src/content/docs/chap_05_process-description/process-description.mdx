@@ -1,0 +1,139 @@
+---
+title: Process Description
+---
+
+import screenFoldingProcess from '../../../assets/spec-screen/folding-process.png';
+import diagramFlyerProcess from '../../../assets/diagram/flyer-process.jpg';
+import { Image } from 'astro:assets';
+
+Whereas the product description is process independent and is not concerned with the machinery equipment of a printing house, the Process Description describes all work steps needed in order to produce the desired product. Therefore, the Process Description is unique for each printing house and depends on both the machinery equipment and the exact production concept which outlines the plan of how the product is to be manufactured.
+
+The heart of the XJDF Specification is chapter 5 - “Processes”. **In XJDF process is a synonym for workflow step. “Processes [...] define individual workflow steps that are assumed to be executed by a single-purpose Device.** Some controllers and devices are able to combine the functionality of multiple single-purpose devices and execute more than one process type” [@xjdf_ip1, chap. 5.1 "Combining Individual Process Steps"]. For instance, folding machines might be able to cut or perforate products in addition to folding.
+
+The XJDF Specification provides a broad list of processes which can occur within a print production workflow. As the development in the graphic arts industry is constantly moving forward, one main task of the CIP4 Consortium is to identify and specify new processes. However, “vendors that have specific Processes that do not fit in the general XJDF processes and that are not combinations of individual XJDF processes can create XJDF Process Nodes of their own type” [@xjdf_ip1, chap. 3.5.5 "Extending Process Types"]. More details of how to extend XJDF in chapter “Extensibility”.
+
+Technically, each process listed in the specification is defined by its unique process name, a detailed description, and two tables declaring the input and output resources of the appropriate process.
+
+There are also some “Generic Input Resources” defined which are valid input resources for each process. Examples of “Generic Input Resources” are NodeInfo or Device. “The NodeInfo resource contains information about planned scheduling” [@xjdf_ip1, chap. 6.60 "NodeInfo"], whereas the Device resource “describes the physical properties of the main device that executes an XJDF process” [@xjdf_ip1, chap. 6.28 "Device"]. The complete list of all “Generic Input Resources” can be found in the XJDF Specification in chapter “Process Template”. There is a table providing “a list of resources that are valid for any process” [@xjdf_ip1, chap. 5.2 "Process Template"].
+
+In the following, an extract of the XJDF Specification shows the process definition of the process Folding:
+
+<figure>
+  <Image src={screenFoldingProcess} alt="The Definition of the Folding Process (XJDF Specification Extract)" />
+  <figcaption>Figure: The Definition of the Folding Process (XJDF Specification Extract)</figcaption>
+</figure>
+
+As depicted in the Folding Process Figure above, each process definition begins with the actual process’s name in the title line. Following that is a detailed description of the process itself. The text includes a description of the process from the production point of view, as well as from the XJDF point of view.
+
+The most significant part of the process definition are the two tables “Input Resource” and “Output Resources”. The content of these tables describes which resources a specific process can consume, and which resources will be produced by that process. In this example there are two optional input parameters - Component resource and FoldingParams resource. The output resource is another Component resource which is also optional.
+
+The question mark “?” right after the resource’s name in the table indicates that the appropriate resource is optional. The full explanation of the cardinality can be found in the XJDF Specification in chapter 1.6.4, “Specification of Cardinality”.
+
+The resource “Component is used to describe the various versions of finished and semi-finished goods in the press and postpress area, such as a pile of folded sheets that have been collected and are then be joined and trimmed. Nearly every postpress process has a Component resource as an input as well as an output. Typically the first components in the process chain are some printed sheets or ribbons, while the last Component is a book or a brochure” [@xjdf_ip1, chap. 6.18 "Component"]. FoldingParams “describes the folding parameters, including the sequence of folding steps. It is also possible to execute the predefined steps of the folding catalog” [@xjdf_ip1, chap. 6.37 "FoldingParams"].
+
+The last line in the table “Input Resources” references the “Generic Input Resources” which have previously been explained. The following instance demonstrates how the corresponding XJDF Document goes about describing the single process “Folding”. This example has already been presented in the chapter on XJDF Essentials:
+
+```xml title="Example: XJDF Gray Box 'Folding'"
+<xjdf:XJDF JobID="JOB-42" Types="Folding"
+        xmlns:xjdf="http://www.CIP4.org/JDFSchema_2_0">
+    <xjdf:AuditPool>
+        <xjdf:AuditCreated>
+            <xjdf:Header AgentName="MIS" AgentVersion="1.0"
+                Time="2016-05-30T21:49:47Z" />
+        </xjdf:AuditCreated>
+    </xjdf:AuditPool>
+    <xjdf:ProductList>
+        <xjdf:Product Amount="2500" DescriptiveName="My Folded Leaflet">
+            <xjdf:Intent Name="LayoutIntent">
+                <xjdf:LayoutIntent Dimensions="841.88 595.27"
+                        Sides="TwoSidedHeadToHead" Pages="2"
+                        FinishedDimensions="280.69 595.27 0.0"/>
+            </xjdf:Intent>
+            <xjdf:Intent Name="FoldingIntent">
+                <xjdf:FoldingIntent FoldCatalog="F6-2"/>
+            </xjdf:Intent>
+            <xjdf:Intent Name="ColorIntent">
+                <xjdf:ColorIntent>
+                    <xjdf:SurfaceColor
+                            ColorsUsed="Cyan Magenta Yellow Black"
+                            Surface="Front"/>
+                    <xjdf:SurfaceColor
+                            ColorsUsed="Cyan Magenta Yellow Black"
+                            Surface="Back"/>
+                </xjdf:ColorIntent>
+            </xjdf:Intent>
+            <xjdf:Intent Name="MediaIntent">
+                <xjdf:MediaIntent MediaQuality="135_MATT"/>
+            </xjdf:Intent>
+        </xjdf:Product>
+    </xjdf:ProductList>
+    <xjdf:ResourceSet Name="Component" Usage="Input">
+        <xjdf:Resource ExternalID="COMP_ID_UNFOLDED">
+            <xjdf:Component Dimensions="841.88 595.27 0.42"
+                    MediaRef="MEDIA-ID" />
+        </xjdf:Resource>
+    </xjdf:ResourceSet>
+    <xjdf:ResourceSet Name="Component" Usage="Output">
+        <xjdf:Resource ExternalID="COMP_ID_FOLDED">
+            <xjdf:AmountPool>
+                <xjdf:PartAmount Amount="2580" />
+            </xjdf:AmountPool>
+            <xjdf:Component Dimensions="280.69 595.27 1.26"
+                    MediaRef="MEDIA-ID" />
+        </xjdf:Resource>
+    </xjdf:ResourceSet>
+    <xjdf:ResourceSet Name="FoldingParams" Usage="Input">
+        <xjdf:Resource>
+            <xjdf:FoldingParams FoldCatalog="F6-2"/>
+        </xjdf:Resource>
+    </xjdf:ResourceSet>
+    <xjdf:ResourceSet Name="Media">
+        <xjdf:Resource ID="MEDIA-ID">
+            <xjdf:Media MediaType="Paper" Thickness="150" Weight="135"
+                    ISOPaperSubstrate="PS3" />
+        </xjdf:Resource>
+    </xjdf:ResourceSet>
+    <xjdf:ResourceSet Name="NodeInfo" Usage="Input">
+        <xjdf:Resource>
+            <xjdf:NodeInfo Start="2016-08-30T15:00:00Z" />
+        </xjdf:Resource>
+    </xjdf:ResourceSet>
+</xjdf:XJDF>
+```
+
+The XJDF example above describes a Folding Gray Box. As previously mentioned, a Gray Box is defined by the attribute `/XJDF/@Types`. Therefore, the `@Types` attribute value is “Folding”.
+
+For the folding process, the XJDF Specification specifies the two resources Component and FoldingParams as input resources, and another Component resource as the output resource. These three resources can also be found in the example above.
+
+The attribute `//ResourceSet/@Usage` “shows that the resource is either consumed or produced within this XJDF document” [@xjdf_ip1, chap. 3 Table 3.4: ResourceSet/@Usage]. If no `@Usage` is specified, the ResourceSet or its child Resource elements shall be referenced from another resource or sub-element thereof.
+
+In the example, one Component resource and the FoldingParams resource are both defined as input resources (`//Resource/@Usage` = “Input”), while the other Component resource is defined as an output resource (`//Resource/@Usage` is equals “Output”). Additionally, the document also contains a NodeInfo resource. NodeInfo is a Generic Input Resource which is valid for each process. The NodeInfo resource is also specified as input resource.
+
+The only resource in the example not containing an `@Usage` attribute is Media. The Media resource “represents the properties of a raw, unexposed printable surface such as sheet, film or plate” [@xjdf_ip1, chap. 6.58 "Media"]. Here, the Media resource describes some characteristics of the paper which the Component represents. Attributes such as `@Weight` or `@Thinkness` are relevant for a folding machine in order to set up for a job.
+
+Nevertheless, Media resource is neither an direct input or output resource of the Folding process, nor is it a Generic Input Resource. Rather, the Media resource is referenced by both Component resources (see `//Component/@MediaRef` = `//ResourceSet`[@Name=”Media”]`/Resource/@ID`) in order to characterize the paper of the Component resource. Technically, the Media resource is referenced by the Component resource. Media’s ResourceSet therefore has no `@Usage` attribute.
+
+As the XJDF Specification provides a broad range of processes which are each defined by specific input and output resources, production workflows or even production networks can be defined based on resource linking. The output of the one process is the input of the next process. However, from the perspective of XJDF, these production workflows or networks do not have to be defined in a single XJDF Document. XJDF is designed as a pure interface technology. The production workflow has to be generated and managed by the MIS. The MIS is also responsible for maintaining an overview of the production, e.g. job tracking, etc. XJDF simply represents a communication medium.
+
+In an XJDF enabled production system, the MIS has to define and plan a production workflow for each job, based on the equipment and oddities of a printing house. Each physical machine or application covers one or several logical XJDF processes. If a customer job needs to be folded, the MIS system has to create a production workflow which includes the process folding. Beyond that, the MIS is concerned with the device’s capabilities and restrictions, such as maximum paper size, and so on, when generating the production workflow.
+
+Once generated, the production workflow is a list of processes linked by resources. XJDF is designed to address Gray Boxes, and so - last but not least - the MIS has to separate the production workflow into Gray Boxes. In most situations, a Gray Box covers the functionality of a single device, but may also cover the processes of multiple devices which can be monitored by way of a lower level process controller.
+
+The following diagram depicts a production workflow of a common folded leaflet from a customer’s artwork submission, to the delivery of the final product to the customer. The diagram also shows some of the interaction between the production and the MIS:
+
+<figure>
+  <Image src={diagramFlyerProcess} alt="Example Process of a Flyer" />
+  <figcaption>Figure: Example Process of a Flyer</figcaption>
+</figure>
+
+In the diagram, the customer is shown at both the start and end points. This process begins when the customer submits the digital artwork to the Preflight process. The process is completed when the customer receives a package containing the folded leaflets that s(he) ordered. This is a very common workflow as implemented in many printing houses.
+
+This folded leaflet production workflow consists of ten processes chained by different kinds of interchange resources. The four major interchange resources are RunList, ExposedMedia, Component, and Product. “A RunList defines one or more printable logical documents or document sets that MAY be defined in one or more external [...] files” [@xjdf_ip1, chap. 6.73 "RunList"]. An ExposedMedia “resource represents a processed Media-based Resource such as film or plate” [@xjdf_ip1, chap. 6.35 "ExposedMedia"]. A “Component is used to describe the various versions of semi-finished goods in the press and postpress area, such as a pile of folded sheets that have been collected and are then be joined and trimmed” [@xjdf_ip1, chap. 6.18 "Component"] and Product represent the final product.
+
+The entire production workflow is organized in seven Gray Boxes. The output of the one Gray Box is the input of the next one. In addition to the interchange resource, each Gray Box may require further parameter resources as part of the process configuration. For instance, the Gray Box 1 (Preflight) requires some additional preflight settings (PreflightParms) in addition to the customer’s digital artwork (RunList), in order to specify which aspects of the artwork are to be preflighted (e. g. fonts, page size, colors etc.). “Preflighting is the process of examining the components of a print job to ensure that the job will print successfully and with the expected results. Preflight checks can be performed on each document or finished page identified within the associated RunList resource.
+
+Preflighting a file is generally a two-step process. First, the documents are analyzed and compared to the set of tests. Then, a preflight report is built to list the encountered issues (according to the tests)” [@xjdf_ip1, chap. 5.4.14 "Preflight"]. In everydays language preflight is also known as “data check”.
+
+The PreflightParms resources have to be generated by the MIS system when the job is being submitted to the Preflight Gray Box. The result of that Gray Box is the checked artwork (RunList), in addition to the preflight report (PreflightReport). A preflight report is a detailed report about the quality of the print data. It contains metadata about the artwork files, as well as all failures and warnings, e.g. incorrect page size, missing fonts, or insufficient resolution of images if it exists. Based on the preflight report, the MIS (or the prepress operator) decides whether the workflow can proceed, or if it has to be interrupted in order to wait for new corrected data.
+
+If the preflight of the customer's artwork was successful and the artwork has neither errors nor warnings, the MIS triggers the next Gray Box. Gray Box 2 contains several prepress processes which are normally provided by a single prepress workflow solution. **Multiple processes in a single Gray Box are also referred to as Combined Processes in XJDF.**

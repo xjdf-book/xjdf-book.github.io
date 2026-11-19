@@ -1,0 +1,78 @@
+---
+title: ProcessUsage
+---
+
+import screenPreflightInput from '../../../assets/spec-screen/preflight-input.png';
+import screenPreflightOutput from '../../../assets/spec-screen/preflight-output.png';
+import screenImpositionInput from '../../../assets/spec-screen/imposition-input.png';
+import { Image } from 'astro:assets';
+
+All resources of a specific process can usually be uniquely identified by their names (`//ResourceSet/@Name`) and their usages (`//ResourceSet/@Usage`). In the following figure, an extract of the XJDF Specification which shows the input and output resources of the Preflight process is shown:
+
+<figure>
+  <Image src={screenPreflightInput} alt="Input resources of Preflight Process" />
+  <Image src={screenPreflightOutput} alt="Output resources of Preflight Process" />
+  <figcaption>Figure: Input- and Output resources of Preflight Process</figcaption>
+</figure>
+
+The Preflight process takes multiple resources as input and produce two optional resources as output. All resources listed above can be uniquely identified by their names and usage. Even though RunList occurs twice, the occurrences can be distinguished by their respective usages:
+
+```xml title="Example: RunList Resource as Input and Output"
+[...]
+<xjdf:ResourceSet Name="RunList" Usage="Input" >
+    <xjdf:Resource>
+        <xjdf:RunList>
+            <xjdf:FileSpec URL="http://example.org/input.pdf"/>
+        </xjdf:RunList>
+    </xjdf:Resource>
+</xjdf:ResourceSet>
+<xjdf:ResourceSet Name="RunList" Usage="Output" >
+    <xjdf:Resource>
+        <xjdf:RunList>
+            <xjdf:FileSpec URL="http://example.org/output.pdf"/>
+        </xjdf:RunList>
+    </xjdf:Resource>
+</xjdf:ResourceSet>
+[...]
+```
+
+As shown, the two RunList resources have been written in two individual ResourceSet elements. The two ResourceSet elements differs by their attribute `@Usage`. The upper set is defined to be an input ResourceSet, whereas the lower one is the output ResourceSet.
+
+However, some processes define multiple resources of the same type as their input or output. One candidate for such processes is the Imposition process. Here, a copy of the XJDF Specification is given which shows an extract of the input resources of the Imposition process:
+
+<figure>
+  <Image src={screenImpositionInput} alt="Input Resources of an Imposition Process" />
+  <figcaption>Figure: Input Resources of an Imposition Process</figcaption>
+</figure>
+
+The Imposition process defines RunList as input twice. The upper RunList resource in the table references a “structured list of incoming page contents which is transformed to produce the imposed surface images” [@xjdf_ip1, chap. 5 Table 5.26: Imposition/RunList(Document)] whereas the lower one references a “structured list of incoming marks. These are typically printer’s marks such as fold marks, cut marks, punch marks or color bars” [@xjdf_ip1, chap. 5 Table 5.26: Imposition/RunList(Marks)]. Both resources are technically binary files and therefore have to be referenced as RunList resources.
+
+In order to differentiate between these two RunList resources, an additional attribute, `@ProcessUsage`, has been introduced. The attribute's value conforms to the value in brackets that immediately follows the resource name in the table. The upper RunList resource defines `@ProcessUsage` as “Document”, whereas the lower one is defined as “Marks”. The following example shows the corresponding two RunList resources using different values of `@ProcessUsage`:
+
+```xml title="Example: RunList with ProcessUsage Definition"
+[...]
+<xjdf:ResourceSet Name="RunList" Usage="Input" ProcessUsage="Document">
+    <xjdf:Resource>
+        <xjdf:RunList>
+            <xjdf:FileSpec URL="http://example.org/document.pdf"/>
+        </xjdf:RunList>
+    </xjdf:Resource>
+</xjdf:ResourceSet>
+<xjdf:ResourceSet Name="RunList" Usage="Input" ProcessUsage="Marks">
+    <xjdf:Resource>
+        <xjdf:RunList>
+            <xjdf:FileSpec URL="http://example.org/marks.pdf"/>
+        </xjdf:RunList>
+    </xjdf:Resource>
+</xjdf:ResourceSet>
+<xjdf:ResourceSet Name="RunList" Usage="Output">
+    <xjdf:Resource>
+        <xjdf:RunList>
+            <xjdf:FileSpec URL="http://example.org/output.pdf"/>
+        </xjdf:RunList>
+    </xjdf:Resource>
+</xjdf:ResourceSet>
+[...]
+```
+
+Two ResourceSet elements with the same `@Name` and `@Usage` may coexist in an XJDF document if they define logically separated entities. In this case, `ResourceSet/@ProcessUsage` SHALL be specified and be unique. “`@ProcessUsage` identifies the context of a Resource if multiple Resource elements of the same type are supplied for an individual process type” [@xjdf_ip1, chap. 3 Table 3.4: ResourceSet/@ProcessUsage].

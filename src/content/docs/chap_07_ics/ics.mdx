@@ -1,0 +1,41 @@
+---
+title: ICS - Interoperability Conformance Specification
+---
+
+import screenIcsGrayBoxes from '../../../assets/spec-screen/ics-gray-boxes.png';
+import { Image } from 'astro:assets';
+
+“Interoperability Conformance Specifications (i.e., ICS documents) are developed by CIP4 working committees. They establish the minimum XJDF support requirements for devices of a common class, including expected behavior. An ICS document can subset XJDF but can not expand upon XJDF [...].
+
+Once published, ICS documents will form the basis for testing and certification by CIP4-sanctioned facilities. XJDF-enabled products that pass these tests will be deemed ‘XJDF Certified’ to conform to an identified level of one or more ICS documents and will be permitted upon certification to use a ‘XJDF Certified’ logo in connection with certified XJDF-enabled products” [@xjdf_ip1, chap. 1.8.2 "Interoperability Conformance Specifications"].
+
+Each ICS Document is managed by an individual CIP4 Working Group and has a specific focus. A full list of all ICS Documents can be found on the CIP4 Website. Representatives of ICS Documents are the “MIS to Conventional Printing – Sheet-Fed ICS” or the “MIS to Finishing ICS”. The first ICS Document mentioned describes the interactions between an MIS and a conventional sheet fed press, whereas the second one describes the interactions between an MIS and finishing devices. Each ICS Document has an official abbreviation, such as MISCPS for “**MIS** to **C**onventional **P**rinting - **S**heet-Fed ICS”, or MISFin for “**MIS** to **Fin**ishing ICS”.
+
+Technically, each ICS Document describes one or multiple Gray Boxes. It describes the minimal processes required, in addition to the appropriate input and output resources:
+
+<figure>
+  <Image src={screenIcsGrayBoxes} alt="List of Gray Boxes of the MIS to Finishing ICS" />
+  <figcaption>Figure: List of Gray Boxes of the MIS to Finishing ICS</figcaption>
+</figure>
+
+In contrast to the XJDF Specification, the ICS Document defines explicitly which attributes and elements of the resources have to be written, and which ones are to be read by the two parties. The Gray Box specifications in the ICS Document are, in a way, the technical interface specification between the two parties.
+
+“An ICS specifies a set of Conformance Requirements that a conforming XJDF-enabled Product SHALL meet in order to achieve interoperability with other conforming XJDF-enabled Products that meet the same Conformance Requirements” [@cip4_base_ics, Glossary "Conformance Requirement"]. Each ICS Document describes one to three conformance levels, namely, levels 0, 1, and 2. “Due to the incremental nature of the ICS levels except for Level 0, a controller or device that conforms to a higher level is able to interoperate with a controller or device, respectively that conforms to a lower level by using this lower level for all communication” [@cip4_base_ics, chap. 4.2 "Interoperability of Levels"].
+
+XJDF Documents which conform to an ICS Document have to have additional attributes in their XJDF root element. The attribute `@ICSVersions` has to contain a defined name of the ICS Document, and the attribute `@Category` must to contain the exact name of the Gray Box the XJDF conforms to. The following is the XJDF stub of the Collection example if the document were to conform to the “MISFin.StitchFin” GrayBox corresponding to “MIS to Finishing ICS”:
+
+```xml title="Example: XJDF Stub of Gray Box 'MISFin.StitchFin'"
+<xjdf:XJDF JobID="JOB-1234" Types="Collecting Stitching Trimming"
+        Category="MISFin.StitchFin" ICSVersions="MISFin_L1-2.0"
+        xmlns:xjdf="http://www.CIP4.org/JDFSchema_2_0">
+    [...]
+</xjdf:XJDF>
+```
+
+XJDF Documents which conform to a certain Gray Box of an ICS Document also have to specify the attributes `@ICSVersions` and `@Category` in the XJDF root element. “`@ICSVersions` SHALL list all CIP4 Interoperability Conformance Specification (ICS) Versions that this XJDF complies with. Value format is: `<ICSName>_L<ICSLevel>-<ICSVersion>`” [@xjdf_ip1, chap. 3 Table 3.1: XJDF/@ICSVersions]. The expression in this example (“MISFin_L1-2.0”) defines conformance to the “MIS to Finishing ICS” version 2.0 in the conformance level 1. The attribute `@Category` normally “specifies the named category of this XJDF” [@xjdf_ip1, chap. 3 Table 3.1: XJDF/@Category]. When writing ICS conform XJDF Documents, the attribute value is predefined by the ICS document and defines the name of the Gray Box. The form of the value is the abbreviation of the particular ICS, including the unique Gray Box name within the ICS Document. Both values are separated by a dot. The value for the example above is “MISFin.StitchFin”. “MISFin” is the abbreviation of the “MIS to Finishing ICS”, and “StitchFin” is the name of the Gray Box as defined in the ICS Document. The Gray Box “StitchFin produces a stitched Product” [@cip4_misfin_ics, chap. 6.7 "GB StitchFin"] and includes several finishing processes.
+
+Generally speaking, the XJDF Specification provides common nomenclature for the Graphic Arts Industry and presents a comprehensive data model which enables people to describe products and processes at the proper level of granularity. Therefore, the specification ensures the integrity of all areas in the printing industry.
+
+ICS Documents are responsible for the definition of specific vendor independent interfaces based on XJDF. These documents define a subset of processes, input and output resources, as well as diverse elements from and attributes of those resources. Beyond that, the ICS Document specifies the behavior of the interface. ICS Documents play a fundamental role in each XJDF enabled environment. They have been written to standardize the communication between the MIS and any device or application, but can also standardize the communication between the MIS and an external system, such as a webshop or a print broker platform. Even the interfaces of cloud services may be standardized using official ICS Documents.
+
+While XJDF is just a common foundation, the real standardization is carried out by the ICS Documents. When developing standardized XJDF applications, the focus should lie on the ICS Documents rather than on the specification itself. If no official ICS Document exists, at least an internal (non-standard) ICS Document shall be written in order to define the internal interface. Once written, an internal ICS Document may be published on the CIP4 Website as well. More about the CIP4 Authoring Process later in the book.

@@ -16,9 +16,9 @@ Additionally, XJDF comes with some simplifications of diverse elements. For exam
 
 
 ```xml title="Example: RunList in XJDF"
-<xjdf:RunList NPage="6" Pages="0 ~ 5" Run="1">
-    <xjdf:FileSpec URL="File:///File1.pdf"/>
-</xjdf:RunList>
+<RunList NPage="6" Pages="0 ~ 5" Run="1">
+    <FileSpec URL="File:///File1.pdf"/>
+</RunList>
 ```
 
 Deprecated elements and attributes have also been removed. The major version change from JDF to XJDF presented a good opportunity to remove all legacy elements and attributes.

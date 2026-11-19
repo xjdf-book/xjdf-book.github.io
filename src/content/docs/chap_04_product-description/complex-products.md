@@ -17,10 +17,10 @@ Currently, there are only three kinds of intent types in the specification which
 All three intent types reference their corresponding child products using the attribute `@ChildRefs`. The value of this attribute is a list of product IDs. The order of the IDs in such lists is crucial. Below is the BindingIntent extract of the previous Collecting example:
 
 ```xml title="Example: BindingIntent with ChildRefs"
-<xjdf:Intent Name="BindingIntent">
-    <xjdf:BindingIntent BindingOrder="Collecting" BindingSide="Left"
+<Intent Name="BindingIntent">
+    <BindingIntent BindingOrder="Collecting" BindingSide="Left"
         BindingType="SaddleStitch" ChildRefs="COVER_ID BODY_ID"/>
-</xjdf:Intent>
+</Intent>
 ```
 
 This BindingIntent element contains three attributes for the specification of the binding characterization. The last attribute `@ChildRefs` refers to the two product parts (child products) by their corresponding IDs “COVER_ID” and “BODY_ID”. When using `@BindingOrder` = “Collecting”, the first ID in the list is the outer product part (here: COVER_ID).
@@ -39,48 +39,48 @@ The following example illustrates the product description of 1,000 saddle stitch
 
 ```xml title="Example: product description of a Magazine with Cover"
 [...]
-<xjdf:ProductList>
-    <xjdf:Product Amount="1000" DescriptiveName="My Magazine A4"
+<ProductList>
+    <Product Amount="1000" DescriptiveName="My Magazine A4"
             IsRoot="true">
-        <xjdf:Intent Name="BindingIntent">
-            <xjdf:BindingIntent BindingOrder="Collecting"
+        <Intent Name="BindingIntent">
+            <BindingIntent BindingOrder="Collecting"
                 BindingSide="Left" BindingType="SaddleStitch"
                 ChildRefs="COVER-ID BODY-ID"/>
-        </xjdf:Intent>
-    </xjdf:Product>
-    <xjdf:Product ID="COVER-ID" IsRoot="false">
-        <xjdf:Intent Name="ColorIntent">
-            <xjdf:ColorIntent>
-                <xjdf:SurfaceColor ColorsUsed="Cyan Magenta Yellow Black"
+        </Intent>
+    </Product>
+    <Product ID="COVER-ID" IsRoot="false">
+        <Intent Name="ColorIntent">
+            <ColorIntent>
+                <SurfaceColor ColorsUsed="Cyan Magenta Yellow Black"
                     Coatings="GlossUV" Surface="Front"/>
-                <xjdf:SurfaceColor ColorsUsed="Cyan Magenta Yellow Black"
+                <SurfaceColor ColorsUsed="Cyan Magenta Yellow Black"
                     Surface="Back"/>
-            </xjdf:ColorIntent>
-        </xjdf:Intent>
-        <xjdf:Intent Name="LayoutIntent">
-            <xjdf:LayoutIntent Sides="TwoSidedHeadToHead" Pages="4"
+            </ColorIntent>
+        </Intent>
+        <Intent Name="LayoutIntent">
+            <LayoutIntent Sides="TwoSidedHeadToHead" Pages="4"
                 FinishedDimensions="841.88 595.27 0.0"/>
-        </xjdf:Intent>
-        <xjdf:Intent Name="MediaIntent">
-            <xjdf:MediaIntent MediaQuality="135_MATT"/>
-        </xjdf:Intent>
-    </xjdf:Product>
-    <xjdf:Product ID="BODY-ID" IsRoot="false">
-        <xjdf:Intent Name="ColorIntent">
-            <xjdf:ColorIntent>
-                <xjdf:SurfaceColor ColorsUsed="Black" Surface="Front"/>
-                <xjdf:SurfaceColor ColorsUsed="Black" Surface="Back"/>
-            </xjdf:ColorIntent>
-        </xjdf:Intent>
-        <xjdf:Intent Name="LayoutIntent">
-            <xjdf:LayoutIntent Sides="TwoSidedHeadToHead" Pages="20"
+        </Intent>
+        <Intent Name="MediaIntent">
+            <MediaIntent MediaQuality="135_MATT"/>
+        </Intent>
+    </Product>
+    <Product ID="BODY-ID" IsRoot="false">
+        <Intent Name="ColorIntent">
+            <ColorIntent>
+                <SurfaceColor ColorsUsed="Black" Surface="Front"/>
+                <SurfaceColor ColorsUsed="Black" Surface="Back"/>
+            </ColorIntent>
+        </Intent>
+        <Intent Name="LayoutIntent">
+            <LayoutIntent Sides="TwoSidedHeadToHead" Pages="20"
                 FinishedDimensions="841.88 595.27 0.0"/>
-        </xjdf:Intent>
-        <xjdf:Intent Name="MediaIntent">
-            <xjdf:MediaIntent MediaQuality="80_MATT"/>
-        </xjdf:Intent>
-    </xjdf:Product>
-</xjdf:ProductList>
+        </Intent>
+        <Intent Name="MediaIntent">
+            <MediaIntent MediaQuality="80_MATT"/>
+        </Intent>
+    </Product>
+</ProductList>
 [...]
 ```
 
@@ -102,32 +102,32 @@ The notepad example exemplifies how to work with amounts in child products. The 
 
 ```xml title="Example: product description of a Notepad"
 [...]
-<xjdf:ProductList>
-    <xjdf:Product Amount="500" DescriptiveName="Notepad A4"
+<ProductList>
+    <Product Amount="500" DescriptiveName="Notepad A4"
             IsRoot="true">
-        <xjdf:Intent Name="BindingIntent">
-            <xjdf:BindingIntent BindingOrder="Gathering"
+        <Intent Name="BindingIntent">
+            <BindingIntent BindingOrder="Gathering"
                 BindingSide="Top" BindingType="EdgeGluing"
                 ChildRefs="SHEET_ID" />
-        </xjdf:Intent>
-    </xjdf:Product>
-    <xjdf:Product Amount="25" ID="SHEET_ID" IsRoot="false">
-        <xjdf:Intent Name="LayoutIntent">
-            <xjdf:LayoutIntent FinishedDimensions="595.28 841.89 0.0"
+        </Intent>
+    </Product>
+    <Product Amount="25" ID="SHEET_ID" IsRoot="false">
+        <Intent Name="LayoutIntent">
+            <LayoutIntent FinishedDimensions="595.28 841.89 0.0"
                 Pages="2" Sides="TwoSidedHeadToHead"/>
-        </xjdf:Intent>
-        <xjdf:Intent Name="ColorIntent">
-            <xjdf:ColorIntent>
-                <xjdf:SurfaceColor ColorsUsed="Cyan Magenta Yellow Black"
+        </Intent>
+        <Intent Name="ColorIntent">
+            <ColorIntent>
+                <SurfaceColor ColorsUsed="Cyan Magenta Yellow Black"
                     Surface="Front"/>
-                <xjdf:SurfaceColor ColorsUsed="Black" Surface="Back"/>
-            </xjdf:ColorIntent>
-        </xjdf:Intent>
-        <xjdf:Intent Name="MediaIntent">
-            <xjdf:MediaIntent MediaQuality="80_OFFSET"/>
-        </xjdf:Intent>
-    </xjdf:Product>
-</xjdf:ProductList>
+                <SurfaceColor ColorsUsed="Black" Surface="Back"/>
+            </ColorIntent>
+        </Intent>
+        <Intent Name="MediaIntent">
+            <MediaIntent MediaQuality="80_OFFSET"/>
+        </Intent>
+    </Product>
+</ProductList>
 [...]
 ```
 

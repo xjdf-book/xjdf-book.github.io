@@ -21,41 +21,41 @@ Bootstrapping is not limited to the MIS-to-Controller communication but it is al
 In the first step, the initiating system sends an XJMF KnownMessages Query Message to the system for it to detect. “The KnownMessages Query Message returns a list of all Message types that are supported by the controller” [@xjdf_ip1, chap. 7.7 "KnownMessages"] or device. The initiating system therefore gets an idea of which XJMF functionality is supported by the called system. Below is an example of such an XJMF KnownMessages Query Message:
 
 ```xml title="Example: XJMF KnownMessages Query Message"
-<xjdf:XJMF xmlns:xjdf="http://www.CIP4.org/JDFSchema_2_0">
-    <xjdf:Header ID="XJMF_ID" DeviceID="MIS_ID"
+<XJMF xmlns="http://www.CIP4.org/JDFSchema_2_0">
+    <Header ID="XJMF_ID" DeviceID="MIS_ID"
             Time="2016-11-14T19:22:28+02:00" />
-    <xjdf:QueryKnownMessages>
-        <xjdf:Header ID="MESSAGE_ID" DeviceID="MIS_ID"
+    <QueryKnownMessages>
+        <Header ID="MESSAGE_ID" DeviceID="MIS_ID"
                 Time="2016-11-14T19:22:28+02:00" />
-    </xjdf:QueryKnownMessages>
-</xjdf:XJMF>
+    </QueryKnownMessages>
+</XJMF>
 ```
 
 In most situations, an empty XJMF KnownMessages Query Message is enough to obtain a sufficient reply. The synchronous response of the Query Message is an XJMF KnownMessages Response Message:
 
 ```xml title="Example: XJMF KnownMessages Response Message"
-<xjdf:XJMF xmlns:xjdf="http://www.CIP4.org/JDFSchema_2_0">
-    <xjdf:Header ID="XJMF_ID" DeviceID="CONTROLLER_ID"
+<XJMF xmlns="http://www.CIP4.org/JDFSchema_2_0">
+    <Header ID="XJMF_ID" DeviceID="CONTROLLER_ID"
             Time="2016-11-14T19:22:29+02:00" />
-    <xjdf:ResponseKnownMessages ReturnCode="0">
-        <xjdf:Header ID="I1234" refID="MESSAGE_ID"
+    <ResponseKnownMessages ReturnCode="0">
+        <Header ID="I1234" refID="MESSAGE_ID"
                 DeviceID="CONTROLLER_ID"
                 Time="2016-11-14T19:22:29+02:00" />
-        <xjdf:MessageService Type="QueryKnownMessages"
+        <MessageService Type="QueryKnownMessages"
                 URLSchemes="http" />
-        <xjdf:MessageService Type="QueryKnownDevices"
+        <MessageService Type="QueryKnownDevices"
                 URLSchemes="http" />
-        <xjdf:MessageService Type="QueryKnownSubscriptions"
+        <MessageService Type="QueryKnownSubscriptions"
                 URLSchemes="http" />
-        <xjdf:MessageService Type="CommandSubmitQueueEntry"
+        <MessageService Type="CommandSubmitQueueEntry"
                 URLSchemes="http" />
-        <xjdf:MessageService Type="CommandShutDown"
+        <MessageService Type="CommandShutDown"
                 URLSchemes="http" />
-        <xjdf:MessageService Type="QueryStatus"
+        <MessageService Type="QueryStatus"
                 URLSchemes="http" />
         [...]
-    </xjdf:ResponseKnownMessages>
-</xjdf:XJMF>
+    </ResponseKnownMessages>
+</XJMF>
 ```
 
 The XJMF KnownMessages Response message references the initiating Query message by its ID using the `@refID` attribute. Furthermore, the Response message contains “a list of MessageService elements. Each MessageService specifies one explicit message type that is supported by the device” [@xjdf_ip1, chap. 7.7.2.1 "MessageService"]. The message’s name can be found as the value of the attribute `@Type`. The meanings of the remaining attributes can be read in the XJDF Specification.
@@ -65,30 +65,30 @@ The XJMF KnownMessages Response message references the initiating Query message 
 In the second step of the XJMF Bootstrapping process, the devices connected to the controller or the device itself are being discovered. An XJMF KnownDevices Query Message is therefore sent to the recipient. “The KnownDevices Query Message requests information about the Devices that are controlled by a controller [...]. The response is a list of device elements” [@xjdf_ip1, chap. 7.6 "KnownDevices"]. Here is an example of such a Query Message:
 
 ```xml title="Example: XJMF KnownDevices Query Message"
-<xjdf:XJMF xmlns:xjdf="http://www.CIP4.org/JDFSchema_2_0">
-    <xjdf:Header ID="XJMF_ID" DeviceID="MIS_ID"
+<XJMF xmlns="http://www.CIP4.org/JDFSchema_2_0">
+    <Header ID="XJMF_ID" DeviceID="MIS_ID"
             Time="2016-11-14T20:26:07+02:00" />
-    <xjdf:QueryKnownDevices>
-        <xjdf:Header ID="MESSAGE_ID" DeviceID="MIS_ID"
+    <QueryKnownDevices>
+        <Header ID="MESSAGE_ID" DeviceID="MIS_ID"
                 Time="2016-11-14T20:26:07+02:00" />
-        <xjdf:DeviceFilter DeviceDetails="Brief"/>
-    </xjdf:QueryKnownDevices>
-</xjdf:XJMF>
+        <DeviceFilter DeviceDetails="Brief"/>
+    </QueryKnownDevices>
+</XJMF>
 ```
 
 The example has previously been shown in the chapter “Query Message”. The message contains a subelement DeviceFilter. “The DeviceFilter Element refines the list of Devices that are requested to be returned” [@xjdf_ip1, chap. 7.6.1.1 "DeviceFilter"]. The usage of the value “Brief” in the attribute `@DeviceDetails` stipulates that the response should only provide the attribute DeviceID for each device listed in the DeviceList element. The corresponding Response Message is as follows:
 
 ```xml title="Example: XJMF KnownDevices Response Message"
-<xjdf:XJMF xmlns:xjdf="http://www.CIP4.org/JDFSchema_2_0">
-    <xjdf:Header ID="XJMF_ID" DeviceID="CONTROLLER_ID"
+<XJMF xmlns="http://www.CIP4.org/JDFSchema_2_0">
+    <Header ID="XJMF_ID" DeviceID="CONTROLLER_ID"
             Time="2016-11-11T11:51:14+02:00" />
-    <xjdf:ResponseKnownDevices ReturnCode="0">
-        <xjdf:Header ID="I42" refID="MESSAGE_ID" DeviceID="CONTROLLER_ID"
+    <ResponseKnownDevices ReturnCode="0">
+        <Header ID="I42" refID="MESSAGE_ID" DeviceID="CONTROLLER_ID"
                 Time="2016-11-11T11:51:14+02:00" />
-        <xjdf:Device DeviceID="DEVICE-I" />
-        <xjdf:Device DeviceID="DEVICE-II" />
-    </xjdf:ResponseKnownDevices>
-</xjdf:XJMF>
+        <Device DeviceID="DEVICE-I" />
+        <Device DeviceID="DEVICE-II" />
+    </ResponseKnownDevices>
+</XJMF>
 ```
 
 The XJMF KnownDevices Response Messages lists all devices which are controlled by the controller. For the initial discovery, this information should be sufficient. Should more information be required, the attribute `@DeviceDetails` in the Query Message can be set to “Full” in order to obtain the maximum amount of available device information from the controller.
@@ -98,14 +98,14 @@ The XJMF KnownDevices Response Messages lists all devices which are controlled b
 The last step of the XJMF Bootstrapping process is the subscriptions discovery. “The KnownSubscriptions XJMF enables controllers to query devices for a list of active persistent channels” [@xjdf_ip1, chap. 7.8 "KnownSubscriptions"]. The following snippet shows the XJMF KnownSubscriptions Query Message:
 
 ```xml title="Example: XJMF KnownSubscriptions Query Message"
-<xjdf:XJMF xmlns:xjdf="http://www.CIP4.org/JDFSchema_2_0">
-    <xjdf:Header ID="XJMF_ID" DeviceID="MIS_ID"
+<XJMF xmlns="http://www.CIP4.org/JDFSchema_2_0">
+    <Header ID="XJMF_ID" DeviceID="MIS_ID"
             Time="2016-11-14T20:57:27+02:00" />
-    <xjdf:QueryKnownSubscriptions>
-        <xjdf:Header ID="MESSAGE_ID" DeviceID="MIS_ID"
+    <QueryKnownSubscriptions>
+        <Header ID="MESSAGE_ID" DeviceID="MIS_ID"
             Time="2016-11-14T20:57:27+02:00" />
-    </xjdf:QueryKnownSubscriptions>
-</xjdf:XJMF>
+    </QueryKnownSubscriptions>
+</XJMF>
 ```
 
 The message is straightforward, as it does not require any subelements. An optional subelement is the SubscriptionFilter element. “The SubscriptionFilter element is a filter to limit the list of SubscriptionInfo elements that are returned in the KnownSubscriptions Response” [@xjdf_ip1, chap. 7.8.1.1 "SubscriptionFilter"]. All attributes which are marked as filterable in the table “Attributes of a persistent channel” in chapter “Persistent Channel” can be selected to filter the result.
@@ -113,32 +113,32 @@ The message is straightforward, as it does not require any subelements. An optio
 The response to an XJMF KnownSubscriptions Query Message is an XJMF KnownSubscriptions Response Message, and it contains all details requested. Below is an example of such a Response Message:
 
 ```xml title="Example: XJMF KnownSubscriptions Response Message"
-<xjdf:XJMF xmlns:xjdf="http://www.CIP4.org/JDFSchema_2_0">
-    <xjdf:Header ID="XJMF_ID" DeviceID="CONTROLLER_ID"
+<XJMF xmlns="http://www.CIP4.org/JDFSchema_2_0">
+    <Header ID="XJMF_ID" DeviceID="CONTROLLER_ID"
             Time="2016-11-11T21:07:14+02:00" />
-    <xjdf:ResponseKnownSubscriptions ReturnCode="0">
-        <xjdf:Header ID="I42" refID="MESSAGE_ID" DeviceID="CONTROLLER_ID"
+    <ResponseKnownSubscriptions ReturnCode="0">
+        <Header ID="I42" refID="MESSAGE_ID" DeviceID="CONTROLLER_ID"
                 Time="2016-11-11T21:07:14+02:00" />
-        <xjdf:SubscriptionInfo ChannelID="CNL_1" DeviceID="MIS_ID"
+        <SubscriptionInfo ChannelID="CNL_1" DeviceID="MIS_ID"
                 MessageType="Status">
-            <xjdf:Subscription URL="http://mis.example.org/jmf"
+            <Subscription URL="http://mis.example.org/jmf"
                     RepeatTime="30" RetryPolicy="DiscardAtNextSignal"
                     ChannelMode="Reliable" />
-        </xjdf:SubscriptionInfo>
-        <xjdf:SubscriptionInfo ChannelID="CNL_2" DeviceID="MIS_ID"
+        </SubscriptionInfo>
+        <SubscriptionInfo ChannelID="CNL_2" DeviceID="MIS_ID"
                 MessageType="Notification">
-            <xjdf:Subscription URL="http://mis.example.org/jmf"
+            <Subscription URL="http://mis.example.org/jmf"
                     RepeatTime="30" RetryPolicy="DiscardAtNextSignal"
                     ChannelMode="Reliable" />
-        </xjdf:SubscriptionInfo>
-        <xjdf:SubscriptionInfo ChannelID="CNL_2" DeviceID="MIS_ID"
+        </SubscriptionInfo>
+        <SubscriptionInfo ChannelID="CNL_2" DeviceID="MIS_ID"
                 MessageType="Resource">
-            <xjdf:Subscription URL="http://mis.example.org/jmf"
+            <Subscription URL="http://mis.example.org/jmf"
                     RepeatTime="30" RetryPolicy="DiscardAtNextSignal"
                     ChannelMode="Reliable" />
-        </xjdf:SubscriptionInfo>
-    </xjdf:ResponseKnownSubscriptions>
-</xjdf:XJMF>
+        </SubscriptionInfo>
+    </ResponseKnownSubscriptions>
+</XJMF>
 ```
 
 The body of the XJMF KnownSubscriptions Response Message is a list of SubscriptionInfo elements. Each Subscription element describes an individual persistent channel.

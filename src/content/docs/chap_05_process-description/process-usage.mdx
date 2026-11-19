@@ -19,20 +19,20 @@ The Preflight process takes multiple resources as input and produce two optional
 
 ```xml title="Example: RunList Resource as Input and Output"
 [...]
-<xjdf:ResourceSet Name="RunList" Usage="Input" >
-    <xjdf:Resource>
-        <xjdf:RunList>
-            <xjdf:FileSpec URL="http://example.org/input.pdf"/>
-        </xjdf:RunList>
-    </xjdf:Resource>
-</xjdf:ResourceSet>
-<xjdf:ResourceSet Name="RunList" Usage="Output" >
-    <xjdf:Resource>
-        <xjdf:RunList>
-            <xjdf:FileSpec URL="http://example.org/output.pdf"/>
-        </xjdf:RunList>
-    </xjdf:Resource>
-</xjdf:ResourceSet>
+<ResourceSet Name="RunList" Usage="Input" >
+    <Resource>
+        <RunList>
+            <FileSpec URL="http://example.org/input.pdf"/>
+        </RunList>
+    </Resource>
+</ResourceSet>
+<ResourceSet Name="RunList" Usage="Output" >
+    <Resource>
+        <RunList>
+            <FileSpec URL="http://example.org/output.pdf"/>
+        </RunList>
+    </Resource>
+</ResourceSet>
 [...]
 ```
 
@@ -51,27 +51,27 @@ In order to differentiate between these two RunList resources, an additional att
 
 ```xml title="Example: RunList with ProcessUsage Definition"
 [...]
-<xjdf:ResourceSet Name="RunList" Usage="Input" ProcessUsage="Document">
-    <xjdf:Resource>
-        <xjdf:RunList>
-            <xjdf:FileSpec URL="http://example.org/document.pdf"/>
-        </xjdf:RunList>
-    </xjdf:Resource>
-</xjdf:ResourceSet>
-<xjdf:ResourceSet Name="RunList" Usage="Input" ProcessUsage="Marks">
-    <xjdf:Resource>
-        <xjdf:RunList>
-            <xjdf:FileSpec URL="http://example.org/marks.pdf"/>
-        </xjdf:RunList>
-    </xjdf:Resource>
-</xjdf:ResourceSet>
-<xjdf:ResourceSet Name="RunList" Usage="Output">
-    <xjdf:Resource>
-        <xjdf:RunList>
-            <xjdf:FileSpec URL="http://example.org/output.pdf"/>
-        </xjdf:RunList>
-    </xjdf:Resource>
-</xjdf:ResourceSet>
+<ResourceSet Name="RunList" Usage="Input" ProcessUsage="Document">
+    <Resource>
+        <RunList>
+            <FileSpec URL="http://example.org/document.pdf"/>
+        </RunList>
+    </Resource>
+</ResourceSet>
+<ResourceSet Name="RunList" Usage="Input" ProcessUsage="Marks">
+    <Resource>
+        <RunList>
+            <FileSpec URL="http://example.org/marks.pdf"/>
+        </RunList>
+    </Resource>
+</ResourceSet>
+<ResourceSet Name="RunList" Usage="Output">
+    <Resource>
+        <RunList>
+            <FileSpec URL="http://example.org/output.pdf"/>
+        </RunList>
+    </Resource>
+</ResourceSet>
 [...]
 ```
 

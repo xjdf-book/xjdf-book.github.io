@@ -12,23 +12,23 @@ This flyer example illustrates a typical product description of 1.000 flyers in 
 
 ```xml title="Example: product description - Flyer"
 [...]
-<xjdf:Product Amount="1000" DescriptiveName="FLYER A6">
-    <xjdf:Intent Name="ColorIntent">
-        <xjdf:ColorIntent>
-            <xjdf:SurfaceColor ColorsUsed="Cyan Magenta Yellow Black"
+<Product Amount="1000" DescriptiveName="FLYER A6">
+    <Intent Name="ColorIntent">
+        <ColorIntent>
+            <SurfaceColor ColorsUsed="Cyan Magenta Yellow Black"
                 Surface="Front"/>
-            <xjdf:SurfaceColor ColorsUsed="Cyan Magenta Yellow Black"
+            <SurfaceColor ColorsUsed="Cyan Magenta Yellow Black"
                 Surface="Back"/>
-        </xjdf:ColorIntent>
-    </xjdf:Intent>
-    <xjdf:Intent Name="LayoutIntent">
-        <xjdf:LayoutIntent FinishedDimensions="297.64 419.53 0.0"
+        </ColorIntent>
+    </Intent>
+    <Intent Name="LayoutIntent">
+        <LayoutIntent FinishedDimensions="297.64 419.53 0.0"
             Pages="2" Sides="TwoSidedHeadToHead"/>
-    </xjdf:Intent>
-    <xjdf:Intent Name="MediaIntent">
-        <xjdf:MediaIntent MediaQuality="135_GLOSS"/>
-    </xjdf:Intent>
-</xjdf:Product>
+    </Intent>
+    <Intent Name="MediaIntent">
+        <MediaIntent MediaQuality="135_GLOSS"/>
+    </Intent>
+</Product>
 [...]
 ```
 
@@ -50,27 +50,27 @@ This product description exemplifies the specification of 750 6-panel Z-folded l
 
 ```xml title="Example: product description - Folded Leaflet"
 [...]
-<xjdf:Product Amount="750" DescriptiveName="Folded Leaflet 6-Panels">
-    <xjdf:Intent Name="LayoutIntent">
-        <xjdf:LayoutIntent Dimensions="841.89 595.28"
+<Product Amount="750" DescriptiveName="Folded Leaflet 6-Panels">
+    <Intent Name="LayoutIntent">
+        <LayoutIntent Dimensions="841.89 595.28"
             FinishedDimensions="280.63 595.28 0.0" Pages="2"
             Sides="TwoSidedHeadToHead"/>
-    </xjdf:Intent>
-    <xjdf:Intent Name="FoldingIntent">
-        <xjdf:FoldingIntent FoldCatalog="F6-2"/>
-    </xjdf:Intent>
-    <xjdf:Intent Name="ColorIntent">
-        <xjdf:ColorIntent>
-            <xjdf:SurfaceColor ColorsUsed="Cyan Magenta Yellow Black"
+    </Intent>
+    <Intent Name="FoldingIntent">
+        <FoldingIntent FoldCatalog="F6-2"/>
+    </Intent>
+    <Intent Name="ColorIntent">
+        <ColorIntent>
+            <SurfaceColor ColorsUsed="Cyan Magenta Yellow Black"
                 Surface="Front"/>
-            <xjdf:SurfaceColor ColorsUsed="Cyan Magenta Yellow Black"
+            <SurfaceColor ColorsUsed="Cyan Magenta Yellow Black"
                 Surface="Back"/>
-        </xjdf:ColorIntent>
-    </xjdf:Intent>
-    <xjdf:Intent Name="MediaIntent">
-        <xjdf:MediaIntent MediaQuality="135_MATT"/>
-    </xjdf:Intent>
-</xjdf:Product>
+        </ColorIntent>
+    </Intent>
+    <Intent Name="MediaIntent">
+        <MediaIntent MediaQuality="135_MATT"/>
+    </Intent>
+</Product>
 [...]
 ```
 
@@ -90,33 +90,33 @@ Banner with grommets is a typical wide format print product. The following examp
 
 ```xml title="Example: product description - Banner with Grommets"
 [...]
-<xjdf:Product Amount="10" DescriptiveName="Banner with Grommets">
-    <xjdf:Intent Name="LayoutIntent">
-        <xjdf:LayoutIntent FinishedDimensions="5669.29 2834.65 0.0"
+<Product Amount="10" DescriptiveName="Banner with Grommets">
+    <Intent Name="LayoutIntent">
+        <LayoutIntent FinishedDimensions="5669.29 2834.65 0.0"
             Pages="2" Sides="OneSided"/>
-    </xjdf:Intent>
-    <xjdf:Intent Name="HoleMakingIntent">
-        <xjdf:HoleMakingIntent>
-            <xjdf:HolePattern Center="141.73 141.73" Extent="56.69 0.0"
+    </Intent>
+    <Intent Name="HoleMakingIntent">
+        <HoleMakingIntent>
+            <HolePattern Center="141.73 141.73" Extent="56.69 0.0"
                     Shape="Round" Pitch="283.46 0.0" HoleCount="19"
                     Reinforcement="Grommet"
                     CenterReference="TrailingEdge" />
-            <xjdf:HolePattern Center="141.73 2692.91" Extent="56.69 0.0"
+            <HolePattern Center="141.73 2692.91" Extent="56.69 0.0"
                     Shape="Round" Pitch="283.46 0.0" HoleCount="19"
                     Reinforcement="Grommet"
                     CenterReference="TrailingEdge" />
-        </xjdf:HoleMakingIntent>
-    </xjdf:Intent>
-    <xjdf:Intent Name="ColorIntent">
-        <xjdf:ColorIntent>
-            <xjdf:SurfaceColor ColorsUsed="Cyan Magenta Yellow Black"
+        </HoleMakingIntent>
+    </Intent>
+    <Intent Name="ColorIntent">
+        <ColorIntent>
+            <SurfaceColor ColorsUsed="Cyan Magenta Yellow Black"
                 Surface="Front"/>
-        </xjdf:ColorIntent>
-    </xjdf:Intent>
-    <xjdf:Intent Name="MediaIntent">
-        <xjdf:MediaIntent MediaQuality="500_PVC"/>
-    </xjdf:Intent>
-</xjdf:Product>
+        </ColorIntent>
+    </Intent>
+    <Intent Name="MediaIntent">
+        <MediaIntent MediaQuality="500_PVC"/>
+    </Intent>
+</Product>
 [...]
 ```
 

@@ -7,13 +7,13 @@ The following example shows a simple RunList resource as an illustration of the 
 
 ```xml title="Example: RunList Resource"
 [...]
-<xjdf:ResourceSet Name="RunList" Usage="Input" >
-    <xjdf:Resource>
-        <xjdf:RunList>
-            <xjdf:FileSpec URL="http://example.org/artwork/my.pdf"/>
-        </xjdf:RunList>
-    </xjdf:Resource>
-</xjdf:ResourceSet>
+<ResourceSet Name="RunList" Usage="Input" >
+    <Resource>
+        <RunList>
+            <FileSpec URL="http://example.org/artwork/my.pdf"/>
+        </RunList>
+    </Resource>
+</ResourceSet>
 [...]
 ```
 
@@ -26,25 +26,25 @@ The attribute `//ResourceSet/@Usage` defines the usage of the ResourceSet within
 
 ```xml title="Example: Extract Folding Example - References of Resources"
 [...]
-<xjdf:ResourceSet Name="Component" Usage="Input">
-    <xjdf:Resource ExternalID="COMP_ID_UNFOLDED">
-        <xjdf:Component Dimensions="841.88 595.27 0.42" 
+<ResourceSet Name="Component" Usage="Input">
+    <Resource ExternalID="COMP_ID_UNFOLDED">
+        <Component Dimensions="841.88 595.27 0.42" 
             MediaRef="MEDIA-ID" />
-    </xjdf:Resource>
-</xjdf:ResourceSet>
-<xjdf:ResourceSet Name="Component" Usage="Output">
-    <xjdf:Resource ExternalID="COMP_ID_FOLDED">
-        <xjdf:Component Dimensions="280.69 595.27 1.26"
+    </Resource>
+</ResourceSet>
+<ResourceSet Name="Component" Usage="Output">
+    <Resource ExternalID="COMP_ID_FOLDED">
+        <Component Dimensions="280.69 595.27 1.26"
             MediaRef="MEDIA-ID" />
-    </xjdf:Resource>
-</xjdf:ResourceSet>
+    </Resource>
+</ResourceSet>
 [...]
-<xjdf:ResourceSet Name="Media">
-    <xjdf:Resource ID="MEDIA-ID">
-        <xjdf:Media MediaType="Paper" Thickness="150" Weight="135" 
+<ResourceSet Name="Media">
+    <Resource ID="MEDIA-ID">
+        <Media MediaType="Paper" Thickness="150" Weight="135" 
             ISOPaperSubstrate="PS3" />
-    </xjdf:Resource>
-</xjdf:ResourceSet>
+    </Resource>
+</ResourceSet>
 [...]
 ```
 
@@ -55,20 +55,20 @@ When describing a logical set of resources in a ResourceSet, XJDF provides a par
 
 ```xml title="Example: RunList Resource Partitioned by Side"
 [...]
-<xjdf:ResourceSet Name="RunList">
-    <xjdf:Resource>
-        <xjdf:Part Side="Front" />
-        <xjdf:RunList>
-            <xjdf:FileSpec URL="http://example.org/files/my-page-1.pdf"/>
-        </xjdf:RunList>
-    </xjdf:Resource>
-    <xjdf:Resource>
-        <xjdf:Part Side="Back" />
-        <xjdf:RunList>
-            <xjdf:FileSpec URL="http://example.org/files/my-page-2.pdf"/>
-        </xjdf:RunList>
-    </xjdf:Resource>
-</xjdf:ResourceSet>
+<ResourceSet Name="RunList">
+    <Resource>
+        <Part Side="Front" />
+        <RunList>
+            <FileSpec URL="http://example.org/files/my-page-1.pdf"/>
+        </RunList>
+    </Resource>
+    <Resource>
+        <Part Side="Back" />
+        <RunList>
+            <FileSpec URL="http://example.org/files/my-page-2.pdf"/>
+        </RunList>
+    </Resource>
+</ResourceSet>
 [...]
 ```
 
@@ -113,37 +113,37 @@ A Part element may also define multiple partition keys, and a Resource element m
 
 ```xml title="Example: Multiple Part elements per Resource"
 [...]
-<xjdf:ResourceSet Name="ExposedMedia">
-    <xjdf:Resource>
-        <xjdf:Part Separation="Cyan" PartVersion="German" />
-        <xjdf:Part Separation="Cyan" PartVersion="English" />
-        <xjdf:ExposedMedia MediaRef="MEDIA-PLATE-ID" />
-    </xjdf:Resource>
-    <xjdf:Resource>
-        <xjdf:Part Separation="Magenta" PartVersion="German" />
-        <xjdf:Part Separation="Magenta" PartVersion="English" />
-        <xjdf:ExposedMedia MediaRef="MEDIA-PLATE-ID" />
-    </xjdf:Resource>
-    <xjdf:Resource>
-        <xjdf:Part Separation="Yellow" PartVersion="German" />
-        <xjdf:Part Separation="Yellow" PartVersion="English" />
-        <xjdf:ExposedMedia MediaRef="MEDIA-PLATE-ID" />
-    </xjdf:Resource>
-    <xjdf:Resource>
-        <xjdf:Part Separation="Black" PartVersion="German" />
-        <xjdf:ExposedMedia MediaRef="MEDIA-PLATE-ID" />
-    </xjdf:Resource>
-    <xjdf:Resource>
-        <xjdf:Part Separation="Black" PartVersion="English" />
-        <xjdf:ExposedMedia MediaRef="MEDIA-PLATE-ID" />
-    </xjdf:Resource>
-</xjdf:ResourceSet>
+<ResourceSet Name="ExposedMedia">
+    <Resource>
+        <Part Separation="Cyan" PartVersion="German" />
+        <Part Separation="Cyan" PartVersion="English" />
+        <ExposedMedia MediaRef="MEDIA-PLATE-ID" />
+    </Resource>
+    <Resource>
+        <Part Separation="Magenta" PartVersion="German" />
+        <Part Separation="Magenta" PartVersion="English" />
+        <ExposedMedia MediaRef="MEDIA-PLATE-ID" />
+    </Resource>
+    <Resource>
+        <Part Separation="Yellow" PartVersion="German" />
+        <Part Separation="Yellow" PartVersion="English" />
+        <ExposedMedia MediaRef="MEDIA-PLATE-ID" />
+    </Resource>
+    <Resource>
+        <Part Separation="Black" PartVersion="German" />
+        <ExposedMedia MediaRef="MEDIA-PLATE-ID" />
+    </Resource>
+    <Resource>
+        <Part Separation="Black" PartVersion="English" />
+        <ExposedMedia MediaRef="MEDIA-PLATE-ID" />
+    </Resource>
+</ResourceSet>
 
-<xjdf:ResourceSet Name="Media">
-    <xjdf:Resource ID="MEDIA-PLATE-ID">
-        <xjdf:Media MediaType="Plate" />
-    </xjdf:Resource>
-</xjdf:ResourceSet>
+<ResourceSet Name="Media">
+    <Resource ID="MEDIA-PLATE-ID">
+        <Media MediaType="Plate" />
+    </Resource>
+</ResourceSet>
 [...]
 ```
 

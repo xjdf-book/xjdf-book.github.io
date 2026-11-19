@@ -55,10 +55,10 @@ When editing existing chapters or adding new content, maintain visual and struct
    - Use single quotes (`'...'`) when quoting terms inside the `title="..."` attribute so the attribute delimiters do not break:
      ````markdown
      ```xml title="Example: XJDF Gray Box 'Folding'"
-     <xjdf:XJDF JobID="JOB-42" Types="Folding"
-             xmlns:xjdf="http://www.CIP4.org/JDFSchema_2_0">
+     <XJDF JobID="JOB-42" Types="Folding"
+             xmlns="http://www.CIP4.org/JDFSchema_2_0">
          [...]
-     </xjdf:XJDF>
+     </XJDF>
      ```
      ````
    - Line numbers are enabled globally via `@expressive-code/plugin-line-numbers`; do not add per-block `showLineNumbers=true`.

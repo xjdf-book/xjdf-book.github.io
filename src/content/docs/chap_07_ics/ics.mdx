@@ -25,11 +25,11 @@ In contrast to the XJDF Specification, the ICS Document defines explicitly which
 XJDF Documents which conform to an ICS Document have to have additional attributes in their XJDF root element. The attribute `@ICSVersions` has to contain a defined name of the ICS Document, and the attribute `@Category` must to contain the exact name of the Gray Box the XJDF conforms to. The following is the XJDF stub of the Collection example if the document were to conform to the “MISFin.StitchFin” GrayBox corresponding to “MIS to Finishing ICS”:
 
 ```xml title="Example: XJDF Stub of Gray Box 'MISFin.StitchFin'"
-<xjdf:XJDF JobID="JOB-1234" Types="Collecting Stitching Trimming"
+<XJDF JobID="JOB-1234" Types="Collecting Stitching Trimming"
         Category="MISFin.StitchFin" ICSVersions="MISFin_L1-2.0"
-        xmlns:xjdf="http://www.CIP4.org/JDFSchema_2_0">
+        xmlns="http://www.CIP4.org/JDFSchema_2_0">
     [...]
-</xjdf:XJDF>
+</XJDF>
 ```
 
 XJDF Documents which conform to a certain Gray Box of an ICS Document also have to specify the attributes `@ICSVersions` and `@Category` in the XJDF root element. “`@ICSVersions` SHALL list all CIP4 Interoperability Conformance Specification (ICS) Versions that this XJDF complies with. Value format is: `<ICSName>_L<ICSLevel>-<ICSVersion>`” [@xjdf_ip1, chap. 3 Table 3.1: XJDF/@ICSVersions]. The expression in this example (“MISFin_L1-2.0”) defines conformance to the “MIS to Finishing ICS” version 2.0 in the conformance level 1. The attribute `@Category` normally “specifies the named category of this XJDF” [@xjdf_ip1, chap. 3 Table 3.1: XJDF/@Category]. When writing ICS conform XJDF Documents, the attribute value is predefined by the ICS document and defines the name of the Gray Box. The form of the value is the abbreviation of the particular ICS, including the unique Gray Box name within the ICS Document. Both values are separated by a dot. The value for the example above is “MISFin.StitchFin”. “MISFin” is the abbreviation of the “MIS to Finishing ICS”, and “StitchFin” is the name of the Gray Box as defined in the ICS Document. The Gray Box “StitchFin produces a stitched Product” [@cip4_misfin_ics, chap. 6.7 "GB StitchFin"] and includes several finishing processes.

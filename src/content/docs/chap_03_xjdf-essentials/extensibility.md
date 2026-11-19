@@ -19,17 +19,17 @@ When working with private namespaces it is recommended to have only one namespac
 XJDF provides the ability to extend the data format by new private intents and resources. The following example illustrates how to add a custom resource:
 
 ```xml title="Example: Custom Resources"
-<xjdf:XJDF Types="ProcessName" JobID="5" 
-        xmlns:xjdf="http://www.CIP4.org/JDFSchema_2_0"
+<XJDF Types="ProcessName" JobID="5" 
+        xmlns="http://www.CIP4.org/JDFSchema_2_0"
         xmlns:foo="http://example.org/foo">
     [...]
-    <xjdf:ResourceSet Name="foo:bar">
-        <xjdf:Resource>
+    <ResourceSet Name="foo:bar">
+        <Resource>
             <foo:bar attribute="myAttributeValue" />
-        </xjdf:Resource>
-    </xjdf:ResourceSet>
+        </Resource>
+    </ResourceSet>
     [...]
-</xjdf:XJDF>
+</XJDF>
 ```
 
 In the first step, a new foreign namespace has been introduced in the XJDF root node. In this case, this namespace URI is *"http://example.org/foo”* and is prefixed by “foo”. The new custom specific resource element is a subelement of Resource. The full name of the element (including the prefix) is the value of the `@Name` attribute in ResourceSet.
@@ -37,19 +37,19 @@ In the first step, a new foreign namespace has been introduced in the XJDF root 
 The introduction of a new custom intent element is quite similar to the introduction of a custom resource. The following is an example as an illustration:
 
 ```xml title="Example: Custom Intents"
-<xjdf:XJDF Types="ProcessName" JobID="5" 
-        xmlns:xjdf="http://www.CIP4.org/JDFSchema_2_0"
+<XJDF Types="ProcessName" JobID="5" 
+        xmlns="http://www.CIP4.org/JDFSchema_2_0"
         xmlns:foo="http://example.org/foo">
     [...]
-    <xjdf:ProductList>
-        <xjdf:Product>
-            <xjdf:Intent Name="foo:bar">
+    <ProductList>
+        <Product>
+            <Intent Name="foo:bar">
                 <foo:bar attribute="myAttributeValue" />
-            </xjdf:Intent>
-        </xjdf:Product>
-    </xjdf:ProductList>
+            </Intent>
+        </Product>
+    </ProductList>
     [...]
-</xjdf:XJDF>
+</XJDF>
 ```
 
 ## Custom Processes
@@ -62,19 +62,19 @@ The company's standardized namespace URI and prefix should be written in the XJD
 “Many Resources contain attributes of type NMTOKEN and some of these have a set of predefined, suggested enumerative values. These lists MAY be extended with private keywords” [@xjdf_ip1, chap. 3.5.4 "Extending NMTOKEN Lists"].
 
 ```xml title="Example: Custom NMTOKEN Values"
-<xjdf:XJDF Types="ProcessName" JobID="5"
-    xmlns:xjdf="http://www.CIP4.org/JDFSchema_2_0" >
+<XJDF Types="ProcessName" JobID="5"
+    xmlns="http://www.CIP4.org/JDFSchema_2_0" >
     [...]
-    <xjdf:ProductList>
-        <xjdf:Product Amount="250">
-            <xjdf:Intent Name="ColorIntent">
-                <xjdf:FoldingIntent FoldCatalog="F6-MY-FOLD" />
-            </xjdf:Intent>
+    <ProductList>
+        <Product Amount="250">
+            <Intent Name="ColorIntent">
+                <FoldingIntent FoldCatalog="F6-MY-FOLD" />
+            </Intent>
             [...]
-        </xjdf:Product>
-    </xjdf:ProductList>
+        </Product>
+    </ProductList>
     [...]
-</xjdf:XJDF>
+</XJDF>
 ```
 
 As `@FoldCatalog` attributes are of type NMTOKEN, they can be extended by new values. This example shows the introduction of a new custom fold scheme “F6-MY-FOLD”. When extending NMTOKEN lists by custom values, no custom namespace declaration is required. 

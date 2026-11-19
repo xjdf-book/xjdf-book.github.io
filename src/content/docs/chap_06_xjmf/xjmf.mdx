@@ -44,15 +44,15 @@ XJMF is the messaging system that accompanies XJDF in order to provide a communi
 “XJMF and XJDF have inherently different structures. In order to allow immediate identification of messages, XJMF uses the unique name XJMF as its own root-element name. XJMF elements SHALL contain one or more messages that provide more detailed information” [@xjdf_ip1, chap. 7.1 "XJMF Root"]. XJMF Messages are essentially tiny XML structures. Many messages consist of only a few lines of code. In the following code snippet, an XJMF KnownDevices Query Message is shown to give an idea of the outline of the XML structure:
 
 ```xml title="Example: XJMF KnownDevices Query Message"
-<xjdf:XJMF xmlns:xjdf="http://www.CIP4.org/JDFSchema_2_0">
-    <xjdf:Header ID="XJMF_ID" DeviceID="DEVICE_ID_MIS"
+<XJMF xmlns="http://www.CIP4.org/JDFSchema_2_0">
+    <Header ID="XJMF_ID" DeviceID="DEVICE_ID_MIS"
             Time="2016-11-10T21:35:14+02:00" />
-    <xjdf:QueryKnownDevices>
-        <xjdf:Header ID="MESSAGE_ID" DeviceID="DEVICE_ID_MIS"
+    <QueryKnownDevices>
+        <Header ID="MESSAGE_ID" DeviceID="DEVICE_ID_MIS"
                 Time="2016-11-10T21:35:14+02:00" />
-        <xjdf:DeviceFilter DeviceDetails="Brief" />
-    </xjdf:QueryKnownDevices>
-</xjdf:XJMF>
+        <DeviceFilter DeviceDetails="Brief" />
+    </QueryKnownDevices>
+</XJMF>
 ```
 
 “The KnownDevices Query Message requests information about the devices that are controlled by a controller. [...] The response is a list of device elements” [@xjdf_ip1, chap. 7.6 "KnownDevices"] guided by the controller. Such a message is usually sent from the MIS to a controller during discovery.

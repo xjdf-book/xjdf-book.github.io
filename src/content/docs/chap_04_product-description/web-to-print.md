@@ -12,53 +12,53 @@ The following is a PrintTalk / XJDF example of a Web-To-Print job submission of 
 
 ```xml title="Example: Web-To-Print Job Submission via PrintTalk and XJDF"
 <ptk:PrintTalk xmlns:ptk="http://www.printtalk.org/schema_2_0"
-    xmlns:xjdf="http://www.CIP4.org/JDFSchema_2_0"
+    xmlns="http://www.CIP4.org/JDFSchema_2_0"
     Timestamp="2016-10-18T20:03:38Z" payloadID="5b7b63e8" >
   <ptk:Request>
     <ptk:PurchaseOrder BusinessID="CART-42">
-      <xjdf:XJDF JobID="JOB-42" Types="Product">
-          <xjdf:ProductList>
-              <xjdf:Product Amount="1000" DescriptiveName="FLYER">
-                  <xjdf:Intent Name="ColorIntent">
-                      <xjdf:ColorIntent>
-                          <xjdf:SurfaceColor
+      <XJDF JobID="JOB-42" Types="Product">
+          <ProductList>
+              <Product Amount="1000" DescriptiveName="FLYER">
+                  <Intent Name="ColorIntent">
+                      <ColorIntent>
+                          <SurfaceColor
                                   ColorsUsed="Cyan Magenta Yellow Black"
                                   Surface="Front"/>
-                          <xjdf:SurfaceColor
+                          <SurfaceColor
                                   ColorsUsed="Cyan Magenta Yellow Black"
                                   Surface="Back"/>
-                      </xjdf:ColorIntent>
-                  </xjdf:Intent>
-                  <xjdf:Intent Name="LayoutIntent">
-                      <xjdf:LayoutIntent
+                      </ColorIntent>
+                  </Intent>
+                  <Intent Name="LayoutIntent">
+                      <LayoutIntent
                               FinishedDimensions="297.64 419.53 0.0"
                               Pages="2" Sides="TwoSidedHeadToHead"/>
-                  </xjdf:Intent>
-                  <xjdf:Intent Name="MediaIntent">
-                      <xjdf:MediaIntent MediaQuality="135_GLOSS"/>
-                  </xjdf:Intent>
-              </xjdf:Product>
-          </xjdf:ProductList>
-          <xjdf:ResourceSet Name="CustomerInfo">
-              <xjdf:Resource>
-                  <xjdf:CustomerInfo CustomerID="CUSTOMER-ID"/>
-              </xjdf:Resource>
-          </xjdf:ResourceSet>
-          <xjdf:ResourceSet Name="NodeInfo">
-              <xjdf:Resource>
-                  <xjdf:NodeInfo End="2016-10-20T16:00:00Z"
+                  </Intent>
+                  <Intent Name="MediaIntent">
+                      <MediaIntent MediaQuality="135_GLOSS"/>
+                  </Intent>
+              </Product>
+          </ProductList>
+          <ResourceSet Name="CustomerInfo">
+              <Resource>
+                  <CustomerInfo CustomerID="CUSTOMER-ID"/>
+              </Resource>
+          </ResourceSet>
+          <ResourceSet Name="NodeInfo">
+              <Resource>
+                  <NodeInfo End="2016-10-20T16:00:00Z"
                       JobPriority="80"/>
-              </xjdf:Resource>
-          </xjdf:ResourceSet>
-          <xjdf:ResourceSet Name="RunList">
-              <xjdf:Resource>
-                  <xjdf:RunList>
-                      <xjdf:FileSpec
+              </Resource>
+          </ResourceSet>
+          <ResourceSet Name="RunList">
+              <Resource>
+                  <RunList>
+                      <FileSpec
                           URL="http://example.org/artwork.pdf"/>
-                  </xjdf:RunList>
-              </xjdf:Resource>
-          </xjdf:ResourceSet>
-      </xjdf:XJDF>
+                  </RunList>
+              </Resource>
+          </ResourceSet>
+      </XJDF>
     </ptk:PurchaseOrder>
   </ptk:Request>
 </ptk:PrintTalk>
@@ -76,14 +76,14 @@ Job Submission is just the one direction of communication supported by PrintTalk
 
 ```xml title="Example: Web-To-Print Status Feedback via PrintTalk and XJDF"
 <ptk:PrintTalk xmlns:ptk="http://www.printtalk.org/schema_2_0"
-        xmlns:xjdf="http://www.CIP4.org/JDFSchema_2_0"
+        xmlns="http://www.CIP4.org/JDFSchema_2_0"
         Timestamp="2016-10-20T22:42:38Z" payloadID="fd891889" >
     <ptk:Request>
         <ptk:OrderStatusResponse BusinessID="CART-43"
                 BusinessRefID="CART-42">
-            <xjdf:Notification JobID="Job-42" Class="Event">
-                <xjdf:Milestone MilestoneType="PressCompleted" />
-            </xjdf:Notification>
+            <Notification JobID="Job-42" Class="Event">
+                <Milestone MilestoneType="PressCompleted" />
+            </Notification>
         </ptk:OrderStatusResponse>
     </ptk:Request>
 </ptk:PrintTalk>

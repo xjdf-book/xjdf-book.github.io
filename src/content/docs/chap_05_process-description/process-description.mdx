@@ -34,71 +34,71 @@ The resource “Component is used to describe the various versions of finished a
 The last line in the table “Input Resources” references the “Generic Input Resources” which have previously been explained. The following instance demonstrates how the corresponding XJDF Document goes about describing the single process “Folding”. This example has already been presented in the chapter on XJDF Essentials:
 
 ```xml title="Example: XJDF Gray Box 'Folding'"
-<xjdf:XJDF JobID="JOB-42" Types="Folding"
-        xmlns:xjdf="http://www.CIP4.org/JDFSchema_2_0">
-    <xjdf:AuditPool>
-        <xjdf:AuditCreated>
-            <xjdf:Header AgentName="MIS" AgentVersion="1.0"
+<XJDF JobID="JOB-42" Types="Folding"
+        xmlns="http://www.CIP4.org/JDFSchema_2_0">
+    <AuditPool>
+        <AuditCreated>
+            <Header AgentName="MIS" AgentVersion="1.0"
                 Time="2016-05-30T21:49:47Z" />
-        </xjdf:AuditCreated>
-    </xjdf:AuditPool>
-    <xjdf:ProductList>
-        <xjdf:Product Amount="2500" DescriptiveName="My Folded Leaflet">
-            <xjdf:Intent Name="LayoutIntent">
-                <xjdf:LayoutIntent Dimensions="841.88 595.27"
+        </AuditCreated>
+    </AuditPool>
+    <ProductList>
+        <Product Amount="2500" DescriptiveName="My Folded Leaflet">
+            <Intent Name="LayoutIntent">
+                <LayoutIntent Dimensions="841.88 595.27"
                         Sides="TwoSidedHeadToHead" Pages="2"
                         FinishedDimensions="280.69 595.27 0.0"/>
-            </xjdf:Intent>
-            <xjdf:Intent Name="FoldingIntent">
-                <xjdf:FoldingIntent FoldCatalog="F6-2"/>
-            </xjdf:Intent>
-            <xjdf:Intent Name="ColorIntent">
-                <xjdf:ColorIntent>
-                    <xjdf:SurfaceColor
+            </Intent>
+            <Intent Name="FoldingIntent">
+                <FoldingIntent FoldCatalog="F6-2"/>
+            </Intent>
+            <Intent Name="ColorIntent">
+                <ColorIntent>
+                    <SurfaceColor
                             ColorsUsed="Cyan Magenta Yellow Black"
                             Surface="Front"/>
-                    <xjdf:SurfaceColor
+                    <SurfaceColor
                             ColorsUsed="Cyan Magenta Yellow Black"
                             Surface="Back"/>
-                </xjdf:ColorIntent>
-            </xjdf:Intent>
-            <xjdf:Intent Name="MediaIntent">
-                <xjdf:MediaIntent MediaQuality="135_MATT"/>
-            </xjdf:Intent>
-        </xjdf:Product>
-    </xjdf:ProductList>
-    <xjdf:ResourceSet Name="Component" Usage="Input">
-        <xjdf:Resource ExternalID="COMP_ID_UNFOLDED">
-            <xjdf:Component Dimensions="841.88 595.27 0.42"
+                </ColorIntent>
+            </Intent>
+            <Intent Name="MediaIntent">
+                <MediaIntent MediaQuality="135_MATT"/>
+            </Intent>
+        </Product>
+    </ProductList>
+    <ResourceSet Name="Component" Usage="Input">
+        <Resource ExternalID="COMP_ID_UNFOLDED">
+            <Component Dimensions="841.88 595.27 0.42"
                     MediaRef="MEDIA-ID" />
-        </xjdf:Resource>
-    </xjdf:ResourceSet>
-    <xjdf:ResourceSet Name="Component" Usage="Output">
-        <xjdf:Resource ExternalID="COMP_ID_FOLDED">
-            <xjdf:AmountPool>
-                <xjdf:PartAmount Amount="2580" />
-            </xjdf:AmountPool>
-            <xjdf:Component Dimensions="280.69 595.27 1.26"
+        </Resource>
+    </ResourceSet>
+    <ResourceSet Name="Component" Usage="Output">
+        <Resource ExternalID="COMP_ID_FOLDED">
+            <AmountPool>
+                <PartAmount Amount="2580" />
+            </AmountPool>
+            <Component Dimensions="280.69 595.27 1.26"
                     MediaRef="MEDIA-ID" />
-        </xjdf:Resource>
-    </xjdf:ResourceSet>
-    <xjdf:ResourceSet Name="FoldingParams" Usage="Input">
-        <xjdf:Resource>
-            <xjdf:FoldingParams FoldCatalog="F6-2"/>
-        </xjdf:Resource>
-    </xjdf:ResourceSet>
-    <xjdf:ResourceSet Name="Media">
-        <xjdf:Resource ID="MEDIA-ID">
-            <xjdf:Media MediaType="Paper" Thickness="150" Weight="135"
+        </Resource>
+    </ResourceSet>
+    <ResourceSet Name="FoldingParams" Usage="Input">
+        <Resource>
+            <FoldingParams FoldCatalog="F6-2"/>
+        </Resource>
+    </ResourceSet>
+    <ResourceSet Name="Media">
+        <Resource ID="MEDIA-ID">
+            <Media MediaType="Paper" Thickness="150" Weight="135"
                     ISOPaperSubstrate="PS3" />
-        </xjdf:Resource>
-    </xjdf:ResourceSet>
-    <xjdf:ResourceSet Name="NodeInfo" Usage="Input">
-        <xjdf:Resource>
-            <xjdf:NodeInfo Start="2016-08-30T15:00:00Z" />
-        </xjdf:Resource>
-    </xjdf:ResourceSet>
-</xjdf:XJDF>
+        </Resource>
+    </ResourceSet>
+    <ResourceSet Name="NodeInfo" Usage="Input">
+        <Resource>
+            <NodeInfo Start="2016-08-30T15:00:00Z" />
+        </Resource>
+    </ResourceSet>
+</XJDF>
 ```
 
 The XJDF example above describes a Folding Gray Box. As previously mentioned, a Gray Box is defined by the attribute `/XJDF/@Types`. Therefore, the `@Types` attribute value is “Folding”.

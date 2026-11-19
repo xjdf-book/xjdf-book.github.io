@@ -8,29 +8,29 @@ Process and production specific details such as imposition scheme or the exact m
 
 ```xml title="Example: product description Folded Leaflet"
 [...]
-<xjdf:ProductList>
-    <xjdf:Product Amount="2500" DescriptiveName="My Folded Leaflet">
-        <xjdf:Intent Name="LayoutIntent">
-            <xjdf:LayoutIntent Dimensions="841.88 595.27"
+<ProductList>
+    <Product Amount="2500" DescriptiveName="My Folded Leaflet">
+        <Intent Name="LayoutIntent">
+            <LayoutIntent Dimensions="841.88 595.27"
                 Sides="TwoSidedHeadToHead"
                 FinishedDimensions="280.69 595.27 0.0"/>
-        </xjdf:Intent>
-        <xjdf:Intent Name="FoldingIntent">
-            <xjdf:FoldingIntent FoldCatalog="F6-2"/>
-        </xjdf:Intent>
-        <xjdf:Intent Name="ColorIntent">
-            <xjdf:ColorIntent>
-                <xjdf:SurfaceColor ColorsUsed="Cyan Magenta Yellow Black"
+        </Intent>
+        <Intent Name="FoldingIntent">
+            <FoldingIntent FoldCatalog="F6-2"/>
+        </Intent>
+        <Intent Name="ColorIntent">
+            <ColorIntent>
+                <SurfaceColor ColorsUsed="Cyan Magenta Yellow Black"
                     Surface="Front"/>
-                <xjdf:SurfaceColor ColorsUsed="Cyan Magenta Yellow Black"
+                <SurfaceColor ColorsUsed="Cyan Magenta Yellow Black"
                     Surface="Back"/>
-            </xjdf:ColorIntent>
-        </xjdf:Intent>
-        <xjdf:Intent Name="MediaIntent">
-            <xjdf:MediaIntent MediaQuality="135_MATT"/>
-        </xjdf:Intent>
-    </xjdf:Product>
-</xjdf:ProductList>
+            </ColorIntent>
+        </Intent>
+        <Intent Name="MediaIntent">
+            <MediaIntent MediaQuality="135_MATT"/>
+        </Intent>
+    </Product>
+</ProductList>
 [...]
 ```
 
@@ -42,11 +42,11 @@ The LayoutIntent “records the size of the finished pages for the product compo
 
 ```xml title="Example: LayoutIntent"
 [...]
-<xjdf:Intent Name="LayoutIntent">
-    <xjdf:LayoutIntent Dimensions="841.88 595.27"
+<Intent Name="LayoutIntent">
+    <LayoutIntent Dimensions="841.88 595.27"
         Sides="TwoSidedHeadToHead"
         FinishedDimensions="280.69 595.27 0.0"/>
-</xjdf:Intent>
+</Intent>
 [...]
 ```
 
@@ -54,14 +54,14 @@ The LayoutIntent “records the size of the finished pages for the product compo
 
 ```xml title="Example: ColorIntent"
 [...]
-<xjdf:Intent Name="ColorIntent">
-    <xjdf:ColorIntent>
-        <xjdf:SurfaceColor ColorsUsed="Cyan Magenta Yellow Black"
+<Intent Name="ColorIntent">
+    <ColorIntent>
+        <SurfaceColor ColorsUsed="Cyan Magenta Yellow Black"
             Surface="Front"/>
-        <xjdf:SurfaceColor ColorsUsed="Cyan Magenta Yellow Black"
+        <SurfaceColor ColorsUsed="Cyan Magenta Yellow Black"
             Surface="Back"/>
-    </xjdf:ColorIntent>
-</xjdf:Intent>
+    </ColorIntent>
+</Intent>
 [...]
 ```
 
@@ -71,9 +71,9 @@ In order to simplify paper matching, the attribute `@MediaQuality` has been intr
 
 ```xml title="Example: MediaIntent"
 [...]
-<xjdf:Intent Name="MediaIntent">
-    <xjdf:MediaIntent MediaQuality="135_MATT"/>
-</xjdf:Intent>
+<Intent Name="MediaIntent">
+    <MediaIntent MediaQuality="135_MATT"/>
+</Intent>
 [...]
 ```
 
@@ -85,9 +85,9 @@ The FoldingIntent “element specifies the straight line folding, creasing and p
 
 ```xml title="Example: FoldingIntent for Folding"
 [...]
-<xjdf:Intent Name="FoldingIntent">
-    <xjdf:FoldingIntent FoldCatalog="F6-2"/>
-</xjdf:Intent>
+<Intent Name="FoldingIntent">
+    <FoldingIntent FoldCatalog="F6-2"/>
+</Intent>
 [...]
 ```
 
@@ -95,12 +95,12 @@ As specified, FoldingIntent can also being used for describing a perforation or 
 
 ```xml title="Example: FoldingIntent for Perforating"
 [...]
-<xjdf:Intent Name="FoldingIntent">
-    <xjdf:FoldingIntent>
-        <xjdf:Perforate StartPosition="0.0 23.43"
+<Intent Name="FoldingIntent">
+    <FoldingIntent>
+        <Perforate StartPosition="0.0 23.43"
                 WorkingPath="0.0 565.68"/>
-    </xjdf:FoldingIntent>
-</xjdf:Intent>
+    </FoldingIntent>
+</Intent>
 [...]
 ```
 

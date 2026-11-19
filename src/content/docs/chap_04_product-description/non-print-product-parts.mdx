@@ -22,33 +22,33 @@ The XJDF example below exemplifies a product description of ten 80 cm x 200 cm s
 
 ```xml title="Example: product description of a Roll-up Display"
 [...]
-<xjdf:ProductList>
-    <xjdf:Product Amount="10" DescriptiveName="Roll-Up Display"
+<ProductList>
+    <Product Amount="10" DescriptiveName="Roll-Up Display"
             IsRoot="true">
-        <xjdf:Intent Name="AssemblingIntent">
-            <xjdf:AssemblingIntent Container="HOUSING_ID">
-              <xjdf:AssemblyItem ChildRef="PRINT_ID" />
-           </xjdf:AssemblingIntent>
-        </xjdf:Intent>
-    </xjdf:Product>
-    <xjdf:Product ID="PRINT_ID" IsRoot="false">
-        <xjdf:Intent Name="LayoutIntent">
-            <xjdf:LayoutIntent FinishedDimensions="2267.72 5669.29 0.0"
+        <Intent Name="AssemblingIntent">
+            <AssemblingIntent Container="HOUSING_ID">
+              <AssemblyItem ChildRef="PRINT_ID" />
+           </AssemblingIntent>
+        </Intent>
+    </Product>
+    <Product ID="PRINT_ID" IsRoot="false">
+        <Intent Name="LayoutIntent">
+            <LayoutIntent FinishedDimensions="2267.72 5669.29 0.0"
                 Pages="2" Sides="OneSided"/>
-        </xjdf:Intent>
-        <xjdf:Intent Name="ColorIntent">
-            <xjdf:ColorIntent>
-                <xjdf:SurfaceColor ColorsUsed="Cyan Magenta Yellow Black"
+        </Intent>
+        <Intent Name="ColorIntent">
+            <ColorIntent>
+                <SurfaceColor ColorsUsed="Cyan Magenta Yellow Black"
                     Surface="Front"/>
-            </xjdf:ColorIntent>
-        </xjdf:Intent>
-        <xjdf:Intent Name="MediaIntent">
-            <xjdf:MediaIntent MediaQuality="500_PVC"/>
-        </xjdf:Intent>
-    </xjdf:Product>
-    <xjdf:Product ID="HOUSING_ID" IsRoot="false"
+            </ColorIntent>
+        </Intent>
+        <Intent Name="MediaIntent">
+            <MediaIntent MediaQuality="500_PVC"/>
+        </Intent>
+    </Product>
+    <Product ID="HOUSING_ID" IsRoot="false"
         ExternalID="ARTICLE_ID_HOUSING_SILVER"/>
-</xjdf:ProductList>
+</ProductList>
 [...]
 ```
 

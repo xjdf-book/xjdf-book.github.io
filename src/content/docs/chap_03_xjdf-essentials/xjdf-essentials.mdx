@@ -29,10 +29,10 @@ As XJDF enabled devices and applications may not only allow for the definition o
 Even the simplest product description document for job submission describes a Gray Box. XJDF Documents containing a pure product description are primarily used in Web-To-Print environments, for example, to link a printing house with a Webshop, a public print broker platform, or even a customer’s ERP system with an MIS system for the purpose of automating the customer’s supply chain of print products. The following is an XJDF stub of a product description Gray Box:
 
 ```xml title="Example: Gray Box 'product description'"
-<xjdf:XJDF JobID="JOB-42" Types="Product"
-        xmlns:xjdf="http://www.CIP4.org/JDFSchema_2_0">
+<XJDF JobID="JOB-42" Types="Product"
+        xmlns="http://www.CIP4.org/JDFSchema_2_0">
     [...]
-</xjdf:XJDF>
+</XJDF>
 ```
 
 The `@Types` attribute is the attribute for defining Gray Boxes. When reading an XJDF Document, this attribute is one of the first attributes to be analyzed. Product description Gray Boxes can be recognized by `@Types` = "Product". The attribute value "`Product` specifies that the products that are described shall be produced without complete knowledge of the production workflow" [@xjdf_ip1, chap. 3 Table 3.1]. On job submission in a Web-To-Print environment, the definition of the product workflow is the primary task of the MIS system. The MIS system is the leading system for the entire production. Therefore, it is responsible for computing or selecting a production workflow in order to produce the desired product.
@@ -49,19 +49,19 @@ Once a production workflow is defined, the MIS system has to route the job from 
 All processes needing to be executed by the receiving Gray Box have to be declared in the `@Types` attribute. The attribute `@Types` can either define the value “Product” as shown in the example before, or one or multiple process names. Here, an XJDF stub is used to address a Gray Box “Folding” (Folding Machine):
 
 ```xml title="Example: Gray Box 'Folding'"
-<xjdf:XJDF JobID="JOB-42" Types="Folding" 
-        xmlns:xjdf="http://www.CIP4.org/JDFSchema_2_0">
+<XJDF JobID="JOB-42" Types="Folding" 
+        xmlns="http://www.CIP4.org/JDFSchema_2_0">
     [...]
-</xjdf:XJDF>
+</XJDF>
 ```
 
 In order to define an XJDF document addressing a Gray Box containing a single folding process, the `@Types` attribute value has to be set to the process’ name “Folding”. However, an XJDF Document can not only address a single process. The `@Types` attribute allows also a whitespace separated list of process names. When addressing a collecting machine which provides the processes Collecting, Stitching and Trimming, the XJDF stub is as follows:
 
 ```xml title="Example: Gray Box 'Collecting Stitching Trimming'"
-<xjdf:XJDF JobID="JOB-42" Types="Collecting Stitching Trimming" 
-        xmlns:xjdf="http://www.CIP4.org/JDFSchema_2_0">
+<XJDF JobID="JOB-42" Types="Collecting Stitching Trimming" 
+        xmlns="http://www.CIP4.org/JDFSchema_2_0">
     [...]
-</xjdf:XJDF>
+</XJDF>
 ```
 
 The attribute `@Types` can not only define one single attribute value. A whitespace separated list of process names is also valid. The upper stub defines the processes Collecting, Stitching and Trimming. The order of the items is relevant to the order in which the processes have to be executed. This example stipulates that Collecting has to be the first process in the row. After Collecting, the semi-product has to be stitched and, finally, trimmed.
@@ -69,10 +69,10 @@ The attribute `@Types` can not only define one single attribute value. A whitesp
 A combination of process names along with the value “Product” is also valid. The following is a stub demonstrating this:
 
 ```xml title="Example: Combination of Gray Box and product description"
-<xjdf:XJDF JobID="JOB-42" Types="ConventionalPrinting Cutting Product"      
-        xmlns:xjdf="http://www.CIP4.org/JDFSchema_2_0">
+<XJDF JobID="JOB-42" Types="ConventionalPrinting Cutting Product"      
+        xmlns="http://www.CIP4.org/JDFSchema_2_0">
     [...]
-</xjdf:XJDF>
+</XJDF>
 ```
 
 The combination of process names accompanying the value “Product” means that the production process is partially defined. In some cases, a partial definition of workflows is needed in specific XJDF production lines.
@@ -122,10 +122,10 @@ The order of all elements is given by the specification. “In general the order
 Each XJDF Document starts with the XJDF root node. The XJDF node can only occur once per document. The following is an example of an XJDF root node:
 
 ```xml title="Example: XJDF Element"
-<xjdf:XJDF JobID="JOB-42" Types="Folding" 
-        xmlns:xjdf="http://www.CIP4.org/JDFSchema_2_0">
+<XJDF JobID="JOB-42" Types="Folding" 
+        xmlns="http://www.CIP4.org/JDFSchema_2_0">
     [...]
-</xjdf:XJDF>
+</XJDF>
 
 ```
 
@@ -266,13 +266,13 @@ The following is an example of a RunList input resource. RunList resources refer
 
 ```xml title="Example: RunList Resource"
 [...]
-<xjdf:ResourceSet Name="RunList" Usage="Input" >
-    <xjdf:Resource>
-        <xjdf:RunList>
-            <xjdf:FileSpec URL="http://example.org/artwork/my.pdf"/>
-        </xjdf:RunList>
-    </xjdf:Resource>
-</xjdf:ResourceSet>
+<ResourceSet Name="RunList" Usage="Input" >
+    <Resource>
+        <RunList>
+            <FileSpec URL="http://example.org/artwork/my.pdf"/>
+        </RunList>
+    </Resource>
+</ResourceSet>
 [...]
 ```
 
@@ -284,74 +284,72 @@ To conclude this chapter, a real-world XJDF folding example is presented. Foldin
 
 Since a folding machine is a single-purpose device it can be covered by a Gray Box containing only a single process “Folding”. Videos and images of what a folding machine looks like or how it works can be found online. Common search terms of folding machines are “Buckle Folding Machine”, or “Knife Folding Machine.”
 
-In the following example, all XJDF nodes are prefixed with “xjdf:”. XJDF is often used in combination with or within other XML languages such as PrintTalk. Therefore, the “xjdf:”-prefix is often written in XJDF Documents. CIP4s XJDF library “xJdfLib”, for example, can currently only write documents containing the “xjdf:”-prefix for each element. This book illustrates both methods. 
-
 This XJDF example anticipates many details of XJDF which are explained in detail later. Nevertheless, it makes sense to get an early preview of a real-world XJDF Document in order to place all items learned in the proper context. The snippet need not be understood completely at this point. Extracts of this example are presented again later in the book in order to explain the details and mechanisms behind XJDF.
 
 ```xml title="Example: XJDF Gray Box Folding"
-<xjdf:XJDF JobID="JOB-42" Types="Folding" 
-        xmlns:xjdf="http://www.CIP4.org/JDFSchema_2_0">
-    <xjdf:AuditPool>
-        <xjdf:AuditCreated>
-            <xjdf:Header AgentName="MIS" AgentVersion="1.0" 
+<XJDF JobID="JOB-42" Types="Folding" 
+        xmlns="http://www.CIP4.org/JDFSchema_2_0">
+    <AuditPool>
+        <AuditCreated>
+            <Header AgentName="MIS" AgentVersion="1.0" 
                     Time="2016-05-30T21:49:47Z" />
-        </xjdf:AuditCreated>
-    </xjdf:AuditPool>
-    <xjdf:ProductList>
-        <xjdf:Product Amount="2500" DescriptiveName="My Folded Leaflet">
-            <xjdf:Intent Name="LayoutIntent">
-                <xjdf:LayoutIntent Dimensions="841.88 595.27" 
+        </AuditCreated>
+    </AuditPool>
+    <ProductList>
+        <Product Amount="2500" DescriptiveName="My Folded Leaflet">
+            <Intent Name="LayoutIntent">
+                <LayoutIntent Dimensions="841.88 595.27" 
                         Sides="TwoSidedHeadToHead" Pages="2"
                         FinishedDimensions="280.69 595.27 0.0"/>
-            </xjdf:Intent>
-            <xjdf:Intent Name="FoldingIntent">
-                <xjdf:FoldingIntent FoldCatalog="F6-2"/>
-            </xjdf:Intent>
-            <xjdf:Intent Name="ColorIntent">
-                <xjdf:ColorIntent>
-                    <xjdf:SurfaceColor Surface="Front"
+            </Intent>
+            <Intent Name="FoldingIntent">
+                <FoldingIntent FoldCatalog="F6-2"/>
+            </Intent>
+            <Intent Name="ColorIntent">
+                <ColorIntent>
+                    <SurfaceColor Surface="Front"
                             ColorsUsed="Cyan Magenta Yellow Black"/>
-                    <xjdf:SurfaceColor Surface="Back" 
+                    <SurfaceColor Surface="Back" 
                             ColorsUsed="Cyan Magenta Yellow Black" />
-                </xjdf:ColorIntent>
-            </xjdf:Intent>
-            <xjdf:Intent Name="MediaIntent">
-                <xjdf:MediaIntent MediaQuality="135_MATT"/>
-            </xjdf:Intent>
-        </xjdf:Product>
-    </xjdf:ProductList>
-    <xjdf:ResourceSet Name="Component" Usage="Input">
-        <xjdf:Resource ExternalID="COMP_ID_UNFOLDED">
-            <xjdf:Component Dimensions="841.88 595.27 0.42" 
+                </ColorIntent>
+            </Intent>
+            <Intent Name="MediaIntent">
+                <MediaIntent MediaQuality="135_MATT"/>
+            </Intent>
+        </Product>
+    </ProductList>
+    <ResourceSet Name="Component" Usage="Input">
+        <Resource ExternalID="COMP_ID_UNFOLDED">
+            <Component Dimensions="841.88 595.27 0.42" 
                     MediaRef="MEDIA-ID" />
-        </xjdf:Resource>
-    </xjdf:ResourceSet>
-    <xjdf:ResourceSet Name="Component" Usage="Output">
-        <xjdf:Resource ExternalID="COMP_ID_FOLDED">
-            <xjdf:AmountPool>
-                <xjdf:PartAmount Amount="2580" />
-            </xjdf:AmountPool>
-            <xjdf:Component Dimensions="280.69 595.27 1.26" 
+        </Resource>
+    </ResourceSet>
+    <ResourceSet Name="Component" Usage="Output">
+        <Resource ExternalID="COMP_ID_FOLDED">
+            <AmountPool>
+                <PartAmount Amount="2580" />
+            </AmountPool>
+            <Component Dimensions="280.69 595.27 1.26" 
                     MediaRef="MEDIA-ID" />
-        </xjdf:Resource>
-    </xjdf:ResourceSet>
-    <xjdf:ResourceSet Name="FoldingParams" Usage="Input">
-        <xjdf:Resource>
-            <xjdf:FoldingParams FoldCatalog="F6-2"/>
-        </xjdf:Resource>
-    </xjdf:ResourceSet>
-    <xjdf:ResourceSet Name="Media">
-        <xjdf:Resource ID="MEDIA-ID">
-            <xjdf:Media MediaType="Paper" Thickness="150" Weight="135" 
+        </Resource>
+    </ResourceSet>
+    <ResourceSet Name="FoldingParams" Usage="Input">
+        <Resource>
+            <FoldingParams FoldCatalog="F6-2"/>
+        </Resource>
+    </ResourceSet>
+    <ResourceSet Name="Media">
+        <Resource ID="MEDIA-ID">
+            <Media MediaType="Paper" Thickness="150" Weight="135" 
                     ISOPaperSubstrate="PS3" />
-        </xjdf:Resource>
-    </xjdf:ResourceSet>
-    <xjdf:ResourceSet Name="NodeInfo" Usage="Input">
-        <xjdf:Resource>
-            <xjdf:NodeInfo Start="2016-08-30T15:00:00Z" />
-        </xjdf:Resource>
-    </xjdf:ResourceSet>
-</xjdf:XJDF>
+        </Resource>
+    </ResourceSet>
+    <ResourceSet Name="NodeInfo" Usage="Input">
+        <Resource>
+            <NodeInfo Start="2016-08-30T15:00:00Z" />
+        </Resource>
+    </ResourceSet>
+</XJDF>
 ```
 
 The XJDF example begins with the XJDF root node. In the root node there is an attribute `@JobID` specifying the job’s unique identifier and an attribute `@Types` which defines the Gray Box of the device the XJDF is addressed to. The AuditPool element keeps the metadata of the creator of the document, as well as the timestamp of the creation.

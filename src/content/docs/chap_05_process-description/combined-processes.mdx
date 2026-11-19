@@ -29,84 +29,84 @@ Interpreting and Rendering normally occur pairwise and are covered by a Raster I
 Here, the corresponding XJDF Document has to be sent from the MIS to the GrayBox of the prepress workflow system, in order to execute the combined processes:
 
 ```xml title="Example: XJDF Gray Box of Combined Process 'PrePress'"
-<xjdf:XJDF JobID="JOB-1234"
+<XJDF JobID="JOB-1234"
         Types="Stripping Imposition Interpreting Rendering"
-        xmlns:xjdf="http://www.CIP4.org/JDFSchema_2_0">
-    <xjdf:AuditPool>
-        <xjdf:AuditCreated>
-            <xjdf:Header AgentName="MIS" AgentVersion="1.0"
+        xmlns="http://www.CIP4.org/JDFSchema_2_0">
+    <AuditPool>
+        <AuditCreated>
+            <Header AgentName="MIS" AgentVersion="1.0"
                 Time="2016-11-02T09:52:24Z"/>
-        </xjdf:AuditCreated>
-    </xjdf:AuditPool>
-    <xjdf:ProductList>
-        <xjdf:Product Amount="2500" DescriptiveName="My Folded Leaflet">
-            <xjdf:Intent Name="LayoutIntent">
-                <xjdf:LayoutIntent Dimensions="841.88 595.27"
+        </AuditCreated>
+    </AuditPool>
+    <ProductList>
+        <Product Amount="2500" DescriptiveName="My Folded Leaflet">
+            <Intent Name="LayoutIntent">
+                <LayoutIntent Dimensions="841.88 595.27"
                     Sides="TwoSidedHeadToHead" Pages="2"
                     FinishedDimensions="280.69 595.27 0.0"/>
-            </xjdf:Intent>
-            <xjdf:Intent Name="FoldingIntent">
-                <xjdf:FoldingIntent FoldCatalog="F6-2"/>
-            </xjdf:Intent>
-            <xjdf:Intent Name="ColorIntent">
-                <xjdf:ColorIntent>
-                    <xjdf:SurfaceColor Surface="Front"
+            </Intent>
+            <Intent Name="FoldingIntent">
+                <FoldingIntent FoldCatalog="F6-2"/>
+            </Intent>
+            <Intent Name="ColorIntent">
+                <ColorIntent>
+                    <SurfaceColor Surface="Front"
                         ColorsUsed="Cyan Magenta Yellow Black" />
-                    <xjdf:SurfaceColor Surface="Back"
+                    <SurfaceColor Surface="Back"
                         ColorsUsed="Cyan Magenta Yellow Black" />
-                </xjdf:ColorIntent>
-            </xjdf:Intent>
-            <xjdf:Intent Name="MediaIntent">
-                <xjdf:MediaIntent MediaQuality="135_MATT"/>
-            </xjdf:Intent>
-        </xjdf:Product>
-    </xjdf:ProductList>
-    <xjdf:ResourceSet Name="Layout" Usage="Input">
-        <xjdf:Resource>
-            <xjdf:Layout SurfaceContentsBox="0.0 0.0 1293.31 907.09"
+                </ColorIntent>
+            </Intent>
+            <Intent Name="MediaIntent">
+                <MediaIntent MediaQuality="135_MATT"/>
+            </Intent>
+        </Product>
+    </ProductList>
+    <ResourceSet Name="Layout" Usage="Input">
+        <Resource>
+            <Layout SurfaceContentsBox="0.0 0.0 1293.31 907.09"
                     WorkStyle="WorkAndBack">
-                <xjdf:Position RelativeBox="0.0 0.0 0.5 1.0"
+                <Position RelativeBox="0.0 0.0 0.5 1.0"
                     Orientation="Rotate90" BinderySignatureID="BS-1" />
-                <xjdf:Position RelativeBox="0.5 0.0 1.0 1.0"
+                <Position RelativeBox="0.5 0.0 1.0 1.0"
                     Orientation="Rotate90" BinderySignatureID="BS-1" />
-            </xjdf:Layout>
-        </xjdf:Resource>
-    </xjdf:ResourceSet>
-    <xjdf:ResourceSet Name="RunList" Usage="Input"
+            </Layout>
+        </Resource>
+    </ResourceSet>
+    <ResourceSet Name="RunList" Usage="Input"
             ProcessUsage="Document">
-        <xjdf:Resource>
-            <xjdf:RunList>
-                <xjdf:FileSpec URL="http://example.org/artwork/my.pdf"/>
-            </xjdf:RunList>
-        </xjdf:Resource>
-    </xjdf:ResourceSet>
-    <xjdf:ResourceSet Name="RunList" Usage="Output">
-        <xjdf:Resource>
-            <xjdf:Part Separation="Cyan" />
-            <xjdf:RunList>
-                <xjdf:FileSpec URL="http://example.org/cyan.tif"/>
-            </xjdf:RunList>
-        </xjdf:Resource>
-        <xjdf:Resource>
-            <xjdf:Part Separation="Magenta" />
-            <xjdf:RunList>
-                <xjdf:FileSpec URL="http://example.org/magenta.tif"/>
-            </xjdf:RunList>
-        </xjdf:Resource>
-        <xjdf:Resource>
-            <xjdf:Part Separation="Yellow" />
-            <xjdf:RunList>
-                <xjdf:FileSpec URL="http://example.org/yellow.tif"/>
-            </xjdf:RunList>
-        </xjdf:Resource>
-        <xjdf:Resource>
-            <xjdf:Part Separation="Black" />
-            <xjdf:RunList>
-                <xjdf:FileSpec URL="http://example.org/black.tif"/>
-            </xjdf:RunList>
-        </xjdf:Resource>
-    </xjdf:ResourceSet>
-</xjdf:XJDF>
+        <Resource>
+            <RunList>
+                <FileSpec URL="http://example.org/artwork/my.pdf"/>
+            </RunList>
+        </Resource>
+    </ResourceSet>
+    <ResourceSet Name="RunList" Usage="Output">
+        <Resource>
+            <Part Separation="Cyan" />
+            <RunList>
+                <FileSpec URL="http://example.org/cyan.tif"/>
+            </RunList>
+        </Resource>
+        <Resource>
+            <Part Separation="Magenta" />
+            <RunList>
+                <FileSpec URL="http://example.org/magenta.tif"/>
+            </RunList>
+        </Resource>
+        <Resource>
+            <Part Separation="Yellow" />
+            <RunList>
+                <FileSpec URL="http://example.org/yellow.tif"/>
+            </RunList>
+        </Resource>
+        <Resource>
+            <Part Separation="Black" />
+            <RunList>
+                <FileSpec URL="http://example.org/black.tif"/>
+            </RunList>
+        </Resource>
+    </ResourceSet>
+</XJDF>
 ```
 
 A Gray Box of a combined process is quite similar to address, just as a Gray Box covering only a single process. Generally, the input resources of such a combined Gray Box is the aggregation of the input resources of the containing processes. The output resources match the output resources of the last process executed in the Gray Box. “A ResourceSet that is produced by one process and immediately consumed by the following process NEED NOT be explicitly specified in the XJDF. Any such ResourceSet MAY be completely under the control of the receiving device” [@xjdf_ip1, chap. 5.1.1 "Exchange ResourceSets in combined processes"].
@@ -119,17 +119,17 @@ Since the definition of the layout is a major requirement in many systems, an ex
 
 ```xml title="Example: Layout definition with RelativeBox"
 [...]
-<xjdf:ResourceSet Name="Layout" Usage="Input">
-    <xjdf:Resource>
-        <xjdf:Layout SurfaceContentsBox="0.0 0.0 1293.31 907.09"
+<ResourceSet Name="Layout" Usage="Input">
+    <Resource>
+        <Layout SurfaceContentsBox="0.0 0.0 1293.31 907.09"
                 WorkStyle="WorkAndBack">
-            <xjdf:Position RelativeBox="0.0 0.0 0.5 1.0"
+            <Position RelativeBox="0.0 0.0 0.5 1.0"
                     Orientation="Rotate90" BinderySignatureID="BS-1" />
-            <xjdf:Position RelativeBox="0.5 0.0 1.0 1.0"
+            <Position RelativeBox="0.5 0.0 1.0 1.0"
                     Orientation="Rotate90" BinderySignatureID="BS-1" />
-        </xjdf:Layout>
-    </xjdf:Resource>
-</xjdf:ResourceSet>
+        </Layout>
+    </Resource>
+</ResourceSet>
 [...]
 ```
 
@@ -144,17 +144,17 @@ In some situations, the relative positioning method is not sufficient - in parti
 
 ```xml title="Example: Layout definition with AbsoluteBox"
 [...]
-<xjdf:ResourceSet Name="Layout" Usage="Input">
-    <xjdf:Resource>
-        <xjdf:Layout SurfaceContentsBox="0.0 0.0 1293.31 907.09"
+<ResourceSet Name="Layout" Usage="Input">
+    <Resource>
+        <Layout SurfaceContentsBox="0.0 0.0 1293.31 907.09"
             WorkStyle="WorkAndBack">
-            <xjdf:Position AbsoluteBox="25.51 42.42 637.79 901.42"
+            <Position AbsoluteBox="25.51 42.42 637.79 901.42"
                 Orientation="Rotate90" BinderySignatureID="BS-1" />
-            <xjdf:Position AbsoluteBox="637.79 42.52 1250.07 901.42"
+            <Position AbsoluteBox="637.79 42.52 1250.07 901.42"
                 Orientation="Rotate90" BinderySignatureID="BS-1" />
-        </xjdf:Layout>
-    </xjdf:Resource>
-</xjdf:ResourceSet>
+        </Layout>
+    </Resource>
+</ResourceSet>
 [...]
 ```
 
@@ -168,131 +168,131 @@ The result of this Layout definition is a very precise positioning as shown belo
 Gray Boxes of Combined Processes are not only limited to prepress systems. A collecting machine can also be a Combined Process as well. Here is the collecting example previously shown in the Essentials chapter:
 
 ```xml title="Example: XJDF Gray Box for a Collecting Device"
-<xjdf:XJDF JobID="JOB-1234" Types="Collecting Stitching Trimming"
-        xmlns:xjdf="http://www.CIP4.org/JDFSchema_2_0">
-    <xjdf:AuditPool>
-        <xjdf:AuditCreated>
-            <xjdf:Header AgentName="MIS" AgentVersion="1.0"
+<XJDF JobID="JOB-1234" Types="Collecting Stitching Trimming"
+        xmlns="http://www.CIP4.org/JDFSchema_2_0">
+    <AuditPool>
+        <AuditCreated>
+            <Header AgentName="MIS" AgentVersion="1.0"
                 Time="2017-04-21T22:06:47Z" />
-        </xjdf:AuditCreated>
-    </xjdf:AuditPool>
-    <xjdf:ProductList>
-        <xjdf:Product Amount="1000" DescriptiveName="My Magazine A4"
+        </AuditCreated>
+    </AuditPool>
+    <ProductList>
+        <Product Amount="1000" DescriptiveName="My Magazine A4"
                 IsRoot="true">
-            <xjdf:Intent Name="BindingIntent">
-                <xjdf:BindingIntent BindingOrder="Collecting"
+            <Intent Name="BindingIntent">
+                <BindingIntent BindingOrder="Collecting"
                         BindingSide="Left" BindingType="SaddleStitch"
                         ChildRefs="COVER-ID BODY-ID"/>
-            </xjdf:Intent>
-        </xjdf:Product>
-        <xjdf:Product ID="COVER-ID" IsRoot="false">
-            <xjdf:Intent Name="ColorIntent">
-                <xjdf:ColorIntent>
-                    <xjdf:SurfaceColor Surface="Front"
+            </Intent>
+        </Product>
+        <Product ID="COVER-ID" IsRoot="false">
+            <Intent Name="ColorIntent">
+                <ColorIntent>
+                    <SurfaceColor Surface="Front"
                             ColorsUsed="Cyan Magenta Yellow Black" />
-                    <xjdf:SurfaceColor Surface="Back"
+                    <SurfaceColor Surface="Back"
                             ColorsUsed="Cyan Magenta Yellow Black" />
-                </xjdf:ColorIntent>
-            </xjdf:Intent>
-            <xjdf:Intent Name="LayoutIntent">
-                <xjdf:LayoutIntent Sides="TwoSidedHeadToHead" Pages="4"
+                </ColorIntent>
+            </Intent>
+            <Intent Name="LayoutIntent">
+                <LayoutIntent Sides="TwoSidedHeadToHead" Pages="4"
                         FinishedDimensions="841.88 595.27 0.0"/>
-            </xjdf:Intent>
-            <xjdf:Intent Name="MediaIntent">
-                <xjdf:MediaIntent MediaQuality="135_MATT"/>
-            </xjdf:Intent>
-        </xjdf:Product>
-        <xjdf:Product ID="BODY-ID" IsRoot="false">
-            <xjdf:Intent Name="ColorIntent">
-                <xjdf:ColorIntent>
-                    <xjdf:SurfaceColor Surface="Front"
+            </Intent>
+            <Intent Name="MediaIntent">
+                <MediaIntent MediaQuality="135_MATT"/>
+            </Intent>
+        </Product>
+        <Product ID="BODY-ID" IsRoot="false">
+            <Intent Name="ColorIntent">
+                <ColorIntent>
+                    <SurfaceColor Surface="Front"
                            ColorsUsed="Black" />
-                    <xjdf:SurfaceColor Surface="Back"
+                    <SurfaceColor Surface="Back"
                             ColorsUsed="Black" />
-                </xjdf:ColorIntent>
-            </xjdf:Intent>
-            <xjdf:Intent Name="LayoutIntent">
-                <xjdf:LayoutIntent Sides="TwoSidedHeadToHead" Pages="20"
+                </ColorIntent>
+            </Intent>
+            <Intent Name="LayoutIntent">
+                <LayoutIntent Sides="TwoSidedHeadToHead" Pages="20"
                         FinishedDimensions="841.88 595.27 0.0"/>
-            </xjdf:Intent>
-            <xjdf:Intent Name="MediaIntent">
-                <xjdf:MediaIntent MediaQuality="80_MATT"/>
-            </xjdf:Intent>
-        </xjdf:Product>
-    </xjdf:ProductList>
-    <xjdf:ResourceSet Name="Assembly" Usage="Input">
-        <xjdf:Resource>
-            <xjdf:Assembly BinderySignatureIDs="BS-1 BS-2 BS-3"
+            </Intent>
+            <Intent Name="MediaIntent">
+                <MediaIntent MediaQuality="80_MATT"/>
+            </Intent>
+        </Product>
+    </ProductList>
+    <ResourceSet Name="Assembly" Usage="Input">
+        <Resource>
+            <Assembly BinderySignatureIDs="BS-1 BS-2 BS-3"
                     Order="Collecting" />
-        </xjdf:Resource>
-    </xjdf:ResourceSet>
-    <xjdf:ResourceSet Name="BinderySignature" Usage="Input">
-        <xjdf:Resource>
-            <xjdf:Part BinderySignatureID="BS-1"
+        </Resource>
+    </ResourceSet>
+    <ResourceSet Name="BinderySignature" Usage="Input">
+        <Resource>
+            <Part BinderySignatureID="BS-1"
                     ProductPart="COVER-ID" />
-            <xjdf:BinderySignature FoldCatalog="F4-1"/>
-        </xjdf:Resource>
-        <xjdf:Resource>
-            <xjdf:Part BinderySignatureID="BS-2" ProductPart="BODY-ID" />
-            <xjdf:BinderySignature FoldCatalog="F16-7"/>
-        </xjdf:Resource>
-        <xjdf:Resource>
-            <xjdf:Part BinderySignatureID="BS-3" ProductPart="BODY-ID" />
-            <xjdf:BinderySignature FoldCatalog="F4-1"/>
-        </xjdf:Resource>
-    </xjdf:ResourceSet>
-    <xjdf:ResourceSet Name="Component" Usage="Input">
-        <xjdf:Resource ExternalID="COMP-BS-1">
-            <xjdf:Part BinderySignatureID="BS-1" />
-            <xjdf:Component Dimensions="852.68 603.67 1.42"
+            <BinderySignature FoldCatalog="F4-1"/>
+        </Resource>
+        <Resource>
+            <Part BinderySignatureID="BS-2" ProductPart="BODY-ID" />
+            <BinderySignature FoldCatalog="F16-7"/>
+        </Resource>
+        <Resource>
+            <Part BinderySignatureID="BS-3" ProductPart="BODY-ID" />
+            <BinderySignature FoldCatalog="F4-1"/>
+        </Resource>
+    </ResourceSet>
+    <ResourceSet Name="Component" Usage="Input">
+        <Resource ExternalID="COMP-BS-1">
+            <Part BinderySignatureID="BS-1" />
+            <Component Dimensions="852.68 603.67 1.42"
                     MediaRef="MEDIA-COVER-ID" />
-        </xjdf:Resource>
-        <xjdf:Resource ExternalID="COMP-BS-2">
-            <xjdf:Part BinderySignatureID="BS-2" />
-            <xjdf:Component Dimensions="852.68 603.67 3.34"
+        </Resource>
+        <Resource ExternalID="COMP-BS-2">
+            <Part BinderySignatureID="BS-2" />
+            <Component Dimensions="852.68 603.67 3.34"
                     MediaRef="MEDIA-BODY-ID" />
-        </xjdf:Resource>
-        <xjdf:Resource ExternalID="COMP-BS-3">
-            <xjdf:Part BinderySignatureID="BS-3" />
-            <xjdf:Component Dimensions="852.68 603.67 0.92"
+        </Resource>
+        <Resource ExternalID="COMP-BS-3">
+            <Part BinderySignatureID="BS-3" />
+            <Component Dimensions="852.68 603.67 0.92"
                     MediaRef="MEDIA-BODY-ID" />
-        </xjdf:Resource>
-    </xjdf:ResourceSet>
-    <xjdf:ResourceSet Name="Component" Usage="Output">
-        <xjdf:Resource ExternalID="COMP-MAGAZINE">
-            <xjdf:AmountPool>
-                <xjdf:PartAmount Amount="1050" />
-            </xjdf:AmountPool>
-            <xjdf:Component Dimensions="841.88 595.27 5.26" />
-        </xjdf:Resource>
-    </xjdf:ResourceSet>
-    <xjdf:ResourceSet Name="StitchingParams" Usage="Input">
-        <xjdf:Resource>
-            <xjdf:StitchingParams StitchType="Saddle"
+        </Resource>
+    </ResourceSet>
+    <ResourceSet Name="Component" Usage="Output">
+        <Resource ExternalID="COMP-MAGAZINE">
+            <AmountPool>
+                <PartAmount Amount="1050" />
+            </AmountPool>
+            <Component Dimensions="841.88 595.27 5.26" />
+        </Resource>
+    </ResourceSet>
+    <ResourceSet Name="StitchingParams" Usage="Input">
+        <Resource>
+            <StitchingParams StitchType="Saddle"
                     StapleShape="Eyelet"/>
-        </xjdf:Resource>
-    </xjdf:ResourceSet>
-    <xjdf:ResourceSet Name="TrimmingParams" Usage="Input">
-        <xjdf:Resource>
-            <xjdf:TrimmingParams Height="841.88" Width="595.27"/>
-        </xjdf:Resource>
-    </xjdf:ResourceSet>
-    <xjdf:ResourceSet Name="Media">
-        <xjdf:Resource ID="MEDIA-COVER-ID">
-            <xjdf:Media MediaType="Paper" Thickness="150" Weight="135"
+        </Resource>
+    </ResourceSet>
+    <ResourceSet Name="TrimmingParams" Usage="Input">
+        <Resource>
+            <TrimmingParams Height="841.88" Width="595.27"/>
+        </Resource>
+    </ResourceSet>
+    <ResourceSet Name="Media">
+        <Resource ID="MEDIA-COVER-ID">
+            <Media MediaType="Paper" Thickness="150" Weight="135"
                     ISOPaperSubstrate="PS3" />
-        </xjdf:Resource>
-        <xjdf:Resource ID="MEDIA-BODY-ID">
-            <xjdf:Media MediaType="Paper" Thickness="90" Weight="80"
+        </Resource>
+        <Resource ID="MEDIA-BODY-ID">
+            <Media MediaType="Paper" Thickness="90" Weight="80"
                     ISOPaperSubstrate="PS3" />
-        </xjdf:Resource>
-    </xjdf:ResourceSet>
-    <xjdf:ResourceSet Name="NodeInfo" Usage="Input">
-        <xjdf:Resource>
-            <xjdf:NodeInfo Start="2016-09-26T22:00:00Z" />
-        </xjdf:Resource>
-    </xjdf:ResourceSet>
-</xjdf:XJDF>
+        </Resource>
+    </ResourceSet>
+    <ResourceSet Name="NodeInfo" Usage="Input">
+        <Resource>
+            <NodeInfo Start="2016-09-26T22:00:00Z" />
+        </Resource>
+    </ResourceSet>
+</XJDF>
 ```
 
 The XJDF Collecting example represents a Combined Process consisting of Collecting, Stitching, and Trimming. All three processes are listed in the `/XJDF/@Types` attribute. In contrast to the prepress example, this XJDF Document contains input resources of all three processes.

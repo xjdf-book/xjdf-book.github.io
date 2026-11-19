@@ -21,17 +21,17 @@ The most common three subscription types are Status, Notification, and Resource.
 In order to turn a Query Message into a subscription, an additional Subscription element has to be written into the message’s body. The following is an example of an XJMF Status Subscription Message:
 
 ```xml title="Example: XJMF Status Subscription Message"
-<xjdf:XJMF xmlns:xjdf="http://www.CIP4.org/JDFSchema_2_0">
-    <xjdf:Header ID="XJMF_ID" DeviceID="DEVICE_ID_MIS"
+<XJMF xmlns="http://www.CIP4.org/JDFSchema_2_0">
+    <Header ID="XJMF_ID" DeviceID="DEVICE_ID_MIS"
             Time="2016-11-15T13:22:01+02:00" />
-    <xjdf:QueryStatus>
-        <xjdf:Header ID="MESSAGE_ID" DeviceID="DEVICE_ID_MIS"
+    <QueryStatus>
+        <Header ID="MESSAGE_ID" DeviceID="DEVICE_ID_MIS"
                 Time="2016-11-15T13:22:01+02:00" />
-        <xjdf:Subscription RepeatTime="30"
+        <Subscription RepeatTime="30"
                 URL="http://mis.example.org/xjmf" />
-        <xjdf:StatusQuParams />
-    </xjdf:QueryStatus>
-</xjdf:XJMF>
+        <StatusQuParams />
+    </QueryStatus>
+</XJMF>
 ```
 
 “Queries SHALL be subscribed by including a Subscription element that defines the details of the subscription. The receiver of the subscription SHALL initially send an empty Response Message to the sender. The receiver of the subscription SHALL send XJMF Signals whenever the conditions that were specified in the Subscription element are met. Such a subscribed query that requests multiple Signals is referred to as a ‘persistent channel’.
@@ -59,15 +59,15 @@ More details about the attributes and their effects on a production system can b
 While Query Messages containing a Subscription element set up a new persistent channel, the XJMF StopPersistentChannel Command Message removes a persistent channel. “No more Signal Messages are sent to the Controller once the command has been issued. A certain subset of signals MAY be addressed for unsubscription by specifying a StopPersChParams Element” [@xjdf_ip1, chap. 7.19 "StopPersistentChannel"]. The following is an example of such a Command Message:
 
 ```xml title="Example: XJMF StopPersistentChannel Command Message"
-<xjdf:XJMF xmlns:xjdf="http://www.CIP4.org/JDFSchema_2_0">
-    <xjdf:Header ID="XJMF_ID" DeviceID="DEVICE_ID_MIS"
+<XJMF xmlns="http://www.CIP4.org/JDFSchema_2_0">
+    <Header ID="XJMF_ID" DeviceID="DEVICE_ID_MIS"
             Time="2016-11-15T15:26:59+02:00" />
-    <xjdf:CommandStopPersistentChannel>
-        <xjdf:Header ID="MESSAGE_ID" DeviceID="DEVICE_ID_MIS"
+    <CommandStopPersistentChannel>
+        <Header ID="MESSAGE_ID" DeviceID="DEVICE_ID_MIS"
                 Time="2016-11-15T15:26:59+02:00" />
-        <xjdf:StopPersChParams URL="http://mis.example.org/xjmf" />
-    </xjdf:CommandStopPersistentChannel>
-</xjdf:XJMF>
+        <StopPersChParams URL="http://mis.example.org/xjmf" />
+    </CommandStopPersistentChannel>
+</XJMF>
 ```
 
 The Command Message example above deletes all persistent channels created by the device “DEVICE_ID_MIS” and which are targeted towards the URL “*http://mis.example.org/jmf*”. All attributes marked as Filter = “yes” in the persistent channel Attribute Table can be used in the StopPersChParams element as a means of defining a subset of persistent channels to be removed. Attributes that are not specified default to match anything.

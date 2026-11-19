@@ -64,17 +64,17 @@ When packaging a ZIP archive, all assets (or a subset) can be packed into the zi
 
 ```xml title="Example: AuditPool Error Notification"
 [...]
-<xjdf:AuditPool>
+<AuditPool>
     [...]
-    <xjdf:AuditNotification>
-        <xjdf:Header DeviceID="DEVICE_ID" ID="MESSAGE_ID"
+    <AuditNotification>
+        <Header DeviceID="DEVICE_ID" ID="MESSAGE_ID"
             Time="2016-11-14T16:57:24+02:00" />
-        <xjdf:Notification Class="Error" JobID="JOB_ID">
-            <xjdf:Event EventID="3092" EventValue="Paper stock is low." />
-        </xjdf:Notification>
-    </xjdf:AuditNotification>
+        <Notification Class="Error" JobID="JOB_ID">
+            <Event EventID="3092" EventValue="Paper stock is low." />
+        </Notification>
+    </AuditNotification>
     [...]
-</xjdf:AuditPool>
+</AuditPool>
 [...]
 ```
 
@@ -83,15 +83,15 @@ This example shows that the actual error information is part of the Notification
 The entire Notification element is embedded in an AuditNotification element which is a direct subelement of AuditPool. However, instead (or in addition) of writing the Notification into the AuditPool of the XJDF Document, the Notification element can also be embedded into an XJMF Notification Signal message as a means of immediately sending the error information to the subscribing system.
 
 ```xml title="Example: XJMF Error Notification"
-<xjdf:XJMF xmlns:xjdf="http://www.CIP4.org/JDFSchema_2_0">
-    <xjdf:Header ID="XJMF_ID" DeviceID="DEVICE_ID_CONTROLLER"
+<XJMF xmlns="http://www.CIP4.org/JDFSchema_2_0">
+    <Header ID="XJMF_ID" DeviceID="DEVICE_ID_CONTROLLER"
             Time="2016-11-14T16:57:24+02:00" />
-    <xjdf:SignalNotification>
-        <xjdf:Header ID="I1234" refID="MESSAGE_ID"
+    <SignalNotification>
+        <Header ID="I1234" refID="MESSAGE_ID"
             DeviceID="DEVICE_ID" Time="2016-11-14T16:57:24+02:00" />
-        <xjdf:Notification Class="Error" JobID="JOB_ID">
-            <xjdf:Event EventID="3092" EventValue="Paper stock is low." />
-        </xjdf:Notification>
-    </xjdf:SignalNotification>
-</xjdf:XJMF>
+        <Notification Class="Error" JobID="JOB_ID">
+            <Event EventID="3092" EventValue="Paper stock is low." />
+        </Notification>
+    </SignalNotification>
+</XJMF>
 ```

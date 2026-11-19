@@ -96,7 +96,5 @@ Please [open an issue](https://github.com/xjdf-book/xjdf-book.github.io/issues) 
 
 ## Publication Details
 
-- **Title**: *XJDF – Exchange Job Definition Format* (First Edition)
+- **Title**: *XJDF – Exchange Job Definition Format* (Online Edition)
 - **Author**: [Dr. Stefan Meissner](https://www.linkedin.com/in/meissners)
-- **ISBN**: `978-3-00-055604-3`
-- **Publisher**: ricebean.net software UG (haftungsbeschränkt)

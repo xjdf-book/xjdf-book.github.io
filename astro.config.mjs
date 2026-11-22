@@ -12,6 +12,7 @@ export default defineConfig({
 		starlight({
 			title: 'XJDF Book',
 			plugins: [starlightThemeRapide()],
+			customCss: ['./src/styles/custom.css'],
 			components: {
 				Footer: './src/components/footer.astro',
 			},

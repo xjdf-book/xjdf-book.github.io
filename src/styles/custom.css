@@ -1,0 +1,33 @@
+/* Custom styles for XJDF Book */
+:root {
+  --xjdf-green: #348f2e;
+  --xjdf-green-dark: #287023;
+  --xjdf-green-subtle: rgba(52, 143, 46, 0.14);
+}
+
+/* Fix active chapter visibility in the left sidebar */
+.sidebar-pane .top-level > li > a {
+  border-radius: 0.375rem;
+  padding: 0.45rem 0.75rem;
+  margin-block: 0.125rem;
+  transition: background-color 150ms ease, color 150ms ease;
+}
+
+.sidebar-pane .top-level > li > a:not([aria-current='page']):is(:hover, :focus-visible) {
+  background-color: var(--xjdf-green-subtle);
+  color: var(--sl-color-white);
+}
+
+/* Active chapter: cover green background with crisp white text */
+.sidebar-pane .top-level > li > a[aria-current='page'],
+.sidebar-pane a[aria-current='page'] {
+  background-color: var(--xjdf-green);
+  color: #ffffff;
+  font-weight: 600;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12);
+}
+
+.sidebar-pane .top-level > li > a[aria-current='page']:is(:hover, :focus-visible) {
+  background-color: var(--xjdf-green-dark);
+  color: #ffffff;
+}

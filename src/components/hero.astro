@@ -4,7 +4,11 @@ import Default from '@astrojs/starlight/components/Hero.astro';
 import xjdfLogoLight from '../assets/xjdf-logo-light.png';
 import xjdfLogoDark from '../assets/xjdf-logo-dark.png';
 import { LinkButton } from '@astrojs/starlight/components';
+import pkg from '../../package.json';
 
+const buildDate =
+	('buildTime' in pkg && typeof pkg.buildTime === 'string' && pkg.buildTime) ||
+	new Date().toISOString().replace('T', ' ').slice(0, 16) + ' UTC';
 const { data } = Astro.locals.starlightRoute.entry;
 const { tagline, image, actions = [] } = data.hero || {};
 const isSplash = data.template === 'splash';
@@ -48,6 +52,11 @@ if (image && 'file' in image) {
 					<span class="sr-only">XJDF</span>
 				</h1>
 				{tagline && <div class="tagline" set:html={tagline} />}
+				<div class="hero-meta">
+					<span>Version {pkg.version}</span>
+					<span class="hero-meta-sep">·</span>
+					<span title="Build timestamp">{buildDate}</span>
+				</div>
 			</div>
 			{actions.length > 0 && (
 				<div class="sl-flex actions">
@@ -121,6 +130,19 @@ if (image && 'file' in image) {
 		letter-spacing: 0.01em;
 		color: var(--sl-color-gray-2);
 		margin-top: 0.25rem;
+	}
+
+	.hero-meta {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.45rem;
+		align-items: center;
+		font-size: var(--sl-text-sm);
+		color: var(--sl-color-gray-3);
+	}
+
+	.hero-meta-sep {
+		opacity: 0.6;
 	}
 
 	.actions {

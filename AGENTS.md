@@ -11,7 +11,7 @@ The site is built as a static documentation website using **Astro 7** and **Star
 - **Citations / Bibliography**: `rehype-citation` backed by `src/data/references.bib`
 - **Code Blocks**: Expressive Code with `@expressive-code/plugin-line-numbers`
 - **Image Optimization**: `sharp` via `astro:assets` `<Image />` component
-- **CI/CD**: GitHub Actions (`.github/workflows/publish.yml`) deploying `dist/` to GitHub Pages on pushes to `main`
+- **CI/CD**: GitHub Actions (`.github/workflows/publish.yml`) deploying `dist/` to GitHub Pages on version tags matching `x.y.z` (`[0-9]+.[0-9]+.[0-9]+`)
 
 ## Commands
 - `npm run dev` / `npm start` — Start the local Astro dev server

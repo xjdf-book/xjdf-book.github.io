@@ -2,7 +2,9 @@
 import Default from '@astrojs/starlight/components/Sidebar.astro';
 import pkg from '../../package.json';
 
-const buildDate = new Date().toISOString().replace('T', ' ').slice(0, 16) + ' UTC';
+const buildDate =
+	('buildTime' in pkg && typeof pkg.buildTime === 'string' && pkg.buildTime) ||
+	new Date().toISOString().replace('T', ' ').slice(0, 16) + ' UTC';
 ---
 
 <Default {...Astro.props}><slot /></Default>

@@ -2,7 +2,8 @@ name: Publish Book
 
 on:
   push:
-    branches: ["main"]
+    tags:
+      - '[0-9]+.[0-9]+.[0-9]+'
   workflow_dispatch:
 
 permissions:
@@ -29,6 +30,13 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
+
+      - name: Set package version and build time
+        run: |
+          if [ "${{ github.ref_type }}" = "tag" ]; then
+            npm version "${GITHUB_REF_NAME}" --no-git-tag-version --allow-same-version
+          fi
+          npm pkg set buildTime="$(date -u +'%Y-%m-%d %H:%M UTC')"
 
       - name: Build static files
         id: build

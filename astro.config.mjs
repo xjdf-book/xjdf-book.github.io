@@ -11,6 +11,7 @@ export default defineConfig({
 	integrations: [
 		starlight({
 			title: 'XJDF Book',
+			favicon: '/favicon.svg',
 			logo: {
 				light: './src/assets/header-logo-light.png',
 				dark: './src/assets/header-logo-dark.png',

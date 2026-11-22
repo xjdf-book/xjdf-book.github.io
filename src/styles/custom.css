@@ -31,3 +31,18 @@
   background-color: var(--xjdf-green-dark);
   color: #ffffff;
 }
+
+/* Top-left header site title image */
+header.header .site-title img {
+  height: calc(var(--sl-nav-height) - 1rem);
+  width: auto;
+}
+
+/* Landing page hero image styling */
+.hero > img,
+.hero .hero-html img {
+  border-radius: 0.75rem;
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.25);
+}
+
+

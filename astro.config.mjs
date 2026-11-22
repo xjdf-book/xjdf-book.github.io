@@ -11,6 +11,11 @@ export default defineConfig({
 	integrations: [
 		starlight({
 			title: 'XJDF Book',
+			logo: {
+				light: './src/assets/header-logo-light.png',
+				dark: './src/assets/header-logo-dark.png',
+				replacesTitle: true,
+			},
 			plugins: [starlightThemeRapide()],
 			customCss: ['./src/styles/custom.css'],
 			components: {

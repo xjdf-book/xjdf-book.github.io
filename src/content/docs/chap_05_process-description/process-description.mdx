@@ -12,32 +12,33 @@ import screenPreflightOutput from '../../../assets/spec-screen/preflight-output.
 import screenImpositionInput from '../../../assets/spec-screen/imposition-input.png';
 import { Image } from 'astro:assets';
 
-Whereas the product description is process independent and is not concerned with the machinery equipment of a printing house, the Process Description describes all work steps needed in order to produce the desired product. Therefore, the Process Description is unique for each printing house and depends on both the machinery equipment and the exact production concept which outlines the plan of how the product is to be manufactured.
+Whereas a product description is process-independent and agnostic to the equipment of a particular print shop, a **process description** specifies the concrete manufacturing worksteps required to produce the product. Consequently, process descriptions are tailored to the specific machinery and production plan of the executing printing house.
 
-The heart of the XJDF Specification is chapter 5 - “Processes”. **In XJDF process is a synonym for workflow step. “Processes [...] define individual workflow steps that are assumed to be executed by a single-purpose Device.** Some controllers and devices are able to combine the functionality of multiple single-purpose devices and execute more than one process type” [@xjdf_ip1, chap. 5.1 "Combining Individual Process Steps"]. For instance, folding machines might be able to cut or perforate products in addition to folding.
+The core of the XJDF Specification is Chapter 5 (“Processes”). **In XJDF, a *process* is synonymous with a workflow step: “Processes [...] define individual workflow steps that are assumed to be executed by a single-purpose Device.** Some controllers and devices are able to combine the functionality of multiple single-purpose devices and execute more than one process type” [@xjdf_ip1, chap. 5.1 "Combining Individual Process Steps"]—for example, a folding machine that can also slit, crease, or perforate sheets inline.
 
-The XJDF Specification provides a broad list of processes which can occur within a print production workflow. As the development in the graphic arts industry is constantly moving forward, one main task of the CIP4 Consortium is to identify and specify new processes. However, “vendors that have specific Processes that do not fit in the general XJDF processes and that are not combinations of individual XJDF processes can create XJDF Process Nodes of their own type” [@xjdf_ip1, chap. 3.5.5 "Extending Process Types"]. More details of how to extend XJDF in the section “Extensibility”.
+The XJDF Specification defines a comprehensive catalog of processes covering prepress, press, and postpress operations. As technology in the graphic arts industry evolves, CIP4 working groups continuously refine and expand this catalog. For specialized equipment that is not covered by standard processes, “vendors that have specific Processes that do not fit in the general XJDF processes and that are not combinations of individual XJDF processes can create XJDF Process Nodes of their own type” [@xjdf_ip1, chap. 3.5.5 "Extending Process Types"] (see “Extensibility” in Chapter 3).
 
-Technically, each process listed in the specification is defined by its unique process name, a detailed description, and two tables declaring the input and output resources of the appropriate process.
+In the specification, every process is defined by:
 
-There are also some “Generic Input Resources” defined which are valid input resources for each process. Examples of “Generic Input Resources” are NodeInfo or Device. “The NodeInfo resource contains information about planned scheduling” [@xjdf_ip1, chap. 6.60 "NodeInfo"], whereas the Device resource “describes the physical properties of the main device that executes an XJDF process” [@xjdf_ip1, chap. 6.28 "Device"]. The complete list of all “Generic Input Resources” can be found in the XJDF Specification in chapter “Process Template”. There is a table providing “a list of resources that are valid for any process” [@xjdf_ip1, chap. 5.2 "Process Template"].
+1. Its unique **process name** (used in `/XJDF/@Types`)
+2. A **semantic description** of the manufacturing step
+3. Two normative tables listing its **Input Resources** and **Output Resources**
 
-In the following, an extract of the XJDF Specification shows the process definition of the process Folding:
+In addition to process-specific resources, the specification defines a set of **Generic Input Resources** that are valid for any process—such as `NodeInfo` (“contains information about planned scheduling” [@xjdf_ip1, chap. 6.60 "NodeInfo"]) and `Device` (“describes the physical properties of the main device that executes an XJDF process” [@xjdf_ip1, chap. 6.28 "Device"]). The complete table of Generic Input Resources is defined in Section 5.2 (“Process Template”) of the XJDF Specification.
+
+The figure below shows the specification entry for the `Folding` process:
 
 <figure>
   <Image src={screenFoldingProcess} alt="The Definition of the Folding Process (XJDF Specification Extract)" />
   <figcaption>Figure: The Definition of the Folding Process (XJDF Specification Extract)</figcaption>
 </figure>
 
-As depicted in the Folding Process Figure above, each process definition begins with the actual process’s name in the title line. Following that is a detailed description of the process itself. The text includes a description of the process from the production point of view, as well as from the XJDF point of view.
+Following the process title and overview, the **Input Resources** and **Output Resources** tables specify which resources the `Folding` process consumes and produces. Here, `Folding` takes two optional input resources (`Component` and `FoldingParams`, plus any Generic Input Resources) and produces one optional output resource (`Component`). The question mark (`?`) following each resource name indicates that the resource is optional (`0..1` cardinality); full cardinality notation rules are defined in Section 1.6.4 (“Specification of Cardinality”) of the XJDF Specification.
 
-The most significant part of the process definition are the two tables “Input Resource” and “Output Resources”. The content of these tables describes which resources a specific process can consume, and which resources will be produced by that process. In this example there are two optional input parameters - Component resource and FoldingParams resource. The output resource is another Component resource which is also optional.
+* **`Component`** “is used to describe the various versions of finished and semi-finished goods in the press and postpress area, such as a pile of folded sheets that have been collected and are then be joined and trimmed. Nearly every postpress process has a Component resource as an input as well as an output. Typically the first components in the process chain are some printed sheets or ribbons, while the last Component is a book or a brochure” [@xjdf_ip1, chap. 6.18 "Component"].
+* **`FoldingParams`** “describes the folding parameters, including the sequence of folding steps. It is also possible to execute the predefined steps of the folding catalog” [@xjdf_ip1, chap. 6.37 "FoldingParams"].
 
-The question mark “?” right after the resource’s name in the table indicates that the appropriate resource is optional. The full explanation of the cardinality can be found in the XJDF Specification in chapter 1.6.4, “Specification of Cardinality”.
-
-The resource “Component is used to describe the various versions of finished and semi-finished goods in the press and postpress area, such as a pile of folded sheets that have been collected and are then be joined and trimmed. Nearly every postpress process has a Component resource as an input as well as an output. Typically the first components in the process chain are some printed sheets or ribbons, while the last Component is a book or a brochure” [@xjdf_ip1, chap. 6.18 "Component"]. FoldingParams “describes the folding parameters, including the sequence of folding steps. It is also possible to execute the predefined steps of the folding catalog” [@xjdf_ip1, chap. 6.37 "FoldingParams"].
-
-The last line in the table “Input Resources” references the “Generic Input Resources” which have previously been explained. The following instance demonstrates how the corresponding XJDF Document goes about describing the single process “Folding”. This example has already been presented in the chapter on XJDF Essentials:
+Below is the corresponding XJDF Document for a `"Folding"` Gray Box (first introduced in Chapter 3):
 
 ```xml title="Example: XJDF Gray Box 'Folding'"
 <XJDF JobID="JOB-42" Types="Folding"
@@ -107,57 +108,43 @@ The last line in the table “Input Resources” references the “Generic Input
 </XJDF>
 ```
 
-The XJDF example above describes a Folding Gray Box. As previously mentioned, a Gray Box is defined by the attribute `/XJDF/@Types`. Therefore, the `@Types` attribute value is “Folding”.
+Notice how the `ResourceSet` elements in the document map directly to the specification table:
 
-For the folding process, the XJDF Specification specifies the two resources Component and FoldingParams as input resources, and another Component resource as the output resource. These three resources can also be found in the example above.
+* The input `Component` and `FoldingParams` resources carry `//ResourceSet/@Usage="Input"`, and the Generic Input Resource `NodeInfo` also carries `@Usage="Input"`.
+* The output `Component` resource carries `//ResourceSet/@Usage="Output"`.
+* The `Media` `ResourceSet` omits `@Usage` because `Media` is neither a direct input nor an output of `Folding`; instead, it is referenced by the two `Component` resources (`//Component/@MediaRef="MEDIA-ID"`) to supply physical paper attributes such as `@Weight` and `@Thickness` needed for folder setup.
 
-The attribute `//ResourceSet/@Usage` “shows that the resource is either consumed or produced within this XJDF document” [@xjdf_ip1, chap. 3 Table 3.4: ResourceSet/@Usage]. If no `@Usage` is specified, the ResourceSet or its child Resource elements shall be referenced from another resource or sub-element thereof.
+Because every process in the XJDF Specification has clearly defined input and output resources, complete production workflows can be chained together inside the MIS by linking the output interchange resource of one process to the input of the next. Importantly, this process chain exists inside the MIS—not inside a monolithic XML job ticket. For each job, the MIS plans the sequence of processes based on available equipment and device capabilities, groups those processes into **Gray Boxes** corresponding to the target devices or controllers, and generates a dedicated XJDF Document for each Gray Box.
 
-In the example, one Component resource and the FoldingParams resource are both defined as input resources (`//Resource/@Usage` = “Input”), while the other Component resource is defined as an output resource (`//Resource/@Usage` is equals “Output”). Additionally, the document also contains a NodeInfo resource. NodeInfo is a Generic Input Resource which is valid for each process. The NodeInfo resource is also specified as input resource.
-
-The only resource in the example not containing an `@Usage` attribute is Media. The Media resource “represents the properties of a raw, unexposed printable surface such as sheet, film or plate” [@xjdf_ip1, chap. 6.58 "Media"]. Here, the Media resource describes some characteristics of the paper which the Component represents. Attributes such as `@Weight` or `@Thinkness` are relevant for a folding machine in order to set up for a job.
-
-Nevertheless, Media resource is neither an direct input or output resource of the Folding process, nor is it a Generic Input Resource. Rather, the Media resource is referenced by both Component resources (see `//Component/@MediaRef` = `//ResourceSet`[@Name=”Media”]`/Resource/@ID`) in order to characterize the paper of the Component resource. Technically, the Media resource is referenced by the Component resource. Media’s ResourceSet therefore has no `@Usage` attribute.
-
-As the XJDF Specification provides a broad range of processes which are each defined by specific input and output resources, production workflows or even production networks can be defined based on resource linking. The output of the one process is the input of the next process. However, from the perspective of XJDF, these production workflows or networks do not have to be defined in a single XJDF Document. XJDF is designed as a pure interface technology. The production workflow has to be generated and managed by the MIS. The MIS is also responsible for maintaining an overview of the production, e.g. job tracking, etc. XJDF simply represents a communication medium.
-
-In an XJDF enabled production system, the MIS has to define and plan a production workflow for each job, based on the equipment and oddities of a printing house. Each physical machine or application covers one or several logical XJDF processes. If a customer job needs to be folded, the MIS system has to create a production workflow which includes the process folding. Beyond that, the MIS is concerned with the device’s capabilities and restrictions, such as maximum paper size, and so on, when generating the production workflow.
-
-Once generated, the production workflow is a list of processes linked by resources. XJDF is designed to address Gray Boxes, and so - last but not least - the MIS has to separate the production workflow into Gray Boxes. In most situations, a Gray Box covers the functionality of a single device, but may also cover the processes of multiple devices which can be monitored by way of a lower level process controller.
-
-The following diagram depicts a production workflow of a common folded leaflet from a customer’s artwork submission, to the delivery of the final product to the customer. The diagram also shows some of the interaction between the production and the MIS:
+The diagram below illustrates a typical end-to-end production workflow for a folded leaflet, from initial artwork submission by the customer to final delivery, including the interactions between the MIS and the seven shop-floor Gray Boxes:
 
 <figure>
   <Image src={diagramFlyerProcess} alt="Example Process of a Flyer" />
   <figcaption>Figure: Example Process of a Flyer</figcaption>
 </figure>
 
-In the diagram, the customer is shown at both the start and end points. This process begins when the customer submits the digital artwork to the Preflight process. The process is completed when the customer receives a package containing the folded leaflets that s(he) ordered. This is a very common workflow as implemented in many printing houses.
+Across this ten-process workflow, the seven Gray Boxes are connected by four primary **interchange resources**:
 
-This folded leaflet production workflow consists of ten processes chained by different kinds of interchange resources. The four major interchange resources are RunList, ExposedMedia, Component, and Product. “A RunList defines one or more printable logical documents or document sets that MAY be defined in one or more external [...] files” [@xjdf_ip1, chap. 6.73 "RunList"]. An ExposedMedia “resource represents a processed Media-based Resource such as film or plate” [@xjdf_ip1, chap. 6.35 "ExposedMedia"]. A “Component is used to describe the various versions of semi-finished goods in the press and postpress area, such as a pile of folded sheets that have been collected and are then be joined and trimmed” [@xjdf_ip1, chap. 6.18 "Component"] and Product represent the final product.
+1. **`RunList`** — “defines one or more printable logical documents or document sets that MAY be defined in one or more external [...] files” [@xjdf_ip1, chap. 6.73 "RunList"] (digital PDF artwork and RIPped TIFF separations).
+2. **`ExposedMedia`** — “represents a processed Media-based Resource such as film or plate” [@xjdf_ip1, chap. 6.35 "ExposedMedia"] (imaged printing plates from the plate setter).
+3. **`Component`** — “is used to describe the various versions of semi-finished goods in the press and postpress area, such as a pile of folded sheets that have been collected and are then be joined and trimmed” [@xjdf_ip1, chap. 6.18 "Component"] (printed press sheets, cut piles, folded leaflets, and packaged boxes).
+4. **`Product`** — The finished product delivered to the customer.
 
-The entire production workflow is organized in seven Gray Boxes. The output of the one Gray Box is the input of the next one. In addition to the interchange resource, each Gray Box may require further parameter resources as part of the process configuration. For instance, the Gray Box 1 (Preflight) requires some additional preflight settings (PreflightParms) in addition to the customer’s digital artwork (RunList), in order to specify which aspects of the artwork are to be preflighted (e. g. fonts, page size, colors etc.). “Preflighting is the process of examining the components of a print job to ensure that the job will print successfully and with the expected results. Preflight checks can be performed on each document or finished page identified within the associated RunList resource.
+In addition to the interchange resource passed from the preceding step, each Gray Box receives process-specific parameter resources from the MIS. For example, **Gray Box 1 (`Preflight`)** receives the customer's artwork (`RunList`) along with preflight check rules (`PreflightParams`). “Preflighting is the process of examining the components of a print job to ensure that the job will print successfully and with the expected results. Preflight checks can be performed on each document or finished page identified within the associated RunList resource. Preflighting a file is generally a two-step process. First, the documents are analyzed and compared to the set of tests. Then, a preflight report is built to list the encountered issues (according to the tests)” [@xjdf_ip1, chap. 5.4.14 "Preflight"].
 
-Preflighting a file is generally a two-step process. First, the documents are analyzed and compared to the set of tests. Then, a preflight report is built to list the encountered issues (according to the tests)” [@xjdf_ip1, chap. 5.4.14 "Preflight"]. In everydays language preflight is also known as “data check”.
-
-The PreflightParms resources have to be generated by the MIS system when the job is being submitted to the Preflight Gray Box. The result of that Gray Box is the checked artwork (RunList), in addition to the preflight report (PreflightReport). A preflight report is a detailed report about the quality of the print data. It contains metadata about the artwork files, as well as all failures and warnings, e.g. incorrect page size, missing fonts, or insufficient resolution of images if it exists. Based on the preflight report, the MIS (or the prepress operator) decides whether the workflow can proceed, or if it has to be interrupted in order to wait for new corrected data.
-
-If the preflight of the customer's artwork was successful and the artwork has neither errors nor warnings, the MIS triggers the next Gray Box. Gray Box 2 contains several prepress processes which are normally provided by a single prepress workflow solution. **Multiple processes in a single Gray Box are also referred to as Combined Processes in XJDF.**
+When `Preflight` finishes, it returns the checked artwork (`RunList`) and a `PreflightReport` detailing file metadata and any errors or warnings (such as missing fonts, incorrect trim box dimensions, or low-resolution images). Based on the `PreflightReport`, the MIS (or a prepress operator) decides whether to release the job to **Gray Box 2** or request corrected artwork. Notice that **Gray Box 2** encapsulates four distinct prepress processes executed together by a single prepress workflow system. **In XJDF, executing multiple processes within a single Gray Box is called a Combined Process.**
 
 
 ## Combined Processes
+While all processes in the XJDF Specification “are assumed to be executed by a single-purpose device. Some controllers and devices are able to combine the functionality of multiple single-purpose devices and execute more than one process type” [@xjdf_ip1, chap. 5.1 "Combining Individual Process Steps"].
 
-All processes described in the XJDF Specification “are assumed to be executed by a single-purpose device. Some controllers and devices are able to combine the functionality of multiple single-purpose devices and execute more than one process type” [@xjdf_ip1, chap. 5.1 "Combining Individual Process Steps"]. One example of a typical Combined Process in a print production workflow is the prepress workflow system. In general, such a system is responsible for preparing the customer's artwork to be exposed on a printing plate, or to be printed by a digital press. This includes, for instance, the way in which single pages of the final product are positioned on the sheet, or any kind of data optimization such as color management, trapping, etc. Each printing technology (sheet-fed offset, web offset, inkjet etc.) places specific demands on the print data. Furthermore, the planned finishing process of the product may also affect the data preparation. The result of the Combined Process of a prepress workflow system is the digital data to be printed on the planned printing system, byte by byte.
+A classic example of a **Combined Process** is a prepress workflow system (**Gray Box 2** in the workflow diagram above), which prepares preflighted customer artwork for plate exposure or digital printing. In our folded leaflet workflow, Gray Box 2 combines four logical XJDF processes—`Stripping`, `Imposition`, `Interpreting`, and `Rendering`:
 
-A prepress workflow system is an absolute necessity for any kind of printing system. Even a common desktop printer has some internal data optimization systems for the purpose of translating the objects of the digital document into colored dots to be printed. In commercial printing, this translation is carried out by prepress workflow systems.
+* **`Stripping`** “specifies the process of translating a high level structured description of the imposition of one or multiple job parts [...] for the Imposition process” [@xjdf_ip1, chap. 5.4.22 "Stripping"].
+* **`Imposition`** “is responsible for combining pages of input graphical content onto surfaces of the physical output media. Static or dynamic printer's marks can be added to the surface in order to facilitate various aspects of the production process. Among other things, these marks are used for press alignment, color calibration, job identification and as guides for cutting and folding. Note that the Imposition process specifies the task of combining pages and marks on sheets. The task of setting up the parameters needed for Imposition is defined by Stripping” [@xjdf_ip1, chap. 5.4.8 "Imposition"].
+* **`Interpreting` and `Rendering`** typically occur together as a pair inside a Raster Image Processor (RIP), which “consume page descriptions and instructions for producing the graphical output. It parses the graphical contents in the page descriptions, renders the contents, and produces a rasterized image of the page” [@jdf_1_5, chap. 6.2.33 "RIPing"].
 
-As the data preparation can be very specific for each printing technology there are many individual workflow solutions available. Systems can be specialized on packaging printing, banners printing, newspaper printing etc.
-
-In the production workflow diagram of a folded leaflet, the “Gray Box 2” covers processes which are provided by a prepress workflow system. The Gray Box contains the four processes Stripping, Imposition, Interpreting and Rendering. Stripping is an abstract description of Imposition. “The Imposition process is responsible for combining pages of input graphical content onto surfaces of the physical output media. Static or dynamic printer's marks can be added to the surface in order to facilitate various aspects of the production process. Among other things, these marks are used for press alignment, color calibration, job identification and as guides for cutting and folding. Note that the Imposition process specifies the task of combining pages and marks on sheets. The task of setting up the parameters needed for Imposition is defined by Stripping” [@xjdf_ip1, chap. 5.4.8 "Imposition"].
-
-“The Stripping process specifies the process of translating a high level structured description of the imposition of one or multiple job parts [...] for the Imposition process” [@xjdf_ip1, chap. 5.4.22 "Stripping"].
-
-Interpreting and Rendering normally occur pairwise and are covered by a Raster Imaging Processor (RIP). The combination of the processes Interpreting and Rendering is also known as ripping. These processes “consume page descriptions and instructions for producing the graphical output. It parses the graphical contents in the page descriptions, renders the contents, and produces a rasterized image of the page” [@jdf_1_5, chap. 6.2.33 "RIPing"]. The following graphic shows an extract of the folded leaflets production workflow for only the Gray Box 2:
+The figure below isolates **Gray Box 2** from the folded leaflet workflow:
 
 <figure>
   <Image src={diagramPrepressGrayBox} alt="Example PrePress Gray Box" />
@@ -166,7 +153,7 @@ Interpreting and Rendering normally occur pairwise and are covered by a Raster I
 
 “Each XJDF SHALL contain a `@Types` attribute, which in turn contains an ordered list of values of each of processes that the XJDF specifies. The ordering of the process names in the `@Types` attribute specifies the ordering in which the processes SHOULD be executed. If the final product result would be indistinguishable, the device MAY change the execution order of the processes from that given in the `@Types` attribute” [@xjdf_ip1, chap. 5.1 "Combining Individual Process Steps"].
 
-Here, the corresponding XJDF Document has to be sent from the MIS to the GrayBox of the prepress workflow system, in order to execute the combined processes:
+Below is the XJDF Document sent from the MIS to the prepress workflow system to execute this four-step combined process:
 
 ```xml title="Example: XJDF Gray Box of Combined Process 'PrePress'"
 <XJDF JobID="JOB-1234"
@@ -249,13 +236,11 @@ Here, the corresponding XJDF Document has to be sent from the MIS to the GrayBox
 </XJDF>
 ```
 
-A Gray Box of a combined process is quite similar to address, just as a Gray Box covering only a single process. Generally, the input resources of such a combined Gray Box is the aggregation of the input resources of the containing processes. The output resources match the output resources of the last process executed in the Gray Box. “A ResourceSet that is produced by one process and immediately consumed by the following process NEED NOT be explicitly specified in the XJDF. Any such ResourceSet MAY be completely under the control of the receiving device” [@xjdf_ip1, chap. 5.1.1 "Exchange ResourceSets in combined processes"].
+Addressing a combined-process Gray Box follows the exact same principles as addressing a single-process Gray Box: its input resources are a subset of the union of input resources across the constituent processes, and its output resources correspond to the final process in the chain. Crucially, intermediate resources that are generated by one internal step and immediately consumed by the next do not need to be exposed in the XJDF Document: “A ResourceSet that is produced by one process and immediately consumed by the following process NEED NOT be explicitly specified in the XJDF. Any such ResourceSet MAY be completely under the control of the receiving device” [@xjdf_ip1, chap. 5.1.1 "Exchange ResourceSets in combined processes"].
 
-In this specific example, the XJDF document defines the input resource of the Stripping process as input and the output resources of the Rendering process as output. The input is a RunList resource referencing the (preflighted) customer artwork in addition to a Layout resource defining a high level description of the digital print data. The output is a RunList resource referencing the ripped separations partitioned by their Separations. There are no intermediate resources defined in the XJDF Document.
+In this prepress example, the XJDF Document supplies the inputs for `Stripping` and `Imposition` (a high-level `Layout` resource and the input artwork `RunList`) and declares the output of `Rendering` (an output `RunList` partitioned by `@Separation` pointing to the 1-bit TIFF files for `Cyan`, `Magenta`, `Yellow`, and `Black`). If the MIS needs finer control over internal steps within the Gray Box, it can simply include additional parameter resources—such as `RenderingParams` or `InterpretingParams`—as extra input `ResourceSet` elements.
 
-In order to obtain more control of the internals of the Gray Box, a reasonable approach is to extend the XJDF Document by additional input resources provided by the covered processes. For instance, the RenderingParams resource can be added in order to control the Rendering process from the outside.
-
-Since the definition of the layout is a major requirement in many systems, an explanation of how a Layout element can be defined is provided here. A very high level definition of a layout, deemed as input by the Stripping process, can be expressed using the paper size, including a `@RelativeBox` attribute. This mechanism has also being used in the Gray Box example above:
+Let us take a closer look at how the `Layout` resource is expressed for `Stripping` and `Imposition`. When the MIS wants to specify *how many* ups are placed on a press sheet (for cost estimation and paper planning) while leaving exact margin and mark calculations to the prepress imposition software, it uses **relative positioning** (`//Position/@RelativeBox`):
 
 ```xml title="Example: Layout definition with RelativeBox"
 [...]
@@ -273,14 +258,14 @@ Since the definition of the layout is a major requirement in many systems, an ex
 [...]
 ```
 
-The paper size is defined in the attribute `//Layout/@SurfaceContentsBox`, and the folded leaflet is placed on the sheet twice - once on the left half, and once on the right. There is no exact position defined where the leaflet has to be placed. Instead, the exact position has to be calculated by the Stripping process. However, for pricing reasons, the MIS needs to communicate that the product has to be placed twice on that sheet. The attribute `//Position/@RelativeBox` defines exactly this. In the first Position element, the left part of the sheet is defined and in the second one the right part. All length expressions are defined relative to the paper’s size. The figure below illustrates the high level Layout definition using relative boxes:
+Here, `//Layout/@SurfaceContentsBox` defines the press sheet dimensions (`1293.31 × 907.09` dtp points), and the two `Position` child elements place the folded leaflet (`@BinderySignatureID="BS-1"`) two-up on the sheet: one in the left half (`@RelativeBox="0.0 0.0 0.5 1.0"`) and one in the right half (`@RelativeBox="0.5 0.0 1.0 1.0"`), rotated by 90°. The `Stripping` process then computes the exact centered coordinates within each relative cell:
 
 <figure>
   <Image src={diagramRelativePositioning} alt="Relative Positioning of the Folded Leaflet" />
   <figcaption>Figure: Relative Positioning of the Folded Leaflet</figcaption>
 </figure>
 
-In some situations, the relative positioning method is not sufficient - in particular, when the MIS is able to compute complex layouts. In this case, XJDF also provides an absolute positioning method using `//Position/@AbsoluteBox`. This method allows a very precise definition of the layout. The following variant can also be an input for the Stripping process:
+When the MIS itself calculates the exact imposition geometry (for example, in ganging or packaging workflows), XJDF also supports **absolute positioning** via `//Position/@AbsoluteBox`, where the lower-left and upper-right coordinates of each cell on the press sheet are specified explicitly in dtp points:
 
 ```xml title="Example: Layout definition with AbsoluteBox"
 [...]
@@ -298,14 +283,12 @@ In some situations, the relative positioning method is not sufficient - in parti
 [...]
 ```
 
-The result of this Layout definition is a very precise positioning as shown below:
-
 <figure>
   <Image src={diagramAbsolutePositioning} alt="Absolute Positioning of the Folded Leaflet" />
   <figcaption>Figure: Absolute Positioning of the Folded Leaflet</figcaption>
 </figure>
 
-Gray Boxes of Combined Processes are not only limited to prepress systems. A collecting machine can also be a Combined Process as well. Here is the collecting example previously shown in the Essentials chapter:
+Combined processes are equally common in postpress finishing. Recall the saddle-stitcher example from Chapter 3 (`Types="Collecting Stitching Trimming"`), reproduced below:
 
 ```xml title="Example: XJDF Gray Box for a Collecting Device"
 <XJDF JobID="JOB-1234" Types="Collecting Stitching Trimming"
@@ -435,26 +418,25 @@ Gray Boxes of Combined Processes are not only limited to prepress systems. A col
 </XJDF>
 ```
 
-The XJDF Collecting example represents a Combined Process consisting of Collecting, Stitching, and Trimming. All three processes are listed in the `/XJDF/@Types` attribute. In contrast to the prepress example, this XJDF Document contains input resources of all three processes.
+Unlike the prepress example (which omitted intermediate parameters), this Combined Process includes explicit parameter resources for all three steps in `/XJDF/@Types`:
 
-The Assembly resource is the input resource of the Collecting process, the StitchingParams resource pertains to the input resource of the Stitching process, and TrimmingParams resource represents the input of Trimming process. The Component output resource is the output of the last process - Trimming. All of the intermediate Component resources are not defined in the XJDF Document.
+* `Assembly` and `BinderySignature` configure the **`Collecting`** step (“Assembly describes how the sections of one or multiple Jobs or Job Parts are bound together” [@xjdf_ip1, chap. 6.4 "Assembly"]).
+* `StitchingParams` configures the **`Stitching`** step (“provides the parameters for the Stitching process” [@xjdf_ip1, chap. 6.85 "StitchingParams"]).
+* `TrimmingParams` configures the **`Trimming`** step (“provides the parameters for the Trimming process” [@xjdf_ip1, chap. 6.92 "TrimmingParams"]).
 
-“Assembly describes how the sections of one or multiple Jobs or Job Parts are bound together” [@xjdf_ip1, chap. 6.4 "Assembly"]. In this case the Assembly resource specifies how the three input Components (“BS-1”, “BS-2” and “BS-3”) has to be assembled. The StitchingParams “resource provides the parameters for the Stitching process” [@xjdf_ip1, chap. 6.85 "StitchingParams"]. In the document, the StitchingParams specify the shape of the staple, as well as their position on the saddle. The TrimmingParams “resource provides the parameters for the Trimming process” [@xjdf_ip1, chap. 6.92 "TrimmingParams"] and specifies here the final size of the product.
-
-The given order of the three processes within the Gray Box represents the usual way of producing such a magazine. However, from an internal standpoint, it is up to the device as to when to execute which process - the only thing that counts is the result. As long as the result is identical, the device can pretty much do as it pleases.
+Meanwhile, the intermediate `Component` states (collected-but-unstitched signatures and stitched-but-untrimmed brochures) remain entirely internal to the saddle stitcher and are omitted from the XJDF Document; only the three initial pre-folded input components and the final trimmed output magazine (`COMP-MAGAZINE`) are specified.
 
 
 ## ProcessUsage
-
-All resources of a specific process can usually be uniquely identified by their names (`//ResourceSet/@Name`) and their usages (`//ResourceSet/@Usage`). In the following figure, an extract of the XJDF Specification which shows the input and output resources of the Preflight process is shown:
+In most processes, every `ResourceSet` can be uniquely identified by the combination of its resource name (`//ResourceSet/@Name`) and its input/output direction (`//ResourceSet/@Usage`). Consider the input and output resource tables for the `Preflight` process from the XJDF Specification:
 
 <figure>
   <Image src={screenPreflightInput} alt="Input resources of Preflight Process" />
   <Image src={screenPreflightOutput} alt="Output resources of Preflight Process" />
-  <figcaption>Figure: Input- and Output resources of Preflight Process</figcaption>
+  <figcaption>Figure: Input and Output resources of Preflight Process</figcaption>
 </figure>
 
-The Preflight process takes multiple resources as input and produce two optional resources as output. All resources listed above can be uniquely identified by their names and usage. Even though RunList occurs twice, the occurrences can be distinguished by their respective usages:
+Even though `RunList` appears in both tables, the two `ResourceSet` elements are easily distinguished by their `@Usage` attribute (`"Input"` vs. `"Output"`):
 
 ```xml title="Example: RunList Resource as Input and Output"
 [...]
@@ -475,18 +457,19 @@ The Preflight process takes multiple resources as input and produce two optional
 [...]
 ```
 
-As shown, the two RunList resources have been written in two individual ResourceSet elements. The two ResourceSet elements differs by their attribute `@Usage`. The upper set is defined to be an input ResourceSet, whereas the lower one is the output ResourceSet.
-
-However, some processes define multiple resources of the same type as their input or output. One candidate for such processes is the Imposition process. Here, a copy of the XJDF Specification is given which shows an extract of the input resources of the Imposition process:
+Some processes, however, consume (or produce) **two distinct `ResourceSet` elements of the same type and with the same `@Usage`**. A prime example is the `Imposition` process, whose input resource table is shown below:
 
 <figure>
   <Image src={screenImpositionInput} alt="Input Resources of an Imposition Process" />
   <figcaption>Figure: Input Resources of an Imposition Process</figcaption>
 </figure>
 
-The Imposition process defines RunList as input twice. The upper RunList resource in the table references a “structured list of incoming page contents which is transformed to produce the imposed surface images” [@xjdf_ip1, chap. 5 Table 5.26: Imposition/RunList(Document)] whereas the lower one references a “structured list of incoming marks. These are typically printer’s marks such as fold marks, cut marks, punch marks or color bars” [@xjdf_ip1, chap. 5 Table 5.26: Imposition/RunList(Marks)]. Both resources are technically binary files and therefore have to be referenced as RunList resources.
+Here, `Imposition` defines two separate input `RunList` resources:
 
-In order to differentiate between these two RunList resources, an additional attribute, `@ProcessUsage`, has been introduced. The attribute's value conforms to the value in brackets that immediately follows the resource name in the table. The upper RunList resource defines `@ProcessUsage` as “Document”, whereas the lower one is defined as “Marks”. The following example shows the corresponding two RunList resources using different values of `@ProcessUsage`:
+1. `RunList (Document)` — a “structured list of incoming page contents which is transformed to produce the imposed surface images” [@xjdf_ip1, chap. 5 Table 5.26: Imposition/RunList(Document)].
+2. `RunList (Marks)` — a “structured list of incoming marks. These are typically printer’s marks such as fold marks, cut marks, punch marks or color bars” [@xjdf_ip1, chap. 5 Table 5.26: Imposition/RunList(Marks)].
+
+Because both resources reference external PDF files, both are modeled as input `RunList` `ResourceSet` elements. To distinguish between them, XJDF provides the `//ResourceSet/@ProcessUsage` attribute, whose value corresponds to the qualifier shown in parentheses next to the resource name in the specification table (`"Document"` vs. `"Marks"`):
 
 ```xml title="Example: RunList with ProcessUsage Definition"
 [...]
@@ -514,14 +497,11 @@ In order to differentiate between these two RunList resources, an additional att
 [...]
 ```
 
-Two ResourceSet elements with the same `@Name` and `@Usage` may coexist in an XJDF document if they define logically separated entities. In this case, `ResourceSet/@ProcessUsage` SHALL be specified and be unique. “`@ProcessUsage` identifies the context of a Resource if multiple Resource elements of the same type are supplied for an individual process type” [@xjdf_ip1, chap. 3 Table 3.4: ResourceSet/@ProcessUsage].
+Whenever two `ResourceSet` elements with the same `@Name` and `@Usage` coexist in an XJDF Document to represent different functional roles for a process, `//ResourceSet/@ProcessUsage` must be specified: “`@ProcessUsage` identifies the context of a Resource if multiple Resource elements of the same type are supplied for an individual process type” [@xjdf_ip1, chap. 3 Table 3.4: ResourceSet/@ProcessUsage].
 
 
 ## CombinedProcessIndex
-
-The definition of Gray Boxes is a fundamental concept of XJDF - one that even allows for define a process twice in a Gray Box such as “Cutting Folding Cutting”.
-
-“Cutting Folding Cutting” means a Component is being cut just before and right after the Folding process within a single process sequence. Such a sequence can be specified as usual by writing the process names into the `@Types` attribute as below:
+In a Combined Process Gray Box, the same process type can even appear **more than once** in `/XJDF/@Types`—for example, `"Cutting Folding Cutting"`, where a sheet is cut before folding and trimmed/cut again immediately after folding within a single automated finishing line:
 
 ```xml title="Example: Gray Box 'Cutting Folding Cutting'"
 <XJDF JobID="JOB-1234" Types="Cutting Folding Cutting"
@@ -530,9 +510,7 @@ The definition of Gray Boxes is a fundamental concept of XJDF - one that even al
 </XJDF>
 ```
 
-Even the Cutting process appears twice in the `@Types` list of process names - this is also a valid usage of processes. Each process listed in `@Types` may have one or multiple input resources. As mentioned above, resources are normally assigned to processes by their names (`@Name`) and their usages (`@Usage`). The attribute `@ProcessUsage` is defined in the specification in case the combination of the attributes `@Name` and `@Usage` is not unique for a single process.
-
-When using a process twice in a Gray Box, the combination of the three attributes `@Name`, `@Usage`, and `@ProcessUsage` becomes ambiguous. Therefore, the XJDF Specification provides the attribute `@CombinedProcessIndex` as a way to solve this ambiguity issue:
+When a process type appears multiple times in `@Types` (or when two different processes in a Combined Process require separate input `ResourceSet` elements of the same type), the combination of `@Name`, `@Usage`, and `@ProcessUsage` is no longer sufficient to tell the device which `ResourceSet` belongs to which step in `@Types`. To resolve this ambiguity, XJDF provides the `//ResourceSet/@CombinedProcessIndex` attribute:
 
 ```xml title="Example: Gray Box 'Cutting Folding Cutting'"
 <XJDF JobID="JOB-1234" Types="Cutting Folding Cutting"
@@ -565,16 +543,16 @@ When using a process twice in a Gray Box, the combination of the three attribute
 
 The attribute “`@CombinedProcessIndex` specifies the zero based indices of individual processes within the complete list of `XJDF/@Types` which this ResourceSet SHALL apply to. Multiple entries in `@CombinedProcessIndex` specify that the ResourceSet is used by the respective multiple processes. `@CombinedProcessIndex` SHALL be specified if multiple ResourceSet items with the same `@Name`, `@ProcessUsage`, and `@Usage` are specified in one XJDF. If `@CombinedProcessIndex` is not specified, the ResourceSet applies to all processes that match the `@Name`, `@ProcessUsage` and `@Usage` requirements” [@xjdf_ip1, chap. 3 Table 3.4: ResourceSet/@CombinedProcessIndex].
 
-In XJDF, all indices start from zero. “Thus, the first index is 0, the second index is 1, etc. Note that this restriction applies to the XJDF representation only. Display of values, for instance in a user interface, is implementation defined” [@xjdf_ip1, chap. 1.9.2 "Counting in XJDF"]. The Gray Box example above contains three processes - Cutting, Folding, and then Cutting once more. The first process in the row (Cutting) has the index value “0”; the second one (Folding) takes a value “1”, while the last one (Cutting) assumes the value “2”. Since the FoldingParams resource exists only once in the XJDF Document, there is no need to write the `@CombinedProcessIndex` attribute in this resource.
-
-This ambiguity issue may not only appear in the case of a process being defined twice in a single GrayBox. There could also be scenarios in which several processes are using the identical resource types as input or output, such as RunList or Component. Because of the absence of intermediate products in a Gray Box, this issue should normally not appear. However, if there are still special cases, these can also be resolved by using the `@CombinedProcessIndex` attribute in a ResourceSet element.
+In XJDF, all indices are zero-based: “Thus, the first index is 0, the second index is 1, etc. Note that this restriction applies to the XJDF representation only. Display of values, for instance in a user interface, is implementation defined” [@xjdf_ip1, chap. 1.9.2 "Counting in XJDF"]. In `"Cutting Folding Cutting"`, the first `Cutting` step has index `0`, `Folding` has index `1`, and the second `Cutting` step has index `2`. Because `FoldingParams` appears only once and unambiguously matches `Folding`, it does not need a `@CombinedProcessIndex` attribute.
 
 
 ## Amounts
+In production workflows, the `AmountPool` element “is a container for the amount-related metadata of the Resource [...]. The interpretation of the amounts specified in an AmountPool depends on the context of the AmountPool” [@xjdf_ip1, chap. 6.1.1 "AmountPool"]:
 
-In a production process, the element “AmountPool is a container for the amount-related metadata of the Resource [...]. The interpretation of the amounts specified in an AmountPool depends on the context of the AmountPool” [@xjdf_ip1, chap. 6.1.1 "AmountPool"]. AmountPool elements defined within `/XJDF/ResourceSet` elements specify the planned and provided amounts of resources consumed, produced, etc., whereas AmountPool elements defined within the `/XJDF/AuditPool` element or within XJMF Messages specify the actual amounts.
+* When placed inside `/XJDF/ResourceSet/Resource`, `AmountPool` specifies **planned** quantities (the amount of input material allocated or the target amount of output to be produced).
+* When placed inside `/XJDF/AuditPool/AuditResource` or inside an XJMF `SignalResource` message, `AmountPool` specifies **actual** quantities (the real amount of material consumed or produced).
 
-Below is an extract from the Collecting example. This code snippet shows the section where the AmountPool element is written in the output component resource. In such a case, the AmountPool specifies the planned amount of output components to be produced (here: 1,050 items) as the element is seen in the context of the output component ResourceSet element:
+The following excerpt from the collecting example shows a **planned** output quantity of 1,050 magazines specified inside the output `Component` resource:
 
 ```xml title="Example: Planned Amount Extract of the Collecting Example"
 <XJDF JobID="JOB-1234" Types="Collecting Stitching Trimming"
@@ -592,11 +570,11 @@ Below is an extract from the Collecting example. This code snippet shows the sec
 </XJDF>
 ```
 
-AmountPool is an optional subelement of the Resource element. If present, it has to be written at the first position. The planned amount value is defined in the `@Amount` attribute of the PartAmount element within the AmountPool. The value specifies the “amount, excluding waste, in units defined in `ResourceSet/@Unit` or implied by” [@xjdf_ip1, chap. 6 Table 6.3: PartAmount/@Amount] default units. **Note: Units other than those defined as default units in the XJDF Specification SHOULD NOT be specified.**
+`AmountPool` is an optional child element of `Resource` (placed first before `Part` and the specific resource element). Inside `AmountPool`, the `PartAmount` element's `@Amount` attribute specifies the good quantity “excluding waste, in units defined in `ResourceSet/@Unit` or implied by” [@xjdf_ip1, chap. 6 Table 6.3: PartAmount/@Amount] the resource's default unit. (**Note:** Units other than the default units defined in the XJDF Specification should not be used.) `PartAmount` also supports additional attributes such as `@Waste` to specify planned spoilage/waste allowances.
 
-In addition to the `@Amount` attribute, the PartAmount element provides further attributes such as `@Waste`, in order to specify more amount-related information. More details about these attributes can be found in the XJDF Specification.
+While planned amounts express what a Gray Box is instructed to consume or produce, **actual amounts** record what was physically consumed or produced on the shop floor. Actual amounts can be reported in two ways—both of which use a `ResourceInfo` container element:
 
-Planned amounts are amounts intended to be consumed or produced within a Gray Box. In contrast to the planned amounts, the actual amounts represent the real resource consumption and production. Actual amounts can either be specified post facto, recorded within the AuditPool, or in real time during the production phase within XJMF Messages. Both methods - the AuditPool and the XJMF Messages - make use of the ResourceInfo element in order to specify the actual amounts. The following XJDF snippet shows post facto recorded amount details within the AuditPool. This method is valid after job completion, when the device returns the job information back to the leading system (MIS or Controller):
+1. **Post-facto inside the `AuditPool`** of the XJDF Document returned to the MIS upon job completion:
 
 ```xml title="Example: Actual Amount within an AuditPool element"
 <XJDF JobID="JOB-1234" Types="Collecting Stitching Trimming"
@@ -622,13 +600,9 @@ Planned amounts are amounts intended to be consumed or produced within a Gray Bo
 </XJDF>
 ```
 
-The AuditPool provides a specific AuditResource subelement in order to specify post facto recorded resource consumption and production. As is the case with all audit element types, the AuditResource element also requires a Header element for the metadata of the audit entry itself. The actual amount of information has to be written into the ResourceInfo element. Each AuditResource requires exactly one ResourceInfo element. A ResourceInfo element may contain a ResourceSet element which is a rough copy of the corresponding ResourceSet element located directly under the XJDF root element. Both ResourceSet elements have nearly identical structures; only a few values are different.
+Inside `AuditPool`, each `AuditResource` element contains a standard `Header` followed by a `ResourceInfo` element wrapping a copy of the relevant `ResourceSet`. Comparing this `AuditResource` entry with the planned `ResourceSet` above shows the exact same XML structure—except that `PartAmount` now reports the actual post-facto production count of `@Amount="1053"` good magazines and `@Waste="89"` wasted copies. To log actual amounts for multiple resources (for example, both input consumption and output production), a separate `AuditResource` element is written for each `ResourceSet`.
 
-In the two examples above, the AuditPool example and the extract of the Collecting example, both have the identical ResourceSet element structure. Only some attributes in the subelements of Resource differ. For instance, in the AuditPool example, the `@Amount` value in PartAmount has been changed from 1,050 to 1,053. There is also an additional `@Waste` attribute. The reason this discrepancy comes about is due to the first example specifying the planned amount (1,050 items) of output components, while the second example specifies both the actual amount of output components produced, as well as those delegated to waste (1,053 and 89, respectively) recorded post facto. Here, post facto denotes the final values after job completion.
-
-In order to track multiple resources, multiple ResourceSet elements are required. Each ResourceSet element has to be located within an individual AuditResource element.
-
-In addition to the planned amounts and the actual amounts after job completion, XJDF also provides a mechanism for tracking the resource consumption and production live, that is, during job processing, using XJMF Messages. More about XJMF Messages is explained in the next chapter. Nevertheless, here is an example of such an XJMF Message containing actual amounts of information from a job running currently:
+2. **In real time during production via XJMF `SignalResource` messages** (covered in detail in Chapter 6):
 
 ```xml title="Example: Actual Amount within an XJMF Message"
 <XJMF xmlns="http://www.CIP4.org/JDFSchema_2_0">
@@ -651,8 +625,4 @@ In addition to the planned amounts and the actual amounts after job completion, 
 </XJMF>
 ```
 
-The SignalResource element in the XJMF Message is the equivalent of the AuditResource element in the AuditPool. Both elements require a Header element and, additionally, one or multiple ResourceInfo elements in order to define the actual amounts. Since the amount in the XJMF message represents the status of the current processing job on the executing device, the `@Amount` value is 243, while `@Waste` takes on a value of 75. Both values should increase from one message to the next.
-
-One difference between the ResourceInfo element in an XJMF Message and the AuditPool are the additional attributes provided in the message. As an XJMF message does not define any job context in the root element, the JobID has to be written into the ResourceInfo. What’s more, there may be some additional attributes in the message which provide information about the current job being run, such as the speed at which it is completing. More about XJMF Messages in the next chapter.
-
-Generally, the AmountPool element can be specified in each Resource element. Most resources are categorized as input and output resources (see `@Usage` equals “Input” or “Output”). Input resources are resources being consumed by a Gray Box, whereas output resources are those being produced. Amounts can be used in both types of resources at the same time. For instance, the amount of paper provided to the press in order to produce the job is defined in the input resource, while the expected amount of printed sheets (components) produced is defined in the output resource. The AuditPool, as well as the XJMF Message, allow for the tracking of the actual amounts using the appropriate ResourceSet elements as needed.
+`SignalResource` is the real-time XJMF counterpart to `AuditResource` in the `AuditPool`. Because an XJMF message has no `/XJDF/@JobID` root attribute, the job context (`@JobID="JOB-1234"`) and live machine telemetry (such as `@Speed="6000"`) are carried directly on the `ResourceInfo` element, while `PartAmount` reports the running counts produced so far (`@Amount="243"` good copies and `@Waste="75"` wasted copies).

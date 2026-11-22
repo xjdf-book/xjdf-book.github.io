@@ -11,33 +11,29 @@ import screenZipAssets from '../../../assets/spec-screen/zip-assets.png';
 import diagramXjmfBootstrapping from '../../../assets/diagram/xjmf-bootstrapping.jpg';
 import { Image } from 'astro:assets';
 
-The main actors involved in an XJDF Workflow are the Management Information System (MIS), Controllers, and Devices. “The highest level Controller in a workflow is known as Management Information Systems or MIS. It is responsible for dictating and monitoring the execution of all of the diverse aspects of the workflow. This task is facilitated by access to production information, either in real time using XJMF messaging or post facto using the audit records within a returned XJDF” [@xjdf_ip1, chap. 2.1.4.5 "Management Information System - MIS"].
+The three primary actors in an XJDF workflow are the **Management Information System (MIS)**, **Controllers**, and **Devices**:
 
-“Controllers route XJDF information to the appropriate devices. The minimum requirement of a Controller is that it can initiate processes on at least one Device [...]. Controllers can also determine process planning and scheduling data, such as process times and planned production amounts” [@xjdf_ip1, chap. 2.1.4.4 "Controller"].
+* **MIS:** “The highest level Controller in a workflow is known as Management Information Systems or MIS. It is responsible for dictating and monitoring the execution of all of the diverse aspects of the workflow. This task is facilitated by access to production information, either in real time using XJMF messaging or post facto using the audit records within a returned XJDF” [@xjdf_ip1, chap. 2.1.4.5 "Management Information System - MIS"].
+* **Controller:** “Controllers route XJDF information to the appropriate devices. The minimum requirement of a Controller is that it can initiate processes on at least one Device [...]. Controllers can also determine process planning and scheduling data, such as process times and planned production amounts” [@xjdf_ip1, chap. 2.1.4.4 "Controller"].
+* **Device:** “The most basic function of a Device is to execute the information specified and routed by a Controller. Devices SHALL be able to execute the instructions that are specified in XJDF and [...] can perform the physical execution” [@xjdf_ip1, chap. 2.1.4.2 "Device"].
 
-“The most basic function of a Device is to execute the information specified and routed by a Controller. Devices SHALL be able to execute the instructions that are specified in XJDF and [...] can perform the physical execution” [@xjdf_ip1, chap. 2.1.4.2 "Device"].
-
-In a typical XJDF system architecture, the devices are not connected to the MIS directly. A Controller is usually involved in the communication. The Controller and the Devices normally stem from one and the same vendor, and the Controller is required in order to integrate the Devices into an XJDF Workflow System:
+In most conventional print-shop architectures, production devices are not connected directly to the MIS. Instead, a vendor-specific **Controller** sits between the MIS and the shop-floor devices of that vendor, acting as an integration gateway:
 
 <figure>
   <Image src={diagramArchWithController} alt="XJDF System Architecture WITH Controller" />
   <figcaption>Figure: XJDF System Architecture WITH Controller</figcaption>
 </figure>
 
-As shown in the figure above, the Controller encapsulates the Device from the outside. In the real world, the communication between the devices and the controller is based on a non-standard data format, and the devices can only be addressed using the Controller as a proxy.
+In this proxy architecture, the Controller encapsulates the underlying Devices: communication between the MIS and the Controller uses standard XJDF/XJMF, whereas communication between the Controller and its connected presses or finishers typically relies on a proprietary vendor protocol. For example, integrating a Heidelberg press requires “Heidelberg Prinect” as a Controller, just as a Koenig & Bauer (KBA) press requires “KBA LogoTronic.” While vendor controllers often provide helpful local scheduling and pressroom management features for shops without a full-featured MIS, they also introduce a single point of failure: if the central controller goes down, all devices behind it become unreachable.
 
-For instance, when using a Heidelberg Press (Device), the “Heidelberg Prinect” (Controller) is additionally required in order to interact with the press. The same goes for KBA. A KBA press requires “KBA Logotronic” (Controller) to be addressed from the outside using an official standard. In such an architecture, the controller is always the single point of failure. A breakdown of the controller causes a breakdown of all devices connected by the controller. In particular, this poses a real problem in highly automated systems. Unfortunately, this architecture is the dominating one.
-
-A more flexible, robust, and more fail-safe architecture would be the ability to address the devices directly without any Controller at all:
+In highly automated production environments—where the MIS handles all scheduling and orchestration centrally—a cleaner, more resilient architecture connects each device directly to the MIS via native XJDF/XJMF without an intermediate controller proxy:
 
 <figure>
   <Image src={diagramArchWithoutController} alt="XJDF System Architecture WITHOUT Controller" />
   <figcaption>Figure: XJDF System Architecture WITHOUT Controller</figcaption>
 </figure>
 
-Apart from the functionality of the proxy, many controllers provide additional functionality such as scheduling, etc. These features can be very useful, especially when no MIS exists or, the scheduling of the MIS is limited. However, the higher the level of automation in a printing house, the more important the stability and reliability of systems becomes. In highly automated systems, MIS systems are self-made, and controllers increasingly become more of an achilles heel for these systems.
-
-XJMF is the messaging system that accompanies XJDF in order to provide a communication infrastructure between the MIS, the controllers, and the devices. “A workflow is a dynamic set of interacting controllers and devices. For the workflow to run efficiently, these controllers and devices need to communicate and interact in a well defined manner. Whereas XJDF will typically be submitted to a device and only be returned after the process has been executed, XJMF messages MAY be exchanged at any time. Typical use cases for XJMF include but are not limited to:
+**XJMF (Exchange Job Messaging Format)** is the real-time messaging protocol that accompanies XJDF, providing the communication infrastructure between the MIS, Controllers, and Devices. “A workflow is a dynamic set of interacting controllers and devices. For the workflow to run efficiently, these controllers and devices need to communicate and interact in a well defined manner. Whereas XJDF will typically be submitted to a device and only be returned after the process has been executed, XJMF messages MAY be exchanged at any time. Typical use cases for XJMF include but are not limited to:
 
 * System setup
 * Dynamic status and error tracking for Jobs and Devices
@@ -46,7 +42,7 @@ XJMF is the messaging system that accompanies XJDF in order to provide a communi
 * Queue handling and Job submission
 * Device Capability description” [@xjdf_ip1, chap. 7 "XJMF Messaging Format"]
 
-“XJMF and XJDF have inherently different structures. In order to allow immediate identification of messages, XJMF uses the unique name XJMF as its own root-element name. XJMF elements SHALL contain one or more messages that provide more detailed information” [@xjdf_ip1, chap. 7.1 "XJMF Root"]. XJMF Messages are essentially tiny XML structures. Many messages consist of only a few lines of code. In the following code snippet, an XJMF KnownDevices Query Message is shown to give an idea of the outline of the XML structure:
+“XJMF and XJDF have inherently different structures. In order to allow immediate identification of messages, XJMF uses the unique name XJMF as its own root-element name. XJMF elements SHALL contain one or more messages that provide more detailed information” [@xjdf_ip1, chap. 7.1 "XJMF Root"]. Unlike full job tickets, XJMF messages are compact, lightweight XML payloads—often just a few lines long. Below is a `QueryKnownDevices` message illustrating the standard XJMF structure:
 
 ```xml title="Example: XJMF KnownDevices Query Message"
 <XJMF xmlns="http://www.CIP4.org/JDFSchema_2_0">
@@ -60,36 +56,33 @@ XJMF is the messaging system that accompanies XJDF in order to provide a communi
 </XJMF>
 ```
 
-“The KnownDevices Query Message requests information about the devices that are controlled by a controller. [...] The response is a list of device elements” [@xjdf_ip1, chap. 7.6 "KnownDevices"] guided by the controller. Such a message is usually sent from the MIS to a controller during discovery.
+“The KnownDevices Query Message requests information about the devices that are controlled by a controller. [...] The response is a list of device elements” [@xjdf_ip1, chap. 7.6 "KnownDevices"]. This message is typically sent by the MIS during initial discovery to find out which devices a controller manages.
 
-The XJMF root element is a container for all kinds of messages. Each XJMF root element contains a Header element which specifies details about its sender. The attribute `@DeviceID` in the header contains the identifier of the sending device, and `@Time` contains the timestamp showing when the XJMF was generated. An unique identifier of the XJMF (`@ID`) is also required in the header.
+Notice that an XJMF payload contains two `Header` elements:
 
-In the example above, there is only one message in the XJMF - the KnownDevices Query Message. The message element also contains a Header element specifying the attributes `@DeviceID`, `@Time`, and `@ID`. In this situation, the values of the attributes `@DeviceID` and `@Time` are equal to the values contained in the XJMF’s Header element, since both the XJMF and the KnownDevices Query Message have been generated by one and the same system at the same time.
+1. **The outer `/XJMF/Header` element** identifies the system that transmitted the XJMF envelope (`@DeviceID`), the timestamp when the envelope was sent (`@Time`), and a unique identifier for the envelope (`@ID`).
+2. **The inner message `Header` element** (e.g., `/XJMF/QueryKnownDevices/Header`) identifies the system that originally created the individual message (`@DeviceID`), when that message was generated (`@Time`), and the unique `@ID` of the message itself.
 
-The attributes in the Header elements will differ as soon as a message is initiated by a device and proxied by a controller. In this situation, the XJMF the requesting system receives defines the controller’s DeviceID, as well as the timestamp of when the controller forwarded the messages in the XJMF Header element. The message’s header defines the DeviceID of the Device which originally initiated the message. The timestamp of the message also corresponds to the time it was initially generated. Even when the controller and the device communicate in a non-standard way, the message contains the header details of the initiating device.
+When the MIS sends a message directly, the `@DeviceID` and `@Time` values in both headers are identical. However, when a message originates on a shop-floor Device and is forwarded to the MIS by an intermediate proxy Controller, the two headers differ: `/XJMF/Header` records the `@DeviceID` and forwarding timestamp of the proxy Controller, whereas the inner message `Header` preserves the `@DeviceID` and original generation timestamp of the Device that triggered the event.
 
-In addition to the device’s identifier and the time, the message’s header also contains an `@ID` attribute. Each message has to contain an unique identifier in order to identify the message. This identifier is used for asynchronous feedback messages. All messages initiated by another message contain that message’s unique identifier in their `Header/@refID` attribute. This method allows for the allocation of messages.
+Furthermore, the inner message `Header/@ID` is used to correlate request and response messages (or subscriptions and asynchronous signals): every message triggered in reply to a previous message references the initiating message's `@ID` in its `Header/@refID` attribute.
 
-The message's body is unique to each message. In the example above, it contains an element, DeviceFilter, and, additionally, a single attribute, `@DeviceDetails`. The attribute `@DeviceDetails` refines the level of provided information about the Devices listed in the Response message. The value “Brief” means “provide only `Device/@DeviceID`” [@xjdf_ip1, chap. 7 Table 7.18: DeviceFilter/@DeviceDetails].
-
-The KnownDevices Query Message is a message of the family “Query”. Technically, each query requires one response. “Response” is another message family in XJMF.
+Finally, each message type defines its own body elements—here, `DeviceFilter` with `@DeviceDetails="Brief"`, which instructs the controller to “provide only `Device/@DeviceID`” [@xjdf_ip1, chap. 7 Table 7.18: DeviceFilter/@DeviceDetails] in its response.
 
 
 ## Message Families
+Every XJMF “Message belongs to one of four message families. These families are Query, Command, Signal and Response” [@xjdf_ip1, chap. 7.2 "XJMF Message Families"]. In XML, each message is represented by a child element of `XJMF` whose tag name combines the message family prefix (`Query`, `Response`, `Command`, or `Signal`) with the message type name—for example:
 
-Each XJMF “Message belongs to one of four message families. These families are Query, Command, Signal and Response” [@xjdf_ip1, chap. 7.2 "XJMF Message Families"]. Each message is expressed by an individual XML Element in the XJMF root element. The element's name is an aggregation of the message family and the message’s type. The corresponding message element of the query message “KnownDevices” is “QueryKnownDevices”. Further message elements are, for instance:
+* `QueryKnownDevices`
+* `ResponseKnownDevices`
+* `CommandShutDown`
+* `CommandSubmitQueueEntry`
+* `SignalStatus`
 
-* QueryKnownDevices
-* ResponseKnownDevices
-* CommandShutDown
-* CommandSubmitQueueEntry
-* SignalStatus
-
-Message families are some kind of categorization of the messages. In the following sections, all message families are introduced. Each message family bundles a set of similar messages which cause a similar behavior of the recipient.
+The four message families categorize messages by their communication pattern and their effect on the receiver:
 
 ### Query Message
-
-“A Query is a message that retrieves information from a receiver without changing the state of that receiver. [...] The receiver SHALL synchronously respond to a Query with an XJMF that contains abstract response of the same type as the” [@xjdf_ip1, chap. 7.2.1 "Query"]. The KnownDevices Query Message, for instance, expects a KnownDevices Response Message as response. The following is an example of a “KnownDevices” query message:
+“A Query is a message that retrieves information from a receiver without changing the state of that receiver. [...] The receiver SHALL synchronously respond to a Query with an XJMF that contains abstract response of the same type as the” [@xjdf_ip1, chap. 7.2.1 "Query"] query. For instance, a `QueryKnownDevices` message must be answered synchronously with a `ResponseKnownDevices` message:
 
 ```xml title="Example: XJMF KnownDevices Query Message"
 <XJMF xmlns="http://www.CIP4.org/JDFSchema_2_0">
@@ -103,11 +96,10 @@ Message families are some kind of categorization of the messages. In the followi
 </XJMF>
 ```
 
-This XJMF code snippet is the same as the one shown before. “The KnownDevices Query Message requests information about the devices that are controlled by a controller. [...] The response is a list of Device elements” [@xjdf_ip1, chap. 7.6 "KnownDevices"] controlled by the Controller that receives the query. A query does not influence the behavior of the receiver in any way according to the XJDF workflow. Queries are used during workflow discovery and for tracking purposes.
+Because queries are side-effect-free read operations, they are used for service discovery and status polling without altering the state of the queried controller or device.
 
 ### Response Message
-
-“A Response is a Message that a Receiver SHALL synchronously send to a sender as a response to a message” [@xjdf_ip1, chap. 7.2.4 "Response"]. Response messages are used for responding to a Query or Command message. Each Response message generated is of the same message type as the initiating message. Therefore, a KnownDevices Query Message has to be responded to by a KnownDevices Response Message. In the following example, a response message of type KnownDevices is presented as a result of the KnownDevices Query Message:
+“A Response is a Message that a Receiver SHALL synchronously send to a sender as a response to a message” [@xjdf_ip1, chap. 7.2.4 "Response"]. Every `Query` or `Command` message is answered synchronously by a `Response` message of the matching type. Below is the controller's `ResponseKnownDevices` reply to the `QueryKnownDevices` message above:
 
 ```xml title="Example: XJMF KnownDevices Response Message"
 <XJMF xmlns="http://www.CIP4.org/JDFSchema_2_0">
@@ -124,17 +116,16 @@ This XJMF code snippet is the same as the one shown before. “The KnownDevices 
 </XJMF>
 ```
 
-The `@DeviceID` value in the XJMF header, as well as in the response messages, corresponds to the identifier of the Controller (“DEVICE_ID_CONTROLLER”) since this message has been generated by the controller in response to the KnownDevices query. The response message contains the two additional attributes `//Header/@refID` and `@ReturnCode`.
+In this response, `@DeviceID="DEVICE_ID_CONTROLLER"` identifies the responding controller, and `//Header/@refID="MESSAGE_ID"` points back to the `@ID` of the initiating `QueryKnownDevices` message.
 
-The attribute `//Header/@refID` refers to the `@ID` Attribute of the initiating Message to which the Response refers. If not specified, the Response Message serves as a reference to the entire XJMF.
+Every `Response` element also carries an `@ReturnCode` attribute: “`@ReturnCode` summarizes the result of the Response. The value ‘0’ indicates success. `@ReturnCode` SHALL be provided if an error occurred” [@xjdf_ip1, chap. 7 Table 7.8: Response/@ReturnCode]. XJDF standardizes integer return codes across ranges: “Return code values are integers. Error messages below 100 are reserved for protocol errors. Error messages above 100 are used for device and controller errors and error messages above 200 for job and pipe specific errors” [@xjdf_ip1, Appendix B - Return Values and Error Codes].
 
-“`@ReturnCode` summarizes the result of the Response. The value ‘0’ indicates success. `@ReturnCode` SHALL be provided if an error occurred” [@xjdf_ip1, chap. 7 Table 7.8: Response/@ReturnCode]. XJDF comes with a set of predefined return codes. “Return code values are integers. Error messages below 100 are reserved for protocol errors. Error messages above 100 are used for device and controller errors and error messages above 200 for job and pipe specific errors” [@xjdf_ip1, Appendix B - Return Values and Error Codes]. The full list of all predefined error codes can be found in the XJDF Specification in Appendix B - “Return Values and Error Codes”
-
-Because the KnownDevices Response message is a response to the KnownDevices Query message which queries a list of devices, the response message also contains the requested information. Therefore, the message provides the list of all devices controlled by the Controller. In the query message, there is an attribute `@DeviceDetails` which defines the value “Brief” - a value indicating “Provide only `Device/@DeviceID`” [@xjdf_ip1, chap. 7 Table 7.18: DeviceFilter/@DeviceDetails]. Thus, the device list in the message only lists the identifiers of the devices. When the attribute `@DeviceDetails` in the query is fed the value “Full”, the response message would have to list the maximum available device information for each device.
+Finally, the body of `ResponseKnownDevices` lists the three devices managed by the controller (`PRESS-01`, `PRESS-02`, and `PRESS-03`). Because the query requested `@DeviceDetails="Brief"`, each `Device` element includes only its `@DeviceID`; if `@DeviceDetails="Full"` had been requested, each `Device` element would include all available device metadata.
 
 ### Command Message
+“A Command is syntactically equivalent to a Query, but rather than simply retrieving information, it also causes a state change in the receiver. A Command is used to change the state of the receiver. The receiver SHALL synchronously respond to a Command with an XJMF that contains a Response of the same type as the Command” [@xjdf_ip1, chap. 7.2.2 "Command"].
 
-“A Command is syntactically equivalent to a Query, but rather than simply retrieving information, it also causes a state change in the receiver. A Command is used to change the state of the receiver. The receiver SHALL synchronously respond to a Command with an XJMF that contains a Response of the same type as the Command” [@xjdf_ip1, chap. 7.2.2 "Command"]. One example for a Command is the ShutDown Command Message. “The ShutDown Command Message shuts down a Controller or Device” [@xjdf_ip1, chap. 7.17 "ShutDown"].
+A simple example is `CommandShutDown`, which “shuts down a Controller or Device” [@xjdf_ip1, chap. 7.17 "ShutDown"] (or places it into standby mode, as specified by `ShutDownCmdParams/@ShutDownType="StandBy"`):
 
 ```xml title="Example: XJMF ShutDown Command Message"
 <XJMF xmlns="http://www.CIP4.org/JDFSchema_2_0">
@@ -148,11 +139,7 @@ Because the KnownDevices Response message is a response to the KnownDevices Quer
 </XJMF>
 ```
 
-The ShutDown Command Message is a straightforward Command. There are no additional attributes - neither in the XJMF element, nor in the message element itself. The subelement ShutDownCmdParams specifies whether the receiver has to shut down completely, or just go into standby modus. More details on shutdown behavior can be found in the XJDF Specification. The expected response message from the Device or Controller is a ShutDown Response message containing a return code value of “0” (success).
-
-Aside from the plain state changes of devices and controllers, command messages can also be used to transfer XJDF Documents from one point to the next in a XJDF Workflow. A SubmitQueueEntry Command Message, for instance, allows for the submission of an XJDF Document from the MIS to a controller or a device.
-
-The submission of and interaction with XJDF Documents is described later in this chapter (“Submission of XJDF Documents”). Nevertheless, the following example shows a command message for the submission of an XJDF Document:
+In addition to controlling device state, `Command` messages are used to submit and manage XJDF jobs in a device queue—most notably via `CommandSubmitQueueEntry` (discussed in detail in “Submission of XJDF Documents” below):
 
 ```xml title="Example: XJMF SubmitQueueEntry Command Message"
 <XJMF xmlns="http://www.CIP4.org/JDFSchema_2_0">
@@ -168,13 +155,10 @@ The submission of and interaction with XJDF Documents is described later in this
 </XJMF>
 ```
 
-The SubmitQueueEntry Command Message is a straightforward Command as well - it contains no additional attributes in the XJMF element or in the message element itself. The rest of the message will be explained later.
-
 ### Signal Message
+“A Signal is a Message that a receiver of a Query with a subscription SHALL asynchronously send whenever the conditions specified in the Subscription are true. [...] Signals are typically sent from a device to a controller” [@xjdf_ip1, chap. 7.2.3 "Signal"] (or MIS).
 
-“A Signal is a Message that a receiver of a Query with a subscription SHALL asynchronously send whenever the conditions specified in the Subscription are true. [...] Signals are typically sent from a device to a controller” [@xjdf_ip1, chap. 7.2.3 "Signal"] (or MIS). How to go about setting up and managing subscriptions is explained in detail in the next section on “Subscriptions”.
-
-In the following, an XJMF example showing a Status Signal message is given. A Status Signal message contains details about “the general status of a device or a controller and the status of jobs associated with this device or controller. No job context is needed to issue a Status message” [@xjdf_ip1, chap. 7.18 "Status"]. The message contains one or more DeviceInfo elements, which in turn contain information specific to the device:
+The example below shows a `SignalStatus` message, which reports “the general status of a device or a controller and the status of jobs associated with this device or controller. No job context is needed to issue a Status message” [@xjdf_ip1, chap. 7.18 "Status"]:
 
 ```xml title="Example: XJMF Status Signal Message"
 <XJMF xmlns="http://www.CIP4.org/JDFSchema_2_0">
@@ -194,27 +178,26 @@ In the following, an XJMF example showing a Status Signal message is given. A St
 </XJMF>
 ```
 
-Since a Signal is an asynchronous message, the attribute `@refID` has to reference the initiating Query message. Signal messages are usually generated by the device. So if a proxy controller is involved in the communication, the attributes `@DeviceId` and `@Time` will differ between the XJMF’s Header element and that of the message.
-
-The payload of the message is structured into one or multiple DeviceInfo subelements. Each DeviceInfo element represents the current status information of an individual device. Status information is, among other types of information, the speed of the device or other types of information. Additionally, the exact status name of the devices (here: “Production”) is part of the DeviceInfo element. More details pertaining to existing status values and the type of information that can be written to a DeviceInfo element can be read in the XJDF Specification.
+Because a `Signal` is emitted asynchronously in response to a prior subscription, `//SignalStatus/Header/@refID="MESSAGE_ID"` references the `@ID` of the `QueryStatus` message that established the subscription. Notice also how the outer `/XJMF/Header/@DeviceID` identifies the forwarding proxy (`"DEVICE_ID_CONTROLLER"`), while the inner `//SignalStatus/Header/@DeviceID` identifies the physical press (`"DEVICE_ID"`). Inside `SignalStatus`, one or more `DeviceInfo` elements report live device telemetry (`@Status="Production"`, `@Speed="6000"`, `@ProductionCounter="5425"`) along with a `JobPhase` child element detailing progress on the currently running job (`@JobID="Job-42"`, `@PercentCompleted="31.66"`, `@Amount="1343"`, `@Waste="85"`).
 
 
 ## Subscriptions
-
-Besides the synchronous method of querying information from a controller or a device, XJMF provides another mechanism to do this asynchronously. Instead of getting a synchronous Response Messages to a Query, a subscription initiates asynchronous Signal Messages from a controller or device periodically, and whenever a change of state occurs. For instance, an XJMF Status Signal Message can be emitted from a device every 30 seconds, and whenever its state changes. The periodical signal is similar to a heartbeat of the device (if a device could have a heartbeat), and each change of state immediately causes an additional signal. The tracking system therefore receives a periodical update on the counters, the amount of resource consumption, etc., but can also promptly track all (critical) changes of state related to the device. The following illustration shows the mechanics of a subscription:
+Rather than repeatedly polling a controller or device with synchronous `Query` messages, an MIS can subscribe to asynchronous `Signal` messages using an **XJMF Subscription**. Once a subscription is active, the controller or device pushes `Signal` messages to the subscriber both periodically (like a heartbeat, e.g., every 30 seconds) and immediately whenever a relevant state change or event occurs:
 
 <figure>
   <Image src={diagramXjmfStatusSubscription} alt="XJMF Status Subscription" />
   <figcaption>Figure: XJMF Status Subscription</figcaption>
 </figure>
 
-In order to set up a Subscription, the MIS has to send an XJMF Subscription Message to the controller (or device). The system on the receiving end creates a new persistent channel specific to the message, which then sends the requested Signal Messages to the target URL configured in the Subscription Message. The persistent channel can be removed by sending a StopPersistentChannel Command Message to the producer.
+To establish a subscription, the MIS sends a `Query` message containing a `Subscription` child element specifying the target callback `@URL` and trigger parameters. The receiving controller or device replies synchronously with an initial `Response` message and opens a **persistent channel** that pushes asynchronous `Signal` messages to the callback `@URL` until the subscriber cancels the channel via a `CommandStopPersistentChannel` message.
 
-Subscriptions and their corresponding persistent channels are typically used by MIS’s in order to track the activity of connected controllers and devices. In general, Subscriptions can be used for any kind of production tracking purposes.
+The three most widely used subscriptions for production tracking are:
 
-The most common three subscription types are Status, Notification, and Resource. A Status Signal Message contains “the general status of a device or a controller and the status of jobs associated with this device or controller. No job context is needed to issue a Status message” [@xjdf_ip1, chap. 7.18 "Status"]. The Notification Signal Message contains notifications produced by the controller or device. “Notification elements are also used to signal usual events due to any activities of a device, operator, etc. (e.g., scanning a barcode)” [@xjdf_ip1, chap. 7.10 "Notification"]. The Resource Signal Message contains information related to the Resources, such as consumption, and so on.
+1. **`Status` (`QueryStatus` → `SignalStatus`):** Reports “the general status of a device or a controller and the status of jobs associated with this device or controller. No job context is needed to issue a Status message” [@xjdf_ip1, chap. 7.18 "Status"].
+2. **`Notification` (`QueryNotification` → `SignalNotification`):** Reports operational events, warnings, and errors—“Notification elements are also used to signal usual events due to any activities of a device, operator, etc. (e.g., scanning a barcode)” [@xjdf_ip1, chap. 7.10 "Notification"].
+3. **`Resource` (`QueryResource` → `SignalResource`):** Reports live material consumption and output production quantities (`AmountPool`).
 
-In order to turn a Query Message into a subscription, an additional Subscription element has to be written into the message’s body. The following is an example of an XJMF Status Subscription Message:
+Adding a `Subscription` element to any subscribable `Query` message turns it into a subscription request, as shown below for `QueryStatus`:
 
 ```xml title="Example: XJMF Status Subscription Message"
 <XJMF xmlns="http://www.CIP4.org/JDFSchema_2_0">
@@ -230,29 +213,26 @@ In order to turn a Query Message into a subscription, an additional Subscription
 </XJMF>
 ```
 
-“Queries SHALL be subscribed by including a Subscription element that defines the details of the subscription. The receiver of the subscription SHALL initially send an empty Response Message to the sender. The receiver of the subscription SHALL send XJMF Signals whenever the conditions that were specified in the Subscription element are met. Such a subscribed query that requests multiple Signals is referred to as a ‘persistent channel’.
+“Queries SHALL be subscribed by including a Subscription element that defines the details of the subscription. The receiver of the subscription SHALL initially send an empty Response Message to the sender. The receiver of the subscription SHALL send XJMF Signals whenever the conditions that were specified in the Subscription element are met. Such a subscribed query that requests multiple Signals is referred to as a ‘persistent channel’. [...] If a Controller that does not support persistent channels is queried to set up a persistent channel, it SHALL answer the Query Message with a Response Message and set the `@ReturnCode` to ‘111’” [@xjdf_ip1, chap. 9.6.2 "Subscribing for Signals"].
 
-[...] If a Controller that does not support persistent channels is queried to set up a persistent channel, it SHALL answer the Query Message with a Response Message and set the `@ReturnCode` to ‘111’” [@xjdf_ip1, chap. 9.6.2 "Subscribing for Signals"].
-
-The conditions in the above example stipulate sending a Signal Message at least every 30 seconds, as specified in the attribute `@RepeatTime`. The attribute `@URL` defines the target URL to which the Signal Message is to be sent.
+In the example above, `@RepeatTime="30"` instructs the device to emit a `SignalStatus` message at least every 30 seconds (in addition to immediate signals upon state changes) to `@URL="http://mis.example.org/xjmf"`.
 
 ### Persistent Channel
-
-A persistent channel is responsible for sending asynchronous Signal Messages (periodically) to a subscriber. Each channel is defined by its ChannelID, the subscribing message type, the DeviceID, and the URL of the receiving system. Furthermore, each channel has additional attributes such as `@RepeatTime`, `@RetryPolicy`, and `@ChannelMode` in order to configure their behavior. The following table shows all relevant attributes relating to persistent channels:
+Every active subscription is managed as a **persistent channel** characterized by the attributes listed in the table below:
 
 | Attribute | Filter | Description |
 | --- | --- | --- |
-| `ChannelID` (required) | yes | The unique identifier of the persistent channel. “ChannelID specifies the ID of the Query message that initiated the Subscription. `@ChannelID` SHALL match `Header/@refID` of all Signals that comprise this persistent channel” [@xjdf_ip1, chap. 7 Table 7.27: SubscriptionInfo/@ChannelID]. |
+| `ChannelID` (required) | yes | Unique identifier of the persistent channel: “ChannelID specifies the ID of the Query message that initiated the Subscription. `@ChannelID` SHALL match `Header/@refID` of all Signals that comprise this persistent channel” [@xjdf_ip1, chap. 7 Table 7.27: SubscriptionInfo/@ChannelID]. |
 | `DeviceID` (required) | yes | “`@DeviceID` of the controller that subscribed for the persistent channel. `@DeviceID` SHALL match `@DeviceID` of the query that subscribed for this persistent channel” [@xjdf_ip1, chap. 7 Table 7.27: SubscriptionInfo/@DeviceID]. |
-| `MessageType` (required) | yes | The message type of the Query Message being subscribed. For instance, in case a QueryStatus has created this channel, this Property has the value “Status”. |
+| `MessageType` (required) | yes | The message type of the subscribed query (e.g., `"Status"` for a channel created by `QueryStatus`). |
 | `URL` (required) | yes | “URL of the persistent channel receiving end” [@xjdf_ip1, chap. 7 Table 7.5: Subscription/@URL]. |
-| `RepeatTime` | no | Update of the Signal Message “every `@RepeatTime` seconds. If defined, the Signal is generated periodically independent of any other trigger conditions” [@xjdf_ip1, chap. 7 Table 7.5: Subscription/@RepeatTime]. |
+| `RepeatTime` | no | Heartbeat interval: emits a `Signal` message “every `@RepeatTime` seconds. If defined, the Signal is generated periodically independent of any other trigger conditions” [@xjdf_ip1, chap. 7 Table 7.5: Subscription/@RepeatTime]. |
 | `ChannelMode` | no | “Specifies reliability of persistent channel, and whether it is required or just preferred” [@xjdf_ip1, chap. 7.2.1.1 "Subscription/@ChannelMode"]. |
 | `RetryPolicy` | no | “For reliable subscriptions. Indicates whether or not signals should be retried indefinitely, or only until the next Signal from the same Subscription (i.e., has the same `Header/@refID`) would be sent. `@RetryPolicy` is ignored for non-reliable subscriptions” [@xjdf_ip1, chap. 7 Table 7.5: Subscription/@RetryPolicy]. |
 
-More details about the attributes and their effects on a production system can be read in the XJDF Specification. “Persistent channels SHOULD be maintained even when a device is powered off and powered on again” [@xjdf_ip1, chap. 9.6.3 "Managing Persistent Channels"].
+“Persistent channels SHOULD be maintained even when a device is powered off and powered on again” [@xjdf_ip1, chap. 9.6.3 "Managing Persistent Channels"].
 
-While Query Messages containing a Subscription element set up a new persistent channel, the XJMF StopPersistentChannel Command Message removes a persistent channel. “No more Signal Messages are sent to the Controller once the command has been issued. A certain subset of signals MAY be addressed for unsubscription by specifying a StopPersChParams Element” [@xjdf_ip1, chap. 7.19 "StopPersistentChannel"]. The following is an example of such a Command Message:
+To close one or more persistent channels, the subscriber sends a `CommandStopPersistentChannel` message: “No more Signal Messages are sent to the Controller once the command has been issued. A certain subset of signals MAY be addressed for unsubscription by specifying a StopPersChParams Element” [@xjdf_ip1, chap. 7.19 "StopPersistentChannel"]:
 
 ```xml title="Example: XJMF StopPersistentChannel Command Message"
 <XJMF xmlns="http://www.CIP4.org/JDFSchema_2_0">
@@ -266,12 +246,13 @@ While Query Messages containing a Subscription element set up a new persistent c
 </XJMF>
 ```
 
-The Command Message example above deletes all persistent channels created by the device “DEVICE_ID_MIS” and which are targeted towards the URL “*http://mis.example.org/jmf*”. All attributes marked as Filter = “yes” in the persistent channel Attribute Table can be used in the StopPersChParams element as a means of defining a subset of persistent channels to be removed. Attributes that are not specified default to match anything.
+Any attribute marked with `Filter = yes` in the table above (`@ChannelID`, `@DeviceID`, `@MessageType`, `@URL`) can be used on `StopPersChParams` to select which channels to close; omitted filter attributes match all channels created by the requesting `@DeviceID`.
 
 
 ## Submission of XJDF Documents
+To submit XJDF Documents to controllers and devices and manage their execution lifecycle, XJMF models every target device as having an **input queue**: “In XJMF, a controller or device is assumed to have one input queue that accepts submitted jobs” [@xjdf_ip1, chap. 4.7 "Queue Support"], where “A queue is a representation of a device that receives, manipulates and stores multiple queue entry items for execution” [@xjdf_ip1, chap. 1 Table 1.4: Glossary (Queue)]. From the perspective of XJMF, every submitted XJDF Document corresponds to a **queue entry** on the receiving device.
 
-In order to transfer XJDF Documents between the MIS, controllers, and devices, XJMF provides a set of Command Messages. Each XJDF Document represents a job for a specific Gray Box. “In XJMF, a controller or device is assumed to have one input queue that accepts submitted jobs” [@xjdf_ip1, chap. 4.7 "Queue Support"]. “A queue is a representation of a device that receives, manipulates and stores multiple queue entry items for execution” [@xjdf_ip1, chap. 1 Table 1.4: Glossary (Queue)]. From the perspective of XJMF, an XJDF Document is a queue entry of a device. The XJDF Specification defines the following Command Messages and their corresponding Response Messages for queue entry handling:
+The XJDF Specification defines five primary command/response pairs for queue management:
 
 | MessageType | Description |
 | --- | --- |
@@ -281,20 +262,18 @@ In order to transfer XJDF Documents between the MIS, controllers, and devices, X
 | `CommandModifyQueueEntry`<br/>`ResponseModifyQueueEntry` | “Modifies the properties of one or more QueueEntry elements” [@xjdf_ip1, chap. 7 Table 7.9: List of XJMF Messages]. |
 | `CommandRequestQueueEntry`<br/>`ResponseRequestQueueEntry` | “A new Job is requested by the Device. This message is used to signal that a device has processing resources available” [@xjdf_ip1, chap. 7 Table 7.9: List of XJMF Messages]. |
 
-“SubmitQueueEntry initially submits a QueueEntry to a device. Modifications to a QueueEntry can be applied by using the ResubmitQueueEntry or ModifyQueueEntry command” [@xjdf_ip1, chap. 7.20 "SubmitQueueEntry"].
-
-“The ReturnQueueEntry Message returns a job that had been submitted with a SubmitQueueEntry to the controller that originally submitted the job. Note that this command is sent from the device to a controller and not from controller to device as is the case with most other queue handling commands” [@xjdf_ip1, chap. 7.16 "ReturnQueueEntry"].
-
-“Queue entries are accessed using a `@QueueEntryID` attribute, which the queue’s controller or device generates when it receives the submitted job, and which is returned in the SubmitQueueEntry Response Message.
-
-`@QueueEntryID` SHALL uniquely identify an entry within the scope of one queue. An implementation is free to choose the algorithm that generates `@QueueEntryID` values” [@xjdf_ip1, chap. 9.1.1 "Queue Entry ID Generation"].
+* “SubmitQueueEntry initially submits a QueueEntry to a device. Modifications to a QueueEntry can be applied by using the ResubmitQueueEntry or ModifyQueueEntry command” [@xjdf_ip1, chap. 7.20 "SubmitQueueEntry"].
+* “The ReturnQueueEntry Message returns a job that had been submitted with a SubmitQueueEntry to the controller that originally submitted the job. Note that this command is sent from the device to a controller and not from controller to device as is the case with most other queue handling commands” [@xjdf_ip1, chap. 7.16 "ReturnQueueEntry"].
+* “Queue entries are accessed using a `@QueueEntryID` attribute, which the queue’s controller or device generates when it receives the submitted job, and which is returned in the SubmitQueueEntry Response Message. `@QueueEntryID` SHALL uniquely identify an entry within the scope of one queue. An implementation is free to choose the algorithm that generates `@QueueEntryID` values” [@xjdf_ip1, chap. 9.1.1 "Queue Entry ID Generation"].
 
 <figure>
   <Image src={diagramXjmfQueueEntry} alt="XJMF QueueEntry Submission and Return" />
   <figcaption>Figure: XJMF QueueEntry Submission and Return</figcaption>
 </figure>
 
-The drawing in the above figure shows the most simple queue entry handling in an XJDF workflow. The XJDF Document is submitted to a controller (or device) and is returned at the end of the execution process. The following snippet contains the corresponding XJMF SubmitQueueEntry Command Messages:
+The diagram above illustrates the standard submission and completion lifecycle of an XJDF job:
+
+1. **Job Submission (`CommandSubmitQueueEntry`):** The MIS submits an XJDF job to the controller or device:
 
 ```xml title="Example: XJMF SubmitQueueEntry Command Message"
 <XJMF xmlns="http://www.CIP4.org/JDFSchema_2_0">
@@ -310,9 +289,9 @@ The drawing in the above figure shows the most simple queue entry handling in an
 </XJMF>
 ```
 
-In the XJDF SubmitQueueEntry Command Message, all submission relevant details are defined in the subelement QueueSubmissionParams. The attribute `@URL` references the XJDF Document to be submitted. The attribute `@ReturnJMF` specifies the URL to which the receiving device or controller has to send the asynchronous feedback as soon as the processing of the job has been accomplished. Additionally, the QueueSubmissionParams element allows the specification of job metadata as the priority. `@Priority` is a “number from 0 to 100, where ‘0’ = lowest priority and ‘100’ = maximum priority” [@xjdf_ip1, chap. 7 Table 7.81: QueueSubmissionParams/@Priority]. The way in which the priority influences the production order of the single jobs is explained in the XJDF Specification.
+Inside `QueueSubmissionParams`, `@URL` points to the XJDF Document to be executed, `@ReturnJMF` specifies the MIS callback endpoint where the device should send `CommandReturnQueueEntry` once the job finishes, and `@Priority="42"` sets the queue priority (“number from 0 to 100, where ‘0’ = lowest priority and ‘100’ = maximum priority” [@xjdf_ip1, chap. 7 Table 7.81: QueueSubmissionParams/@Priority]).
 
-When sending this message to a controller or device, the corresponding Response Message might look something like the following:
+2. **Synchronous Acceptance (`ResponseSubmitQueueEntry`):** The receiving controller or device creates a queue entry and returns its newly assigned `@QueueEntryID` (`"1"`) and initial `@Status` (`"Waiting"`):
 
 ```xml title="Example: XJMF SubmitQueueEntry Response Message"
 <XJMF xmlns="http://www.CIP4.org/JDFSchema_2_0">
@@ -328,9 +307,7 @@ When sending this message to a controller or device, the corresponding Response 
 </XJMF>
 ```
 
-The corresponding XJDF SubmitQueueEntry Response Message references the Command Message in the `@refID` attribute. Furthermore, there is a QueueEntry subelement which contains details about the newly created queue entry. The `@QueueEntryID` attribute defines the identifier of the queue entry as defined above. The `@Priority` has been adapted on a 1:1 ratio, while the attribute `@Status` defines the current status of the queue entry.
-
-After the successful execution of the job, the queue entry is sent back to the MIS. Following is a snippet containing the XJMF ReturnQueueEntry Command Message:
+3. **Job Completion & Return (`CommandReturnQueueEntry`):** Once the job has been executed on the device, the controller or device sends a `CommandReturnQueueEntry` message to the `@ReturnJMF` endpoint of the MIS, referencing `@QueueEntryID="1"` and the `@URL` of the completed XJDF Document (which now contains the populated `AuditPool`):
 
 ```xml title="Example: XJMF ReturnQueueEntry Command Message"
 <XJMF xmlns="http://www.CIP4.org/JDFSchema_2_0">
@@ -345,15 +322,15 @@ After the successful execution of the job, the queue entry is sent back to the M
 </XJMF>
 ```
 
-The XJMF ReturnQueueEntry Command Message is initiated by the controller (or device) and contains a ReturnQueueEntryParams subelement. The subelement specifies the queue entries identifier (`@QueueEntryID`) in addition to the reference to where to locate the XJDF Document to send back. As feedback, the MIS returns the Response Message seen below in order to confirm the successful processing of the Command Message. The response does not specify any specific details:
+4. **Return Confirmation (`ResponseReturnQueueEntry`):** The MIS acknowledges receipt of the returned job with a `ResponseReturnQueueEntry` message (`@ReturnCode="0"`):
 
 ```xml title="Example: XJMF ReturnQueueEntry Response Message"
 <XJMF xmlns="http://www.CIP4.org/JDFSchema_2_0">
-    <Header ID="XJMF_ID" DeviceID="DEVICE_ID_CONTROLLER"
+    <Header ID="XJMF_ID" DeviceID="DEVICE_ID_MIS"
             Time="2016-11-12T12:11:39+02:00" />
     <ResponseReturnQueueEntry ReturnCode="0">
         <Header ID="I1234" refID="MESSAGE_ID"
-                DeviceID="DEVICE_ID_CONTROLLER"
+                DeviceID="DEVICE_ID_MIS"
                 Time="2016-11-12T12:11:39+02:00" />
     </ResponseReturnQueueEntry>
 </XJMF>
@@ -361,62 +338,56 @@ The XJMF ReturnQueueEntry Command Message is initiated by the controller (or dev
 
 
 ## Interchange Protocol
-
 “XJDF and XJMF SHOULD be exchanged over a network by using http […] or https. Controllers and devices SHOULD implement an http server. […] Controllers and devices SHOULD provide insecure http without a TLS layer for better interoperability” [@xjdf_ip1, chap. 9.5 "XJDF and XJMF Interchange Protocol"]. “XJMF Messaging does not specify a standard port” [@xjdf_ip1, chap. 9.5.1 "HTTP Port"].
 
-“A sender SHALL use an http POST request to transmit an XJMF that contains XJMF Queries, XJMF Commands and XJMF Signals to an HTTP server. The contents SHALL be placed in the body of the http request. […].
+“A sender SHALL use an http POST request to transmit an XJMF that contains XJMF Queries, XJMF Commands and XJMF Signals to an HTTP server. The contents SHALL be placed in the body of the http request. […]. The receiver SHALL package response messages as raw XML. The body of an HTTP response to an XJMF that contains only XJMF Signals that are not defined as reliable (`@ChannelMode`!="Reliable") MAY be empty” [@xjdf_ip1, chap. 9.5.2 "HTTP Request Method"].
 
-The receiver SHALL package response messages as raw XML. The body of an HTTP response to an XJMF that contains only XJMF Signals that are not defined as reliable (`@ChanelMode`!="Reliable") MAY be empty” [@xjdf_ip1, chap. 9.5.2 "HTTP Request Method"].
-
-To conclude, a table containing the most important interchange protocol parameters is presented here:
+The table below summarizes the key HTTP transport parameters:
 
 | Parameter | Value |
 | --- | --- |
 | Protocol | HTTP / HTTPS |
-| Port | any |
-| Request Method | POST |
-| Payload Location | Body |
+| Port | Any (configured per endpoint URL) |
+| HTTP Request Method | `POST` |
+| Payload Location | HTTP Request / Response Body |
 
 ### Packaging
+Because an XJMF message may reference an XJDF Document, and that XJDF Document may in turn reference external digital assets (such as PDF artwork or ICC color profiles), submitting a job by URL alone can create a chain of dependent HTTP downloads across the network. In distributed or cross-network setups, such multi-hop download chains can be fragile or blocked by firewalls.
 
-XJMF Messages may reference XJDF Documents, and XJDF Documents may reference external digital assets such as a customer’s artwork, or a Color Profile. A data transaction may therefore become complex. When, for instance, a job is being submitted from an MIS to a device, an XJMF SubmitQueueEntry Command message is initially sent. The command messages reference an XJDF Document provided on the MIS’s internal http server which has to be downloaded by the device. Next, the XJDF Document has to be interpreted by the device; if there are other external references, these also have to be downloaded from their source. In some circumstances, these “dependency chains” make a job submission fragile and complicated.
+To make job transfers self-contained, XJDF supports bundling an XJMF message, its referenced XJDF Document, and any associated digital assets into a single **ZIP package**: “Zip is a de facto industry standard for packaging and compressing data. Directory structures can be encoded in a ZIP package” [@xjdf_ip1, chap. 9.7.2 "ZIP Packaging"] (see *https://www.pkware.com/support/zip-app-note/*).
 
-In order to reduce the amount of complexity during job submission, XJDF allows for the packaging of all files involved into a single ZIP archive. An XJMF ZIP Package contains a single XJMF Message, the XJDF Document to which it refers, and - if they exist - the digital assets to which the XJMF and XJDF refer to. “Zip is a de facto industry standard for packaging and compressing data. Directory structures can be encoded in a ZIP package” [@xjdf_ip1, chap. 9.7.2 "ZIP Packaging"]. Details can be found at: *https://www.pkware.com/support/zip-app-note/*.
-
-When processing a ZIP package, a unique entry point needs to be defined. Therefore, the XJDF Specification defines the root XJMF. “The root XJMF SHALL be named root.xjmf and SHALL reside in the root directory of the ZIP package” [@xjdf_ip1, chap. 9.7.2.1 "Identifying the Root XJMF"]. Below is a screenshot of a root directory of a ZIP package:
+To ensure a well-defined entry point when unpacking an XJMF ZIP archive, the specification mandates a root message file: “The root XJMF SHALL be named root.xjmf and SHALL reside in the root directory of the ZIP package” [@xjdf_ip1, chap. 9.7.2.1 "Identifying the Root XJMF"]:
 
 <figure>
   <Image src={screenZipRoot} alt="Root Directory ('/') of the ZIP Archive" />
   <figcaption>Figure: Root Directory (“/”) of the ZIP Archive</figcaption>
 </figure>
 
-As shown in the figure, there is a file called “root.xjmf” in the ZIP package’s root directory. This is the first file to be interpreted by the recipient when unpacking and processing the archive. “Referenced digital assets that reside in the ZIP package, [...] SHALL be referenced as local URLs. The current URL for calculating local URLs SHALL be the root of the ZIP package, regardless of the location of the referring digital asset within the ZIP package. Digital assets other than the root.xjmf MAY be placed in a directory tree structure within the ZIP file” [@xjdf_ip1, chap. 9.7.2.2 "Referencing Digital Assets within a ZIP Package"]. The next screenshot below reveals the content of the subfolder “assets”:
+When the recipient unpacks the archive, `root.xjmf` is parsed first. All files included inside the ZIP archive are referenced using relative local paths resolved from the root of the ZIP archive: “Referenced digital assets that reside in the ZIP package, [...] SHALL be referenced as local URLs. The current URL for calculating local URLs SHALL be the root of the ZIP package, regardless of the location of the referring digital asset within the ZIP package. Digital assets other than the root.xjmf MAY be placed in a directory tree structure within the ZIP file” [@xjdf_ip1, chap. 9.7.2.2 "Referencing Digital Assets within a ZIP Package"]. The figure below shows the contents of the `/assets/` subdirectory inside the archive:
 
 <figure>
   <Image src={screenZipAssets} alt="Assets Subdirectory ('/assets/') of the ZIP Archive" />
   <figcaption>Figure: Assets Subdirectory (“/assets/”) of the ZIP Archive</figcaption>
 </figure>
 
-In XJMF and XJDF, most digital assets (including XJDF Documents) are referenced by an `@URL` attribute. The attribute can either references files in the file system, or it can define an http address for downloading the asset.
-
-When packaging a ZIP archive, all assets (or a subset) can be packed into the zip archive. Afterwards, the appropriate `@URL` values in the XJMF Message and XJDF Document have to be updated to the new inner-zip-package location. The reference of the XJDF Document “doc.xjdf” in the root XJMF Message simply becomes “doc.xjdf” and the location of the “asset_2.jpg” has to be updated to “assets/asset_2.jpg”.
+Accordingly, in `root.xjmf`, `QueueSubmissionParams/@URL` simply points to `"doc.xjdf"`, and inside `doc.xjdf`, the `FileSpec/@URL` attributes point to `"assets/asset_1.pdf"` and `"assets/asset_2.jpg"`.
 
 “XJMF messages that do not refer to XJDF or external digital assets SHOULD NOT be packaged as zip. Digital assets that are not included in the zip package MAY be referenced. Multiple XJMF messages SHALL NOT be packaged in one zip package” [@xjdf_ip1, chap. 9.7 "XJDF Packaging"].
 
 ### MIME Types and File Extensions
-
 “The following MIME types and extensions SHOULD be used when storing XJDF or XJMF as files or when a MIME type is required, e.g. when setting the http Content-Type header:” [@xjdf_ip1, chap. 9.7.1 "MIME Types and File Extensions"]
 
 | MIME Type | File Extension | Usage |
 | --- | --- | --- |
-| `application/vnd.cip4-xjdf+xml` | `.xjdf` | raw XJDF |
-| `application/vnd.cip4-xjmf+xml` | `.xjmf` | raw XJMF |
-| `application/vnd.cip4-xjdf+zip` | `.xjdf.zip` | ZIP packaged XJDF |
-| `application/vnd.cip4-xjmf+zip` | `.xjmf.zip` | ZIP packaged XJMF |
+| `application/vnd.cip4-xjdf+xml` | `.xjdf` | Raw XML XJDF Document |
+| `application/vnd.cip4-xjmf+xml` | `.xjmf` | Raw XML XJMF Message |
+| `application/vnd.cip4-xjdf+zip` | `.xjdf.zip` | ZIP-packaged XJDF |
+| `application/vnd.cip4-xjmf+zip` | `.xjmf.zip` | ZIP-packaged XJMF |
 
 ### Error Handling
+“Error handling is an implementation-dependent feature of XJDF-based systems. The AuditPool element provides a container where errors that occur during the execution [...] SHOULD be logged using Notification elements. Notification elements MAY also be sent in XJMF messages” [@xjdf_ip1, chap. 9.3.8 "Error Handling"] in real time as soon as an error occurs.
 
-“Error handling is an implementation-dependent feature of XJDF-based systems. The AuditPool element provides a container where errors that occur during the execution [...] SHOULD be logged using Notification elements. Notification elements MAY also be sent in XJMF messages” [@xjdf_ip1, chap. 9.3.8 "Error Handling"] as soon as an error occurs. Here is an XJDF example of an AuditPool element containing an Error Notification:
+Below is an example of an error logged inside `/XJDF/AuditPool/AuditNotification`:
 
 ```xml title="Example: AuditPool Error Notification"
 [...]
@@ -434,9 +405,9 @@ When packaging a ZIP archive, all assets (or a subset) can be packed into the zi
 [...]
 ```
 
-This example shows that the actual error information is part of the Notification element. “This Element contains information about individual events that occurred during processing” [@xjdf_ip1, chap. 7.10.3.1 "Notification"]. In this case, the event is an error. Using the attribute `@Class`, the Notification element can be classified. The value “Error” indicates that an error has occurred that requires user interaction. This value appears in situations such as when resources are missing, when major incompatibilities are detected, or when the toner is empty. The attribute `@JobID` brings the Notification into the right job context. Context information and classifications can of course be found in the XJDF Specification.
+Inside `AuditNotification`, the `Notification` element “contains information about individual events that occurred during processing” [@xjdf_ip1, chap. 7.10.3.1 "Notification"], classified by `@Class="Error"` (indicating an issue that requires operator intervention, such as depleted paper or toner) and linked to the affected job via `@JobID="JOB_ID"`.
 
-The entire Notification element is embedded in an AuditNotification element which is a direct subelement of AuditPool. However, instead (or in addition) of writing the Notification into the AuditPool of the XJDF Document, the Notification element can also be embedded into an XJMF Notification Signal message as a means of immediately sending the error information to the subscribing system.
+To report the exact same error immediately in real time, the `Notification` element is sent inside an XJMF `SignalNotification` message:
 
 ```xml title="Example: XJMF Error Notification"
 <XJMF xmlns="http://www.CIP4.org/JDFSchema_2_0">
@@ -454,21 +425,17 @@ The entire Notification element is embedded in an AuditNotification element whic
 
 
 ## XJMF Bootstrapping
-
-XJMF Bootstrapping describes the process of service discovery when connecting a controller or device. “XJMF currently provides no mechanism for initial device discovery. Thus, the URL of an XJMF device needs to be provided to a controller outside of XJMF. Once the XJMF URL is known, a controller SHOULD follow the steps below:” [@xjdf_ip1, chap. 9.6.7 "XJMF Bootstrapping"]
+**XJMF Bootstrapping** is the three-step service discovery handshake performed when connecting an MIS (or controller) to a subordinate controller or device: “XJMF currently provides no mechanism for initial device discovery. Thus, the URL of an XJMF device needs to be provided to a controller outside of XJMF. Once the XJMF URL is known, a controller SHOULD follow the steps below:” [@xjdf_ip1, chap. 9.6.7 "XJMF Bootstrapping"]
 
 <figure>
   <Image src={diagramXjmfBootstrapping} alt="XJMF Bootstrapping" />
   <figcaption>Figure: XJMF Bootstrapping</figcaption>
 </figure>
 
-This illustration shows an MIS, a controller, and two devices. The focus in this illustration lies on the communication between the MIS and the controller. Each box visualize a synchronous communication between both. In all three boxes, the MIS sends a Query Message to the controller and receives a synchronous Response message in return. The combination of the three boxes is also known as XJMF Bootstrapping. The XJMF Bootstrapping consists of the steps “Messages Discovery”, “Devices Discovery”, and “Subscriptions Discovery”.
-
-Bootstrapping is not limited to the MIS-to-Controller communication but it is also valid for the Controller-to-Device or MIS-to-Device communication.
+As shown in the diagram, bootstrapping consists of three synchronous query/response pairs executed in sequence: **Step 1: Message Discovery**, **Step 2: Devices Discovery**, and **Step 3: Subscriptions Discovery**. (The exact same handshake applies whether an MIS is connecting to a Controller, a Controller to a Device, or an MIS directly to a Device.)
 
 ### Step 1: Message Discovery
-
-In the first step, the initiating system sends an XJMF KnownMessages Query Message to the system for it to detect. “The KnownMessages Query Message returns a list of all Message types that are supported by the controller” [@xjdf_ip1, chap. 7.7 "KnownMessages"] or device. The initiating system therefore gets an idea of which XJMF functionality is supported by the called system. Below is an example of such an XJMF KnownMessages Query Message:
+First, the initiating system sends an empty `QueryKnownMessages` message to discover which XJMF messages the target endpoint supports: “The KnownMessages Query Message returns a list of all Message types that are supported by the controller” [@xjdf_ip1, chap. 7.7 "KnownMessages"] or device:
 
 ```xml title="Example: XJMF KnownMessages Query Message"
 <XJMF xmlns="http://www.CIP4.org/JDFSchema_2_0">
@@ -481,7 +448,7 @@ In the first step, the initiating system sends an XJMF KnownMessages Query Messa
 </XJMF>
 ```
 
-In most situations, an empty XJMF KnownMessages Query Message is enough to obtain a sufficient reply. The synchronous response of the Query Message is an XJMF KnownMessages Response Message:
+The target endpoint replies synchronously with a `ResponseKnownMessages` message containing “a list of MessageService elements. Each MessageService specifies one explicit message type that is supported by the device” [@xjdf_ip1, chap. 7.7.2.1 "MessageService"]:
 
 ```xml title="Example: XJMF KnownMessages Response Message"
 <XJMF xmlns="http://www.CIP4.org/JDFSchema_2_0">
@@ -508,11 +475,8 @@ In most situations, an empty XJMF KnownMessages Query Message is enough to obtai
 </XJMF>
 ```
 
-The XJMF KnownMessages Response message references the initiating Query message by its ID using the `@refID` attribute. Furthermore, the Response message contains “a list of MessageService elements. Each MessageService specifies one explicit message type that is supported by the device” [@xjdf_ip1, chap. 7.7.2.1 "MessageService"]. The message’s name can be found as the value of the attribute `@Type`. The meanings of the remaining attributes can be read in the XJDF Specification.
-
 ### Step 2: Devices Discovery
-
-In the second step of the XJMF Bootstrapping process, the devices connected to the controller or the device itself are being discovered. An XJMF KnownDevices Query Message is therefore sent to the recipient. “The KnownDevices Query Message requests information about the Devices that are controlled by a controller [...]. The response is a list of device elements” [@xjdf_ip1, chap. 7.6 "KnownDevices"]. Here is an example of such a Query Message:
+Second, the initiating system sends a `QueryKnownDevices` message to discover the device(s) managed by the target endpoint: “The KnownDevices Query Message requests information about the Devices that are controlled by a controller [...]. The response is a list of device elements” [@xjdf_ip1, chap. 7.6 "KnownDevices"]:
 
 ```xml title="Example: XJMF KnownDevices Query Message"
 <XJMF xmlns="http://www.CIP4.org/JDFSchema_2_0">
@@ -525,8 +489,6 @@ In the second step of the XJMF Bootstrapping process, the devices connected to t
     </QueryKnownDevices>
 </XJMF>
 ```
-
-The example has previously been shown in the section “Query Message”. The message contains a subelement DeviceFilter. “The DeviceFilter Element refines the list of Devices that are requested to be returned” [@xjdf_ip1, chap. 7.6.1.1 "DeviceFilter"]. The usage of the value “Brief” in the attribute `@DeviceDetails` stipulates that the response should only provide the attribute DeviceID for each device listed in the DeviceList element. The corresponding Response Message is as follows:
 
 ```xml title="Example: XJMF KnownDevices Response Message"
 <XJMF xmlns="http://www.CIP4.org/JDFSchema_2_0">
@@ -541,11 +503,10 @@ The example has previously been shown in the section “Query Message”. The me
 </XJMF>
 ```
 
-The XJMF KnownDevices Response Messages lists all devices which are controlled by the controller. For the initial discovery, this information should be sufficient. Should more information be required, the attribute `@DeviceDetails` in the Query Message can be set to “Full” in order to obtain the maximum amount of available device information from the controller.
+Setting `DeviceFilter/@DeviceDetails="Brief"` returns the `@DeviceID` of each connected device (`"DEVICE-I"` and `"DEVICE-II"`); setting `@DeviceDetails="Full"` retrieves full device metadata.
 
 ### Step 3: Subscriptions Discovery
-
-The last step of the XJMF Bootstrapping process is the subscriptions discovery. “The KnownSubscriptions XJMF enables controllers to query devices for a list of active persistent channels” [@xjdf_ip1, chap. 7.8 "KnownSubscriptions"]. The following snippet shows the XJMF KnownSubscriptions Query Message:
+Third, the initiating system sends a `QueryKnownSubscriptions` message to check which persistent channels are already active on the controller or device: “The KnownSubscriptions XJMF enables controllers to query devices for a list of active persistent channels” [@xjdf_ip1, chap. 7.8 "KnownSubscriptions"]:
 
 ```xml title="Example: XJMF KnownSubscriptions Query Message"
 <XJMF xmlns="http://www.CIP4.org/JDFSchema_2_0">
@@ -558,9 +519,7 @@ The last step of the XJMF Bootstrapping process is the subscriptions discovery. 
 </XJMF>
 ```
 
-The message is straightforward, as it does not require any subelements. An optional subelement is the SubscriptionFilter element. “The SubscriptionFilter element is a filter to limit the list of SubscriptionInfo elements that are returned in the KnownSubscriptions Response” [@xjdf_ip1, chap. 7.8.1.1 "SubscriptionFilter"]. All attributes which are marked as filterable in the table “Attributes of a persistent channel” in the section “Persistent Channel” can be selected to filter the result.
-
-The response to an XJMF KnownSubscriptions Query Message is an XJMF KnownSubscriptions Response Message, and it contains all details requested. Below is an example of such a Response Message:
+(If desired, a `SubscriptionFilter` child element can be included using any filterable attribute from the persistent channel table to narrow the query.) The target replies with a `ResponseKnownSubscriptions` message listing all active `SubscriptionInfo` entries:
 
 ```xml title="Example: XJMF KnownSubscriptions Response Message"
 <XJMF xmlns="http://www.CIP4.org/JDFSchema_2_0">
@@ -581,7 +540,7 @@ The response to an XJMF KnownSubscriptions Query Message is an XJMF KnownSubscri
                     RepeatTime="30" RetryPolicy="DiscardAtNextSignal"
                     ChannelMode="Reliable" />
         </SubscriptionInfo>
-        <SubscriptionInfo ChannelID="CNL_2" DeviceID="MIS_ID"
+        <SubscriptionInfo ChannelID="CNL_3" DeviceID="MIS_ID"
                 MessageType="Resource">
             <Subscription URL="http://mis.example.org/jmf"
                     RepeatTime="30" RetryPolicy="DiscardAtNextSignal"
@@ -591,21 +550,12 @@ The response to an XJMF KnownSubscriptions Query Message is an XJMF KnownSubscri
 </XJMF>
 ```
 
-The body of the XJMF KnownSubscriptions Response Message is a list of SubscriptionInfo elements. Each Subscription element describes an individual persistent channel.
-
-“A Controller SHOULD NOT send a new subscription if a matching subscription is already in place in the device. If the device does not support QueryKnownSubscriptions, the controller MAY create a new subscription. A device that receives a subscription of the same type to the same URL SHOULD replace the existing subscription with the new subscription.
-
-A controller SHOULD remove persistent channels that are no longer evaluated by sending a CommandStopPersistentChannel to a device” [@xjdf_ip1, chap. 9.6.3 "Managing Persistent Channels"].
+Inspecting active subscriptions during bootstrapping prevents duplicate channels after restarts: “A Controller SHOULD NOT send a new subscription if a matching subscription is already in place in the device. If the device does not support QueryKnownSubscriptions, the controller MAY create a new subscription. A device that receives a subscription of the same type to the same URL SHOULD replace the existing subscription with the new subscription. A controller SHOULD remove persistent channels that are no longer evaluated by sending a CommandStopPersistentChannel to a device” [@xjdf_ip1, chap. 9.6.3 "Managing Persistent Channels"].
 
 
 ## Piping (Overlapping Processing)
+Up to this point, we have looked at hierarchical communication between the MIS and individual controllers or devices, where one process step finishes before the next begins. However, XJMF also supports direct peer-to-peer coordination between devices for **overlapping processing (piping)**:
 
-Up to now, XJMF Messages and XJDF Documents have only been presented for communication purposes within a production hierarchy. The MIS sends job information to lower level controllers and devices for execution, and, when finished, the information is sent back to the MIS system. In such an architecture, all processes are executed in serial (one after another), or sometimes even in parallel (especially in prepress data preparation). However, XJMF also provides communication methods for linking devices directly to each other.
+“Some processes, e.g. a long print run, take a long time to complete while constantly creating intermediate output that is already available for processing by a subsequent process prior to completion of the initial process. In overlapping processing, the controller sends an XJDF to the initial device and does not wait until the first XJDF has been processed before sending a subsequent XJDF that describes the next process step of the same job to a different device. The subsequent device MAY begin processing as soon as the initial device has produced sufficient resources for the subsequent device. The communication between the devices SHOULD use CommandPipeControl messages” [@xjdf_ip1, chap. 9.3.5 "Overlapping Processing"].
 
-“Some processes, e.g. a long print run, take a long time to complete while constantly creating intermediate output that is already available for processing by a subsequent process prior to completion of the initial process. In overlapping processing, the controller sends an XJDF to the initial device and does not wait until the first XJDF has been processed before sending a subsequent XJDF that describes the next process step of the same job to a different device.
-
-The subsequent device MAY begin processing as soon as the initial device has produced sufficient resources for the subsequent device. The communication between the devices SHOULD use CommandPipeControl messages” [@xjdf_ip1, chap. 9.3.5 "Overlapping Processing"].
-
-XJMF Piping can also be used in fully automated digital production lines, such as a Book-on-Demand production system. This type of system consists of a digital press of vendor A, and a finishing unit of vendor B. Both devices have to work closely together. For instance, when the press is interrupted, the finishing unit also has to pause, and vice versa. Another case would be that of the finishing unit wasting a book. In this situation, the press requires the information to reprint the book. All of these procedures and more can be standardized by way of using XJMF Pipes.
-
-As piping is an advanced XJMF functionality, its details and intricacies are beyond the scope of this book but can be found in the XJDF Specification in the chapter “9.3.5 Overlapping Processing”.
+XJMF Piping is also used in physically coupled multi-vendor production lines—such as an automated Book-on-Demand line pairing a digital web press from Vendor A directly with an inline perfect binder/trimmer from Vendor B. Using `CommandPipeControl` messages, both devices coordinate directly in real time: if the finishing unit pauses, it signals the press to pause; if the finishing unit spoils a book block, it signals the press to reprint that specific book copy automatically. Full details on XJMF Piping can be found in Section 9.3.5 (“Overlapping Processing”) of the XJDF Specification.

@@ -7,60 +7,47 @@ import screenJiraDraft from '../../../assets/spec-screen/jira-draft.png';
 import screenJiraComment from '../../../assets/spec-screen/jira-comment.png';
 import { Image } from 'astro:assets';
 
-CIP4 is responsible for the development of standard data formats in the Graphic Arts Industry. Industry standards survive on transparency, acceptance, and active community support. These are the major design criteria points of the CIP4 Authoring Process. Everyone (also non-members) should be able to initiate and participate in discussions of how to improve or extend CIP4’s specifications.
+The CIP4 Organization is responsible for developing and maintaining open data exchange standards for the graphic arts industry. Because industry standards thrive on transparency, broad consensus, and active community participation, the CIP4 Authoring Process is designed to be open to everyone—including non-members—who wishes to follow or contribute to improvements and extensions of CIP4's specifications.
 
-To accommodate for this, CIP4 has introduced visitor accounts which can easily be created by anyone on the website. A visitor account enables people to get onto the workspaces of the CIP4 Working Groups, or interact with others of the community. A visitor account can be upgraded to a member account at any time.
+Anyone can register a free **visitor account** on the CIP4 website to access working group spaces and participate in technical discussions with the community. A visitor account can be upgraded to a full CIP4 member account at any time.
 
-All discussions are carried out in the CIP4 JIRA System (*https://jira.cip4.org*). JIRA is a software product powered by Atlassian (*http://www.atlassian.com*). JIRA is an ticket system whose purpose is to obtain all work that has been organized. All tickets follow pre-defined workflows so that each issue created can be managed and tracked from the beginning. JIRA also provides a release management. Issues can be allocated to a specific release of the Specification. This helps in getting an overview of the issues that take preference, and the ones which are (intended) to be published, and in which release. Each CIP4 Specification is managed by an individual project in JIRA. The following table showing the most significant JIRA projects at CIP4:
+All specification work is tracked publicly in the **CIP4 JIRA System** (*https://jira.cip4.org*), powered by Atlassian JIRA (*https://www.atlassian.com*). Every proposed change follows a structured workflow from initial discussion to final release, and each CIP4 specification is managed in its own dedicated JIRA project:
 
-| Specification | Link |
+| Specification | JIRA Project Link |
 | --- | --- |
 | XJDF Specification | https://jira.cip4.org/projects/XJDF |
 | JDF Specification | https://jira.cip4.org/projects/JDF |
 | PrintTalk Specification | https://jira.cip4.org/projects/PTK |
 | ... | ... |
 
-Every issue in a project represents a bug, an improvement, or an extension. Bugs are, for instance, typos in the spec, or maybe even conceptual discrepancies. Improvements are issues that make the specification more user friendly, while extensions are new attributes, elements, and, sometimes, even processes. The specification projects are fully public. Even unregistered participants are able to follow the discussion and development of the specification. CIP4 visitors and CIP4 members are able to create new issues, write comments when participating in discussions, subscribe to changes of an issue, or vote for issues in order to raise their priority. More information about how to work with CIP4 JIRA in detail can be found on the CIP4’s Confluence Website (*https://confluence.cip4.org*).
-
-**Note: In case there are questions concerning the CIP4 organization (including technical questions), there is also a question forum available on CIP4 Confluence where participants can submit them.**
+Every JIRA issue represents a **bug** (such as an editorial typo or technical inconsistency), an **improvement** (making the specification clearer or easier to use), or a **new feature/extension** (adding new attributes, elements, or process types). All specification projects are publicly readable without logging in, while registered CIP4 visitors and members can create new issues, comment on proposals, watch issues for updates, and vote on issues to help prioritize upcoming work. Detailed documentation on using CIP4's tools is available on the **CIP4 Confluence** wiki (*https://confluence.cip4.org*), which also hosts a public Q&A forum for technical and organizational questions.
 
 ## Specification Authoring Workflow
-
-As mentioned above, each issue follows a pre-defined workflow. The following is a sketch of the CIP4 Specification Authoring Workflow:
+Every JIRA issue progresses through a standardized eight-stage workflow, illustrated in the diagram below:
 
 <figure>
   <Image src={diagramAuthoringWorkflow} alt="CIP4 Specification Authoring Workflow" />
   <figcaption>Figure: CIP4 Specification Authoring Workflow</figcaption>
 </figure>
 
-Each workflow is a concatenation of a defined issue status. The CIP4 Specification Workflow defines eight different status. The following sections describes the individual states.
-
 ### Status: Discussion
-
-“Discussion” is the initial status in the CIP4 Authoring Workflow. Each issue created is automatically in that status. Furthermore, each issue in any status can be set to the status “Discussion” at any time. All issues in status “Discussion” are open for discussion. The goal of this workflow step is to clarify the issue and find the pro and contras. Every registered user (members and non-members) is welcome to write his experience or opinion as a comment into the appropriate issues. Additionally, there are public CIP4 Web Conferences that take place on a periodic basis in which these issues are being discussed.
-
-At the end of a discussion period, a decision is made based on the arguments written in the comments. The decision is to either reject the issue, or move forward to status “Drafting”. The status change takes place within the CIP4 Web Conferences.
+**Discussion** is the initial state of every newly created issue (and any issue reopened from a later state). Issues in `"Discussion"` are open for community review to clarify requirements and weigh pros and cons. Registered users (both members and visitors) are encouraged to share feedback and implementation experience in the issue comments, and open issues are reviewed regularly during public CIP4 Working Group web conferences. Once a consensus is reached during a working group meeting, the issue either moves forward to **Drafting** or is closed as **Rejected**.
 
 ### Status: Rejected
-
-All issues discussed and being rejected are found in the status “Rejected”. “Rejected” is an end-status and is used to archive these issues. This status helps to avoid redundant discussions about the same topics. Before an issue is rejected, a justification for that rejection has to be written as a comment. However, each rejected issue can be reactivated at any time by relegating it back to the “Discussion” status.
+Issues that the working group decides not to pursue are transitioned to **Rejected** with an explanatory comment documenting the rationale. Archiving rejected proposals in JIRA prevents repeating the same debates in the future, while still allowing a rejected issue to be reopened into **Discussion** if new requirements emerge.
 
 ### Status: Drafting
-
-Once a positive decision regarding a suggestion has been made, the next step is to draft the changes of the specification sequentially. The field “Draft” in the JIRA issue serves this purpose:
+Once a proposal is approved in principle, the exact wording and table changes for the specification are prepared in the JIRA issue's **Draft** field:
 
 <figure>
   <Image src={screenJiraDraft} alt="Draft in JIRA" />
   <figcaption>Figure: Draft in JIRA</figcaption>
 </figure>
 
-The figure above illustrates the content of the Draft field. The red text has to be removed and the green added; the black text remains as is. When the exact draft is finished, the issue is pushed to the next status, “TSC Approve”.
+In the **Draft** field, deletions are marked in red strikethrough text, additions are highlighted in green, and unchanged context remains in black. Once the draft text is complete, the issue advances to **TSC Approve**.
 
 ### Status: TSC Approve
-
-The CIP4s Technical Steering Committee (TSC) “is comprised of the chair people and alternate chairs of technical working groups and the Chief Technical Officer of CIP4. Chairmen of subgroups of working groups are also members of the TSC. [...]
-
-One objective of the TSC is to ensure that CIP4's specifications remain architecturally sound, and the TSC may reject working group recommendations if:
+CIP4's **Technical Steering Committee (TSC)** “is comprised of the chair people and alternate chairs of technical working groups and the Chief Technical Officer of CIP4. Chairmen of subgroups of working groups are also members of the TSC. [...] One objective of the TSC is to ensure that CIP4's specifications remain architecturally sound, and the TSC may reject working group recommendations if:
 
 * A recommendation includes elements or functions that already exist, perhaps under different names, and would hence, create a redundancy
 * A recommendation is in conflict with either existing specification features or features under development by one or more other working groups;
@@ -69,61 +56,38 @@ One objective of the TSC is to ensure that CIP4's specifications remain architec
 * A recommendation is outside of the scope of the originating working group and must be referred to the appropriate working group, and
 * A recommendation is outside of the scope of the specification under development” [@cip4_tsc_2005].
 
-In the status “TSC Approve”, the TSC has to approve the changes of the specifications as specified in the “Draft” field. In case of corrections, the issue goes back to the status “Drafting”, or “Discussion”. In some rare cases, the issue can even be rejected at that point. When the changes in the specification are approved, the issue is pushed forward to the status “Specification”.
+In **TSC Approve**, the TSC reviews the proposed changes in the **Draft** field. If revisions are needed, the issue returns to **Drafting** or **Discussion** (or, in rare cases, **Rejected**). Once approved by the TSC, the issue moves to **Specification**.
 
 ### Status: Specification
+In **Specification**, CIP4's specification editors incorporate the approved draft changes into the master specification source documents. CIP4 runs a continuous build pipeline for its specifications: as soon as a change is committed to the source repository, an updated draft PDF of the specification is automatically built and published to the TSC Spec Incubator space on CIP4 Confluence (*https://confluence.cip4.org/display/TSC/Spec+Incubator*). Once the specification text has been updated, the issue advances to **Schema** (`Scheme`).
 
-In the status “Specification”, all changes drafted in the JIRA issue are moved into the next version of the official specification document. CIP4 has several specification editors who work on the source documents of the specifications.
-
-CIP4 provides continuous builds of their specifications. This means that the next version of the specification is built continuously. As soon as a modification of the source document has been made, a new PDF document reflecting that modification is generated and published at the TSC Space on CIP4 Confluence (*https://confluence.cip4.org/display/TSC/Spec+Incubator*) automatically.
-
-As soon as the changes have been applied and moved to the specification source documents, the issue is updated to the next status, “Scheme”
-
-### Status: Scheme
-
-As CIP4’s standard data formats are XML languages, CIP4 also provides XML Scheme files in addition to their specification documents. In this status, the CIP4 Scheme Editors make the Scheme modifications if required for this issue.
-
-CIP4 provides continuous builds for the schemes as well. The latest scheme is always published at the Tools and Infrastructure Space on CIP4 Confluence (*https://confluence.cip4.org*).
+### Status: Schema
+Because CIP4's standards are XML formats, CIP4 publishes official XML Schema (XSD) files alongside the specification PDFs. In this stage, CIP4's schema editors apply any required XSD updates, which are likewise built continuously and published on CIP4 Confluence.
 
 ### Status: TSC Verify
-
-When all modification on Specification and Scheme have been done, the TSC has to verify the changes in the specification. In case of corrections, the issue is pushed back to the status “Specification”; otherwise, it is pushed to “Implemented”.
+Once both the specification document and the XML Schema have been updated, the TSC performs a final verification in **TSC Verify** to confirm that the edits match the approved draft. If any discrepancy is found, the issue returns to **Specification**; otherwise, it transitions to **Implemented**.
 
 ### Status: Implemented
+**Implemented** is the final terminal state for completed issues. When a new version of a CIP4 specification is released, comprehensive release notes are generated directly from the **Implemented** issues in JIRA, providing a permanent, transparent audit trail of every change and its technical rationale.
 
-The status implemented is an “end-status”. All issues implemented successfully in the specification are archived in this status.
-
-When publishing a new version of a CIP4 specification, release notes about all changes can be generated from the issue archive. What’s more, those interested can track the reasons for changes that have been carried out at any time.
 
 ## Meetings
+In addition to asynchronous collaboration in JIRA, CIP4 working groups hold regular virtual and in-person meetings to discuss complex proposals in depth.
 
-CIP4s main task is to discuss and develop its specifications. As discussions are not limited to being lead in JIRA issues, there are also certain kinds of meetings whose purpose it is to facilitate further cooperative discussion of issues in more detail.
-
-Common meetings are, for example, the CIP4 Web Conferences. Each active CIP4 Working Group organizes such a web conference on a biweekly basis. People are able to participate in these web conferences by visiting a link with their browser. Only a headset and broadband internet connection are required.
-
-The main part of such web conferences is to discuss the JIRA issues in the status “Discussion”. The results of the discussions are documented in the issue as seen below:
+Each active CIP4 Working Group hosts a **public web conference** on a biweekly schedule. Anyone can join via a standard web browser with a headset. A core agenda item of every web conference is reviewing JIRA issues currently in **Discussion** and recording the outcome directly as a comment on each issue:
 
 <figure>
   <Image src={screenJiraComment} alt="Comment of a Web Conference" />
   <figcaption>Figure: Comment of a Web Conference</figcaption>
 </figure>
 
-Comments made during meetings can be recognized by the hashtag. The hashtag in the figure above shows that the comment was created by the XJDF Workgroup Meeting on November 10th in 2016. The hashtag is also used to aggregate all issues discussed in the meeting in the appropriate meeting minutes. All meeting minutes of a CIP4 Work Group can be found in their corresponding Confluence Space. The primarily goal in specification development is to make each discussion and decision transparent and trackable for everyone.
+Comments recorded during working group meetings are tagged with a meeting hashtag (such as `#xjdf_20161110` in the screenshot above, indicating the XJDF Working Group meeting held on November 10, 2016). These hashtags allow Confluence to automatically aggregate all issues discussed during a session into the official meeting minutes. The schedule of upcoming web conferences and dial-in links can be found in the public CIP4 Calendar (*https://confluence.cip4.org/display/PUB/Calendar*).
 
-The CIP4 Calendar (*https://confluence.cip4.org/display/PUB/Calendar*), containing all CIP4 Web Conferences, can be found on CIP4 Confluence. There is also a link to the virtual web conference room.
+### Face-to-Face Meetings
+Several times a year, CIP4 also organizes in-person Face-to-Face (F2F) meetings—most notably the **CIP4 InterOp**, held twice a year: “These InterOp meetings are organized worldwide and are split into two distinct phases. The first phase, which typically lasts from Monday to Wednesday is the actual technical interoperability testing phase, where anyone can bring their JDF enabled product and test its interoperability with other matching products. The second phase lasts from Wednesday to Friday and consists of meetings of the respective technical work groups. Topics of discussion range from new features for the next specification version to over interpretation of individual attributes to philosophical debates about the value of namespace URIs in XML” [@cip4_interop_2016].
 
-### Face 2 Face Meetings
+Dates, locations, and registration details for upcoming and past InterOp meetings are published on CIP4 Confluence (*https://confluence.cip4.org/display/PUB/InterOp*).
 
-A few times a year, CIP4 also organizes Face to Face (F2F) meetings. The most important F2F meeting is the CIP4 InterOp, which takes place twice a year. “These InterOp meetings are organized worldwide and are split into two distinct phases. The first phase, which typically lasts from Monday to Wednesday is the actual technical interoperability testing phase, where anyone can bring their JDF enabled product and test its interoperability with other matching products. The second phase lasts from Wednesday to Friday and consists of meetings of the respective technical work groups. Topics of discussion range from new features for the next specification version to over interpretation of individual attributes to philosophical debates about the value of namespace URIs in XML” [@cip4_interop_2016]. A substantial amount of time in the second part is consumed with discussion of the JIRA issues in the status “Discussion”. Just as is done in the web conferences, the discussion results here are also documented in the issues with the appropriate hashtag.
-
-The dates and locations of the next (and former) InterOps can be found on CIP4 Confluence: *https://confluence.cip4.org/display/PUB/InterOp*. Everyone is welcome to participate in the CIP4 InterOp Meetings. Only a registration is required in advance on the respective Confluence page.
-
-In addition to the InterOp, there are further Face to Face Meetings internally organized by the CIP4 Work Groups. Theses meetings are planned and organized by the work groups on an individual basis.
-
-Nevertheless, the output of each discussion meeting is a list of issues that were discussed, and each issue has to be commented on in the result of the discussions.
 
 ## ICS Development (Workgroups)
-
-ICS Documents are developed by individual CIP4 Work Groups. Each work group has its specific focus. The schedule of the work group meetings, as well as the link to their web conference, can be found in the CIP4 Calendar.
-
-Each work group aims to produce an ICS Document, in order to describe and standardize the Gray Boxes covering Devices. The process of how to achieve this is left up to the Work Group itself. As soon as a Workgroup requires additional attributes, elements, or even processes in the specification, a new JIRA issue has to be created.
+Individual CIP4 Working Groups are also responsible for developing and maintaining the **Interoperability Conformance Specifications (ICS Documents)** for their respective domains (such as Prepress, Conventional Printing, Digital Printing, or Finishing). Whenever an ICS working group identifies a need for a new element, attribute, or process type in the core XJDF Specification to support a Gray Box interface, it submits a JIRA issue into the XJDF Specification Authoring Workflow described above.

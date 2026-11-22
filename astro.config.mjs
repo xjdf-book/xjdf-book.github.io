@@ -21,6 +21,7 @@ export default defineConfig({
 			customCss: ['./src/styles/custom.css'],
 			components: {
 				Footer: './src/components/footer.astro',
+				Hero: './src/components/hero.astro',
 			},
 			expressiveCode: {
 				plugins: [pluginLineNumbers()],

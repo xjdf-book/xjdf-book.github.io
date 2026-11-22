@@ -38,11 +38,32 @@ header.header .site-title img {
   width: auto;
 }
 
-/* Landing page hero image styling */
+/* Landing page hero & abstract alignment and styling */
 .hero > img,
 .hero .hero-html img {
   border-radius: 0.75rem;
   box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.25);
 }
+
+[data-has-hero] .sl-markdown-content {
+  max-width: 100%;
+  font-size: 1.05rem;
+  line-height: 1.75;
+  color: var(--sl-color-gray-2);
+}
+
+[data-has-hero] .sl-markdown-content h3 {
+  font-size: var(--sl-text-h3);
+  color: var(--sl-color-white);
+  border-bottom: 1px solid var(--sl-color-gray-5);
+  padding-bottom: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+[data-has-hero] .sl-markdown-content p {
+  text-align: justify;
+  hyphens: auto;
+}
+
 
 

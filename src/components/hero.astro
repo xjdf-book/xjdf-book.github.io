@@ -1,0 +1,156 @@
+---
+import { Image } from 'astro:assets';
+import Default from '@astrojs/starlight/components/Hero.astro';
+import xjdfLogoLight from '../assets/xjdf-logo-light.png';
+import xjdfLogoDark from '../assets/xjdf-logo-dark.png';
+import { LinkButton } from '@astrojs/starlight/components';
+
+const { data } = Astro.locals.starlightRoute.entry;
+const { tagline, image, actions = [] } = data.hero || {};
+const isSplash = data.template === 'splash';
+
+let heroFile: ImageMetadata | undefined;
+if (image && 'file' in image) {
+	heroFile = image.file;
+}
+---
+
+{isSplash ? (
+	<div class="hero xjdf-hero">
+		{heroFile && (
+			<Image
+				src={heroFile}
+				loading="eager"
+				decoding="async"
+				width={400}
+				height={400}
+				alt={image?.alt || 'XJDF Book Cover'}
+				class="hero-cover"
+			/>
+		)}
+		<div class="sl-flex stack">
+			<div class="sl-flex copy">
+				<h1 id="_top" data-page-title class="hero-logo-title">
+					<Image
+						src={xjdfLogoLight}
+						alt="XJDF"
+						width={340}
+						loading="eager"
+						class="hero-title-logo hero-title-logo-light"
+					/>
+					<Image
+						src={xjdfLogoDark}
+						alt="XJDF"
+						width={340}
+						loading="eager"
+						class="hero-title-logo hero-title-logo-dark"
+					/>
+					<span class="sr-only">XJDF</span>
+				</h1>
+				{tagline && <div class="tagline" set:html={tagline} />}
+			</div>
+			{actions.length > 0 && (
+				<div class="sl-flex actions">
+					{actions.map(({ attrs: { class: className, ...attrs } = {}, icon, link: href, text, variant }) => (
+						<LinkButton {href} {variant} icon={icon?.name} class:list={[className]} {...attrs}>
+							{text}
+							{icon?.html && <Fragment set:html={icon.html} />}
+						</LinkButton>
+					))}
+				</div>
+			)}
+		</div>
+	</div>
+) : (
+	<Default {...Astro.props}><slot /></Default>
+)}
+
+<style>
+	.hero {
+		display: grid;
+		grid-template-columns: 100%;
+		align-items: center;
+		gap: 2rem;
+		padding-bottom: 1.5rem;
+	}
+
+	.hero-cover {
+		object-fit: contain;
+		width: min(75%, 22rem);
+		height: auto;
+		margin-inline: auto;
+		border-radius: 0.75rem;
+		box-shadow: 0 12px 32px -8px rgba(0, 0, 0, 0.28);
+	}
+
+	.stack {
+		flex-direction: column;
+		gap: clamp(1.5rem, calc(1.5rem + 1vw), 2.25rem);
+		text-align: center;
+	}
+
+	.copy {
+		flex-direction: column;
+		gap: 0.75rem;
+		align-items: center;
+	}
+
+	.hero-logo-title {
+		margin: 0;
+		line-height: 1;
+		display: flex;
+		align-items: center;
+	}
+
+	.hero-title-logo {
+		width: clamp(14rem, 26vw, 21rem);
+		height: auto;
+	}
+
+	:global([data-theme='dark']) .hero-title-logo-light {
+		display: none;
+	}
+
+	:global([data-theme='light']) .hero-title-logo-dark {
+		display: none;
+	}
+
+	.tagline {
+		font-size: clamp(1.25rem, calc(0.5rem + 1.6vw), 1.65rem);
+		font-weight: 400;
+		letter-spacing: 0.01em;
+		color: var(--sl-color-gray-2);
+		margin-top: 0.25rem;
+	}
+
+	.actions {
+		gap: 1rem 1.5rem;
+		flex-wrap: wrap;
+		justify-content: center;
+	}
+
+	@media (min-width: 50rem) {
+		.hero {
+			grid-template-columns: 7fr 4fr;
+			gap: 4%;
+			padding-block: clamp(2.5rem, calc(1rem + 8vmin), 6rem);
+		}
+
+		.hero-cover {
+			order: 2;
+			width: min(100%, 24rem);
+		}
+
+		.stack {
+			text-align: start;
+		}
+
+		.copy {
+			align-items: flex-start;
+		}
+
+		.actions {
+			justify-content: flex-start;
+		}
+	}
+</style>

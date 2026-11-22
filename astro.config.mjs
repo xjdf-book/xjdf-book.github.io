@@ -22,6 +22,7 @@ export default defineConfig({
 			components: {
 				Footer: './src/components/footer.astro',
 				Hero: './src/components/hero.astro',
+				Sidebar: './src/components/sidebar.astro',
 			},
 			expressiveCode: {
 				plugins: [pluginLineNumbers()],

@@ -4,15 +4,48 @@ import Default from '@astrojs/starlight/components/Footer.astro';
 ---
 <div class="bmc-container">
   <a href="https://buymeacoffee.com/meixxi">
-    <img src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=&slug=meixxi&button_colour=FFDD00&font_colour=000000&font_family=Cookie&outline_colour=000000&coffee_colour=ffffff" />
+    <img src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=&slug=meixxi&button_colour=FFDD00&font_colour=000000&font_family=Cookie&outline_colour=000000&coffee_colour=ffffff" alt="Buy me a coffee" />
   </a>
 </div>
 <Default {...Astro.props}><slot /></Default>
+<div class="legal-footer">
+  <a href="https://meixxi.github.io/" target="_blank" rel="noopener">Dr. Stefan Meissner</a>
+  <span class="legal-sep">·</span>
+  <a href="https://meixxi.github.io/imprint/" target="_blank" rel="noopener">Imprint &amp; Privacy</a>
+</div>
 
 <style>
   .bmc-container {
     padding-bottom: 1rem;
     display: flex;
     justify-content: center;
+  }
+
+  .legal-footer {
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--sl-color-gray-6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: var(--sl-text-xs);
+    color: var(--sl-color-gray-3);
+  }
+
+  .legal-footer a {
+    color: var(--sl-color-gray-3);
+    text-decoration: none;
+    transition: color 150ms ease;
+  }
+
+  .legal-footer a:is(:hover, :focus-visible) {
+    color: var(--sl-color-white);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+
+  .legal-sep {
+    opacity: 0.6;
   }
 </style>

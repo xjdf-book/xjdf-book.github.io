@@ -1,0 +1,77 @@
+---
+import Default from '@astrojs/starlight/components/Sidebar.astro';
+import pkg from '../../package.json';
+
+const buildDate = new Date().toISOString().replace('T', ' ').slice(0, 16) + ' UTC';
+---
+
+<Default {...Astro.props}><slot /></Default>
+
+<div class="sidebar-book-meta">
+	<div class="meta-author">
+		<a href="https://meixxi.github.io/" target="_blank" rel="noopener">Dr. Stefan Meissner</a>
+	</div>
+	<div class="meta-details">
+		<span>Version {pkg.version}</span>
+		<span class="meta-sep">·</span>
+		<span title="Build timestamp">{buildDate}</span>
+	</div>
+	<div class="meta-legal">
+		<a href="https://meixxi.github.io/imprint/" target="_blank" rel="noopener">Imprint &amp; Privacy</a>
+	</div>
+</div>
+
+<style>
+	.sidebar-book-meta {
+		margin-top: auto;
+		padding-top: 0.75rem;
+		padding-bottom: 0.5rem;
+		padding-inline: 0.75rem;
+		border-top: 1px solid var(--sl-color-gray-5);
+		font-size: var(--sl-text-xs);
+		color: var(--sl-color-gray-3);
+		line-height: 1.45;
+	}
+
+	.meta-author a {
+		font-weight: 600;
+		color: var(--sl-color-gray-2);
+		text-decoration: none;
+		transition: color 150ms ease;
+	}
+
+	.meta-author a:is(:hover, :focus-visible) {
+		color: var(--sl-color-white);
+		text-decoration: underline;
+		text-underline-offset: 0.2em;
+	}
+
+	.meta-details {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.35rem;
+		align-items: center;
+		font-size: 0.75rem;
+	}
+
+	.meta-sep {
+		opacity: 0.6;
+	}
+
+	.meta-legal {
+		margin-top: 0.15rem;
+		font-size: 0.75rem;
+	}
+
+	.meta-legal a {
+		color: var(--sl-color-gray-3);
+		text-decoration: none;
+		transition: color 150ms ease;
+	}
+
+	.meta-legal a:is(:hover, :focus-visible) {
+		color: var(--sl-color-gray-1);
+		text-decoration: underline;
+		text-underline-offset: 0.2em;
+	}
+</style>

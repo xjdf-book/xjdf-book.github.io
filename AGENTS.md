@@ -21,17 +21,17 @@ The site is built as a static documentation website using **Astro 7** and **Star
 ## Repository Structure
 - `astro.config.mjs` — Starlight configuration, explicit sidebar definition, Expressive Code plugins, and `unified` markdown processor with `rehype-citation`.
 - `src/content.config.ts` — Astro Content Collections configuration using Starlight's `docsLoader()` and `docsSchema()`.
-- `src/content/docs/` — Book chapters and pages in `.md` and `.mdx` formats:
+- `src/content/docs/` — Book chapters and pages in `.md` and `.mdx` formats (one page per chapter):
   - `index.mdx` — Splash landing page with book cover and abstract
-  - `chap_01_introduction/` — Chapter 1: Introduction
-  - `chap_02_major-changes/` — Chapter 2: Major Changes in XJDF
-  - `chap_03_xjdf-essentials/` — Chapter 3: XJDF Essentials (`xjdf-essentials.mdx`, `resources.md`, `extensibility.md`, `identifiers.mdx`)
-  - `chap_04_product-description/` — Chapter 4: Product Description (`product-description.md`, `simple-products.md`, `complex-products.md`, `non-print-product-parts.mdx`, `web-to-print.md`)
-  - `chap_05_process-description/` — Chapter 5: Process Description (`process-description.mdx`, `combined-processes.mdx`, `process-usage.mdx`, `combined-process-index.md`, `amounts.md`)
-  - `chap_06_xjmf/` — Chapter 6: XJMF - Exchange Job Messaging Format (`xjmf.mdx`, `message-families.md`, `subscriptions.mdx`, `submission.mdx`, `interchange-protocol.mdx`, `bootstrapping.mdx`, `piping.md`)
-  - `chap_07_ics/` — Chapter 7: ICS - Interoperability Conformance Specification (`ics.mdx`)
-  - `chap_08_authoring-process/` — Chapter 8: Authoring Process (`authoring-process.mdx`)
-  - `chap_09_appendix/` — Chapter 9: Appendix (`abbreviations.md`, `glossary.md`)
+  - `chap_01_introduction/introduction.md` — Chapter 1: Introduction
+  - `chap_02_major-changes/major-changes.md` — Chapter 2: Major Changes in XJDF
+  - `chap_03_xjdf-essentials/xjdf-essentials.mdx` — Chapter 3: XJDF Essentials
+  - `chap_04_product-description/product-description.mdx` — Chapter 4: Product Description
+  - `chap_05_process-description/process-description.mdx` — Chapter 5: Process Description
+  - `chap_06_xjmf/xjmf.mdx` — Chapter 6: XJMF - Exchange Job Messaging Format
+  - `chap_07_ics/ics.mdx` — Chapter 7: ICS - Interoperability Conformance Specification
+  - `chap_08_authoring-process/authoring-process.mdx` — Chapter 8: Authoring Process
+  - `chap_09_appendix/appendix.md` — Chapter 9: Appendix (Abbreviations & Glossary)
 - `src/assets/` — Optimized images imported by `.mdx` pages:
   - `src/assets/diagram/` — Architectural and technical diagrams (`.jpg`)
   - `src/assets/spec-screen/` — Screenshots and excerpts from the XJDF Specification, fold catalog, and JIRA (`.png`, `.jpg`)

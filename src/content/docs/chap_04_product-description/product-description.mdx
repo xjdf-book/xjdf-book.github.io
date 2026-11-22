@@ -1,0 +1,551 @@
+---
+title: Product Description
+---
+
+import diagramRollupDisplay from '../../../assets/diagram/rollup-display.jpg';
+import { Image } from 'astro:assets';
+
+Product intent (or product description) is the process independent product description of the final product. Product intent describes the final product from the perspective of the customer. Each decision on the final product being done by the designer or print buyer has to be defined as product intent. For instance, product specifications such as the final page size or the print job substrate are typically representative of product intents.
+
+Process and production specific details such as imposition scheme or the exact media size of the printed sheet are not relevant for the customer. This kind of information has to be defined as process resources in the XJDF Document. The following XML extract shows the product description of the folding example:
+
+```xml title="Example: product description Folded Leaflet"
+[...]
+<ProductList>
+    <Product Amount="2500" DescriptiveName="My Folded Leaflet">
+        <Intent Name="LayoutIntent">
+            <LayoutIntent Dimensions="841.88 595.27"
+                Sides="TwoSidedHeadToHead"
+                FinishedDimensions="280.69 595.27 0.0"/>
+        </Intent>
+        <Intent Name="FoldingIntent">
+            <FoldingIntent FoldCatalog="F6-2"/>
+        </Intent>
+        <Intent Name="ColorIntent">
+            <ColorIntent>
+                <SurfaceColor ColorsUsed="Cyan Magenta Yellow Black"
+                    Surface="Front"/>
+                <SurfaceColor ColorsUsed="Cyan Magenta Yellow Black"
+                    Surface="Back"/>
+            </ColorIntent>
+        </Intent>
+        <Intent Name="MediaIntent">
+            <MediaIntent MediaQuality="135_MATT"/>
+        </Intent>
+    </Product>
+</ProductList>
+[...]
+```
+
+Using product intents, most common technical product descriptions can be specified in less than 20 lines of code. “Product intent provides a description of finished products from the print buyer point of view” [@xjdf_ip1, chap. 4 "Product Intent"]. **If an element or attribute of an intent element is omitted and no additional information is specified in the description, the value defaults to ‘don’t care’. If an entire intent element that specifies a given product feature is omitted, then that feature is not requested.**
+
+Technically, each intent element (e. g. MediaIntent, LayoutIntent, etc.) is embedded in an Intent element which contains an attribute `@Name`. The value of the attribute `@Name` is the full name of the specific intent element. Common intent elements are LayoutIntent, ColorIntent, FoldingIntent and MediaIntent.
+
+The LayoutIntent “records the size of the finished pages for the product component [...]. It also describes how the finished pages of the product component are to be imaged onto the finished media. The size definition of the finished media describes the size of a sheet that is folded to create a product, not the size of a production sheet” [@xjdf_ip1, chap. 4.11 "LayoutIntent"].
+
+```xml title="Example: LayoutIntent"
+[...]
+<Intent Name="LayoutIntent">
+    <LayoutIntent Dimensions="841.88 595.27"
+        Sides="TwoSidedHeadToHead"
+        FinishedDimensions="280.69 595.27 0.0"/>
+</Intent>
+[...]
+```
+
+“ColorIntent specifies the color and varnishing of the product. Each surface SHALL be specified individually in a SurfaceColor element” [@xjdf_ip1, chap. 4.5 "ColorIntent"].
+
+```xml title="Example: ColorIntent"
+[...]
+<Intent Name="ColorIntent">
+    <ColorIntent>
+        <SurfaceColor ColorsUsed="Cyan Magenta Yellow Black"
+            Surface="Front"/>
+        <SurfaceColor ColorsUsed="Cyan Magenta Yellow Black"
+            Surface="Back"/>
+    </ColorIntent>
+</Intent>
+[...]
+```
+
+MediaIntent “describes the media to be used for the product component. In some cases, the exact identity of the medium is known, while in other cases, the characteristics are described and a particular stock is matched to those characteristics” [@xjdf_ip1, chap. 4.12 "MediaIntent"].
+
+In order to simplify paper matching, the attribute `@MediaQuality` has been introduced in XJDF. “Media with the same `@MediaQuality` are identical from the customer point of view. Thus, characteristics such as weight, coatings or recycling percentage are identical whereas lot or sheet dimension may vary based on production or warehousing requirements” [@xjdf_ip1, chap. 4 Table 4.34: MediaIntent/@MediaQuality].
+
+```xml title="Example: MediaIntent"
+[...]
+<Intent Name="MediaIntent">
+    <MediaIntent MediaQuality="135_MATT"/>
+</Intent>
+[...]
+```
+
+Such an abstract description of printing substrates is already broadly used in Web-To-Print scenarios. Customers are able to choose a 135 gsm gloss or a 170 gsm matt paper, but they cannot choose the exact vendor or volume of the paper. This concept has been adapted to XJDF using the attribute `@MediaQuality`.
+
+A list of all valid `@MediaQuality` values are not part of the specification. These values have to be defined and synchronized individually between all parties in a non-standard way.
+
+The FoldingIntent “element specifies the straight line folding, creasing and perforating of a product” [@xjdf_ip1, chap. 4.8 "FoldingIntent"]. The following is an extract of the folding example which defines an F6-2 fold:
+
+```xml title="Example: FoldingIntent for Folding"
+[...]
+<Intent Name="FoldingIntent">
+    <FoldingIntent FoldCatalog="F6-2"/>
+</Intent>
+[...]
+```
+
+As specified, FoldingIntent can also being used for describing a perforation or creasing line. FoldingIntent specifies everything that can be done by a simple folding machine. Making a straight line crease or a perforation is supported by mounting a crease or perforation wheel immediately after the folding unit. For this reason, creasing and perforation are also part of FoldingIntent. Below is an example for a perforation line:
+
+```xml title="Example: FoldingIntent for Perforating"
+[...]
+<Intent Name="FoldingIntent">
+    <FoldingIntent>
+        <Perforate StartPosition="0.0 23.43"
+                WorkingPath="0.0 565.68"/>
+    </FoldingIntent>
+</Intent>
+[...]
+```
+
+The subelement Perforate specifies that the product has to be perforated. The attribute `@StartPosition` defines the start position, while `@WorkingPath` defines the end point relative to the start position. Since perforation lines provided by a folding machine can only be made parallel to a reference edge and only through the whole product, either the X or the Y value of the attributes `@WorkingPath` and `@StartPosition` must to be zero. There is no way to make a perforation line, for instance, only on the first half of the product. Complex perforation and creasing lines have to be specified as ShapeCuttingIntent. “ShapeCuttingIntent describes finishing of products with irregular shapes, including diecutting and adding windows to envelopes” [@xjdf_ip1, chap. 4.14 "ShapeCuttingIntent"].
+
+All in all, the role of product intents has become significant in XJDF. In particular, when using XJDF as a pure interface technology, product intents place each XJDF Document in the proper context. Using product intents, the receiving devices do not only get a list of pre-settings and configuration details, but also additional information about the context of the current job. It is a good practice to provide the full product description of the final product in each XJDF Document.
+
+Product intents enable XJDF to also be used in web-to-print environments and cross company communications. Product intents are designed for the automated purchasing of print jobs and for standardized links of webshops to MIS systems.
+
+
+## Simple Products
+
+Most standard printing products are simple products. Technically, simple products are characterized by having one product part only. Examples include flyers, folded leaflets, posters, letter heads, etc. Even magazines may be simple products as long as they do not contain multiple product parts such as a separate cover and body. In XJDF, simple products can be specified by a single Product node in the ProductList element.
+
+All examples in this section represent common configurations of standard print products. However, the specification is able to define additional details for each Product and Intent element as demonstrated in the examples. For instance, the MediaIntent is used with just a single `@MediaQuality` attribute in most examples. It should be noted that the specification also defines quite a few more attributes for the purpose of describing a printing substrate. Apart from `@MediaQuality`, there are attributes such as `@Weight`, `@Thickness`, `@MediaColor`, `@GrainDirection`, etc. In order to get a deeper understanding of XJDF and how the specification is structured, it is advisable to read it in parallel when going through the XJDF examples.
+
+### Product: Flyers
+
+This flyer example illustrates a typical product description of 1.000 flyers in size A6. The flyers are printed in CMYK (*Cyan*, *Magenta*, *Yellow*, *Black*) on both sides of a 135 gsm gloss paper.
+
+```xml title="Example: product description - Flyer"
+[...]
+<Product Amount="1000" DescriptiveName="FLYER A6">
+    <Intent Name="ColorIntent">
+        <ColorIntent>
+            <SurfaceColor ColorsUsed="Cyan Magenta Yellow Black"
+                Surface="Front"/>
+            <SurfaceColor ColorsUsed="Cyan Magenta Yellow Black"
+                Surface="Back"/>
+        </ColorIntent>
+    </Intent>
+    <Intent Name="LayoutIntent">
+        <LayoutIntent FinishedDimensions="297.64 419.53 0.0"
+            Pages="2" Sides="TwoSidedHeadToHead"/>
+    </Intent>
+    <Intent Name="MediaIntent">
+        <MediaIntent MediaQuality="135_GLOSS"/>
+    </Intent>
+</Product>
+[...]
+```
+
+The product descriptions begin with a product element. The number of copies (here: 1,000), as well as a short human readable description, are attributes of this Product element. All physical characteristics of the flyer are specified in the Intent subnodes.
+
+The final size of the A6 flyer is defined in `//LayoutIntent/@FinishedDimensions`. The attribute `@FinishedDimensions` “specifies the width (X), height (Y) and depth (Z) [...], respectively, of the finished product after all finishing operations, including folding, trimming, etc. If the Z coordinate is 0, it SHALL be ignored” [@xjdf_ip1, chap. 4 Table 4.33: LayoutIntent/@FinishedDimensions]. The dimensions are encoded in dtp points.
+
+`//LayoutIntent/@Pages` “specifies the number of finished pages (surfaces) of the product component, including blank pages. This value SHALL be an even number” [@xjdf_ip1, chap. 4 Table 4.33: LayoutIntent/@Pages].
+
+The attribute `//LayoutIntent/@Sides` defines how the pages have to be exposed. The value “TwoSidedHeadToHead” means “imposed on the front and back sides so that the head (top) of page contents backs up to each other” [@xjdf_ip1, chap. A Table A.35: Sides (TwoSidedHeadToHead)].
+
+The four process colors (*Cyan*, *Magenta*, *Yellow* and *Black*) are explicitly listed in `//ColorIntent/SurfaceColor/@ColorsUsed`. Although both sides of the flyer are identical they have to be defined individually for each side (front and back).
+
+The substrate of the flyer is identified by the attribute `//MeidaIntent/@MediaQuality`. The value “135_GLOSS” is a non-standard value and has to be synchronized between the linked systems manually. In this example, “135_GLOSS” refers to the requested 135 gsm gloss paper.
+
+### Product: Folded Leaflets
+
+This product description exemplifies the specification of 750 6-panel Z-folded leaflets. The product is printed in CMYK on a 135 gsm matt substrate:
+
+```xml title="Example: product description - Folded Leaflet"
+[...]
+<Product Amount="750" DescriptiveName="Folded Leaflet 6-Panels">
+    <Intent Name="LayoutIntent">
+        <LayoutIntent Dimensions="841.89 595.28"
+            FinishedDimensions="280.63 595.28 0.0" Pages="2"
+            Sides="TwoSidedHeadToHead"/>
+    </Intent>
+    <Intent Name="FoldingIntent">
+        <FoldingIntent FoldCatalog="F6-2"/>
+    </Intent>
+    <Intent Name="ColorIntent">
+        <ColorIntent>
+            <SurfaceColor ColorsUsed="Cyan Magenta Yellow Black"
+                Surface="Front"/>
+            <SurfaceColor ColorsUsed="Cyan Magenta Yellow Black"
+                Surface="Back"/>
+        </ColorIntent>
+    </Intent>
+    <Intent Name="MediaIntent">
+        <MediaIntent MediaQuality="135_MATT"/>
+    </Intent>
+</Product>
+[...]
+```
+
+The definition of the folded leaflet is quite similar to the description of the A6 flyer above. The differences are in the additional attribute `//LayoutIntent/@Dimensions` and the FoldingIntent element.
+
+Describing folded leaflets, the attribute `//LayoutIntent/@Dimensions` defines the paper-size of the open (unfolded) product, while `//LayoutIntent/@FinishedDimensions` defines the closed (folded) product.
+
+The Z coordinate in `//LayoutIntent/@FinishedDimensions` can normally be omitted by setting it to zero. It is difficult to calculate the exact height of a folded leaflet in advance due to heavily predictable production parameters such as the pressure during folding, paper characteristics, etc.
+
+The element FoldingIntent describes the desired fold of the final product. The XJDF Specification comes with a catalog of predefined commonly used folding schemes. The attribute `@FoldCatalog` “describes the folding scheme according to the folding catalog” [@xjdf_ip1, chap. 4 Table 4.30: FoldingIntent/@FoldingCatalog]. Further details about the folding schemes and the XJDF folding catalog can be read in the section “Folding Schemes and Pagination”.
+
+The element FoldingIntent can also define individual folds. Orientation details of how the individual folds or the folding schemes are to be applied can also be specified using this element. Additional details can be found in the specification.
+
+### Product: Banner with Grommets
+
+Banner with grommets is a typical wide format print product. The following example outlines how to specify 10 banners (200 cm x 100 cm) printed on a 500 gsm PVC substrate. The product is a one sided print in CMYK. Additionally, the banner has grommets on the upper and lower (long) edge. The distance between the edge of the banner and the grommets is 5 cm, while the center-to-center distance between the grommets measures 10 cm:
+
+```xml title="Example: product description - Banner with Grommets"
+[...]
+<Product Amount="10" DescriptiveName="Banner with Grommets">
+    <Intent Name="LayoutIntent">
+        <LayoutIntent FinishedDimensions="5669.29 2834.65 0.0"
+            Pages="2" Sides="OneSided"/>
+    </Intent>
+    <Intent Name="HoleMakingIntent">
+        <HoleMakingIntent>
+            <HolePattern Center="141.73 141.73" Extent="56.69 0.0"
+                    Shape="Round" Pitch="283.46 0.0" HoleCount="19"
+                    Reinforcement="Grommet"
+                    CenterReference="TrailingEdge" />
+            <HolePattern Center="141.73 2692.91" Extent="56.69 0.0"
+                    Shape="Round" Pitch="283.46 0.0" HoleCount="19"
+                    Reinforcement="Grommet"
+                    CenterReference="TrailingEdge" />
+        </HoleMakingIntent>
+    </Intent>
+    <Intent Name="ColorIntent">
+        <ColorIntent>
+            <SurfaceColor ColorsUsed="Cyan Magenta Yellow Black"
+                Surface="Front"/>
+        </ColorIntent>
+    </Intent>
+    <Intent Name="MediaIntent">
+        <MediaIntent MediaQuality="500_PVC"/>
+    </Intent>
+</Product>
+[...]
+```
+
+The product description of the banner with grommets closely resembles the former description as well. In contrast to the flyer, this product is a one sided print only. This is specified by the attribute `//LayoutIntent/@Sides` = “OneSided” and the fact that there is only one definition for the front side in ColorIntent. The value “OneSided” means the “page contents SHALL be imposed on the front side” [@xjdf_ip1, chap. A Table A.35: Sides (OneSided)].
+
+Even though the product is one-sided, the attribute `//LayoutIntent/@Pages` has to be set to “2”. Recall that `//LayoutIntent/@Pages` “specifies the number of finished pages (surfaces) of the product component, including blank pages. This value SHALL be an even number” [@xjdf_ip1, chap. 4 Table 4.33: LayoutIntent/@Pages].
+
+The element HoleMakingIntent provides the “information that identifies the type of holemaking operation, or, alternatively, an explicit list of holes” [@xjdf_ip1, chap. 4.9 "HoleMakingIntent"]. HoleMakingIntent contains one or several HolePattern elements. Each HolePattern element describes one or a set of holes in the final product. In this case, an explicit set of holes is described.
+
+The description of a set of holes begins with the definition of the first hole. The attribute `@Center` describes the “position of the center of the hole” [@xjdf_ip1, chap. 8 Table 8.18: HolePattern/@Center]. `@Extend` specifies the “size [...] of each hole, in points. If `@Shape` is "Round", only the first entry of `@Extent` is evaluated and defines the hole diameter” [@xjdf_ip1, chap. 8 Table 8.18: HolePattern/@Extent]. The shape of the set of holes can be defined using the element `@Shape`. The attributes `@HoleCount` and `@Pitch` describe a set of holes in a line. Whereas `@HoleCount` “specifies the number of consecutive holes and spaces [...]” [@xjdf_ip1, chap. 8 Table 8.18: HolePattern/@HoleCount], the attribute `@Pitch` “represents the distance between the centers of two adjacent holes” [@xjdf_ip1, chap. 8 Table 8.18: HolePattern/@Pitch].
+
+The grommets are reinforcements of a hole. The reinforcement can be defined in the appropriate attribute `@Reinforcement` = “Grommet”.
+
+HoleMakingIntent is not only for explicit hole definitions of a banner as shown in this example; it was originally introduced to describe standard holes as commonly known for letterheads, etc. The XJDF Specification defines a large set of predefined standards of hole types and hole patterns. More extensive details about hole making can be found in the specification.
+
+
+## Complex Products
+
+Simplicity was one of the major design criteria for XJDF. The goal was to find an XML structure which would allow simple products to be described in a simple manner, but the same structure must also be able to describe complex products by simply extending it with further elements and attributes. The concept of Product elements for describing products and product parts and Intent elements for the characterization of the appropriate product parts ensures that this requirement is satisfied.
+
+This is a fundamental advantage of XJDF in contrast to many non-standard data structures. The XJDF structure ensures stability, and - at the same time - guarantees long-term extensibility of system interfaces. XJDF maintain interface stability even when the product descriptions become increasingly more complex over time.
+
+Complex products are those consisting of at least two product parts, such as a magazine with an additional cover. Complex magazines typically differ at least in the paper quality of cover and body. Additionally, the cover may also have some additional finishings, such as UV-Coating, etc.
+
+Another example of a complex product is notepads. A notepad is built from a pre-determined number of identical sheets glued together on a side specified by the user. In some situations, a notepad may also have a backboard.
+
+Both products are different, but can be specified in the same way. They consist of a root product containing a BindingIntent element and one or more child products. Each child product characterizes a single product part of the final product, for instance the cover or body of a magazine. The child products are referenced by the BindingIntent element of the root product.
+
+Currently, there are only three kinds of intent types in the specification which allow the referencing of child products: AssemblingIntent, BindingIntent, and VariableIntent. AssemblingIntent “specifies the creation of a composite component by providing page location, position and attachment method of the respective child products that shall be assembled with the parent product” [@xjdf_ip1, chap. 4.3 "AssemblingIntent"]. BindingIntent “specifies the binding intent for an XJDF job using information that identifies the desired type of binding and which sides SHALL be bound” [@xjdf_ip1, chap. 4.4 "BindingIntent"]. VariableIntent “specifies the variations of the content for printed data with variable content such as lottery tickets or direct mail” [@xjdf_ip1, chap. 4.15 "VariableIntent"].
+
+All three intent types reference their corresponding child products using the attribute `@ChildRefs`. The value of this attribute is a list of product IDs. The order of the IDs in such lists is crucial. Below is the BindingIntent extract of the previous Collecting example:
+
+```xml title="Example: BindingIntent with ChildRefs"
+<Intent Name="BindingIntent">
+    <BindingIntent BindingOrder="Collecting" BindingSide="Left"
+        BindingType="SaddleStitch" ChildRefs="COVER_ID BODY_ID"/>
+</Intent>
+```
+
+This BindingIntent element contains three attributes for the specification of the binding characterization. The last attribute `@ChildRefs` refers to the two product parts (child products) by their corresponding IDs “COVER_ID” and “BODY_ID”. When using `@BindingOrder` = “Collecting”, the first ID in the list is the outer product part (here: COVER_ID).
+
+All simple products, root products, and product parts are sub-elements of one and the same ProductList element. From a hierarchical perspective, there is no difference between the individual product elements. This structure simplifies the read and write operations of applications dealing with product descriptions.
+
+Once multiple subelements are in ProductList, the attribute `//Product/@IsRoot` indicates the type of the appropriate Product element. “If true, this Product is a self-contained product. If false, this Product is a child product of another Product, such as a cover or insert” [@xjdf_ip1, chap. 4 Table 4.1: Product/@IsRoot].
+
+Root product and child products may both define an attribute `@Amount`. The attribute `@Amount` in the root product specifies the number of required copies of the final product, whereas the amount in a child product defines the number of units needed in order to produce one final product. For example, when specifying 100 notepads at 25 pages each, the root product attribute `@Amount` is 100, while the child products `@Amount` attribute is 25. The total number of child products needed in order to produce the 100 notepads is 2,500 (100 notepads x 25 pages).
+
+The attribute `@Amount` is optional. If the attribute `@Amount` is not specified in a child product, it defaults to a value of 1.
+
+### Product: Magazine with Cover
+
+The following example illustrates the product description of 1,000 saddle stitched magazines with twenty-four pages in DIN A4, including an premium cover. The cover consists of 4 pages and is printed in CMYK on a 135 gsm matt paper with an UV Gloss Varnishing on the outside. The body consists of 20 pages and is printed single colored black on an 80 gsm matt paper. The binding is on the left:
+
+```xml title="Example: product description of a Magazine with Cover"
+[...]
+<ProductList>
+    <Product Amount="1000" DescriptiveName="My Magazine A4"
+            IsRoot="true">
+        <Intent Name="BindingIntent">
+            <BindingIntent BindingOrder="Collecting"
+                BindingSide="Left" BindingType="SaddleStitch"
+                ChildRefs="COVER-ID BODY-ID"/>
+        </Intent>
+    </Product>
+    <Product ID="COVER-ID" IsRoot="false">
+        <Intent Name="ColorIntent">
+            <ColorIntent>
+                <SurfaceColor ColorsUsed="Cyan Magenta Yellow Black"
+                    Coatings="GlossUV" Surface="Front"/>
+                <SurfaceColor ColorsUsed="Cyan Magenta Yellow Black"
+                    Surface="Back"/>
+            </ColorIntent>
+        </Intent>
+        <Intent Name="LayoutIntent">
+            <LayoutIntent Sides="TwoSidedHeadToHead" Pages="4"
+                FinishedDimensions="841.88 595.27 0.0"/>
+        </Intent>
+        <Intent Name="MediaIntent">
+            <MediaIntent MediaQuality="135_MATT"/>
+        </Intent>
+    </Product>
+    <Product ID="BODY-ID" IsRoot="false">
+        <Intent Name="ColorIntent">
+            <ColorIntent>
+                <SurfaceColor ColorsUsed="Black" Surface="Front"/>
+                <SurfaceColor ColorsUsed="Black" Surface="Back"/>
+            </ColorIntent>
+        </Intent>
+        <Intent Name="LayoutIntent">
+            <LayoutIntent Sides="TwoSidedHeadToHead" Pages="20"
+                FinishedDimensions="841.88 595.27 0.0"/>
+        </Intent>
+        <Intent Name="MediaIntent">
+            <MediaIntent MediaQuality="80_MATT"/>
+        </Intent>
+    </Product>
+</ProductList>
+[...]
+```
+
+The product description of the magazine consists of three Product elements, namely the root product and two child products (product parts). One product part specifies the cover, while the other one refers to the body of the magazine. The root product can be identified by the attribute `@IsRoot` = “true”, while the two child products take on the value “false”.
+
+The root product contains only a BindingIntent element which refers to the appropriate product parts by its ID in the attribute `//BindingIntent/@ChildRef`. As the cover is on the outside, its ID is mentioned first.
+
+Each product part defines a ColorIntent, LayoutIntent, and MediaIntent. Most definitions have already been explained in previous examples. The UV Coating on the outside of the cover is defined by the attribute `//ColorIntent/SurfaceColor/@Coatings`. Coatings are “materials usually applied to a full surface on press as a protective or gloss-enhancing layer over ink” [@xjdf_ip1, chap. 4 Table 4.24: SurfaceColor/@Coatings]. The coating is only specified for the front page.
+
+As cited in the beginning of this chapter, if an element or attribute of an intent element is omitted and no additional information is specified in the description, the value defaults to ‘don’t care’. This means that the decision of providing UV coating of the inner page of the cover is left up to the print provider. In case the customer explicitly states a desire for no coating of the inner pages, this has to be specified by writing the attribute `@Coatings` = “None” for the back page. In most situations, the print provider would decide not to provide a coating if not requested, but - particularly in the case of ganging (consolidation of multiple customer jobs) - it could prove to be more cost efficient to provide an additional coating for some jobs.
+
+This is also valid for the body description in this example. UV coating is not specified there. This also means that the customer isn’t concerned with coating. In order to explicitly define a preference of no coating, the attribute `@Coating` = “None” would have to be specified.
+
+In practice, providing a coating, although it is not requested by the customer, is routine. There are some protective coatings which improve the stability and the time of the production process. Such a protective coating is almost transparent and cannot be recognized by the customer without expert skills. Such protective coatings make a print product more resistant to scratches, etc.
+
+### Product: Notepad
+
+The notepad example exemplifies how to work with amounts in child products. The example below describes 500 notepads consisting of 25 sheets each. Each sheet is printed in CMYK on the front side and single colored black on the back side. The paper quality is 80 gsm offset paper, and the gluing edge is located on the top.
+
+```xml title="Example: product description of a Notepad"
+[...]
+<ProductList>
+    <Product Amount="500" DescriptiveName="Notepad A4"
+            IsRoot="true">
+        <Intent Name="BindingIntent">
+            <BindingIntent BindingOrder="Gathering"
+                BindingSide="Top" BindingType="EdgeGluing"
+                ChildRefs="SHEET_ID" />
+        </Intent>
+    </Product>
+    <Product Amount="25" ID="SHEET_ID" IsRoot="false">
+        <Intent Name="LayoutIntent">
+            <LayoutIntent FinishedDimensions="595.28 841.89 0.0"
+                Pages="2" Sides="TwoSidedHeadToHead"/>
+        </Intent>
+        <Intent Name="ColorIntent">
+            <ColorIntent>
+                <SurfaceColor ColorsUsed="Cyan Magenta Yellow Black"
+                    Surface="Front"/>
+                <SurfaceColor ColorsUsed="Black" Surface="Back"/>
+            </ColorIntent>
+        </Intent>
+        <Intent Name="MediaIntent">
+            <MediaIntent MediaQuality="80_OFFSET"/>
+        </Intent>
+    </Product>
+</ProductList>
+[...]
+```
+
+The complex product “Notepad” consists of two Product elements: a root product and a child product. The root product defines the total amount of notepads needed, as well as the binding details. The child product specifies a single sheet in the notepad. The attribute `@Amount` in the child product defines how many items of the child product are needed in order to produce one final product (root product). In this example, the customer has requested 500 notepads containing 25 sheets each. Therefore, the `@Amount` of the root product is 500, and the `@Amount` of the child product is 25. The total number of sheets to be printed in order to complete the entire customer job is 12,500 (500 notepads with 25 sheets each).
+
+Furthermore, as the single sheets are placed on top of one another, the value of the attribute `@BindingOrder` in BindingIntent element is “Gathering”. The attributes `@BindingType` = “EdgeGluing” and `@BindingSide` = “Top”. The definition of the value “EdgeGluing” is “gluing gathered sheets at one edge of the pile [...]. Products of this type are also referred to as padded” [@xjdf_ip1, chap. 4 Table 4.10: BindingType]. Other valid values for `@BindingType` are, for instance, “Ring”, “WireComb”, “SoftCover”, “HardCover”, etc. Additional details on binding types can be found in the specification.
+
+The BindingIntent element is just another example of the extensibility and stability of XJDF. When using XJDF as a data model, notepads are supported even though they were not considered when the interface was originally being designed. For instance, when launching a simple webshop for flyers which is connected to a production system using XJDF, the interface remains stable, even in the case of rapid product portfolio growth and branching out.
+
+
+## Complex Products including Non-Print Product Parts
+
+Particularly in the case of Large Format Print, increasingly more printing products are being combined with non-print product parts. Examples for such products include Roll-up Displays or Beach Banners. Technically, these products consist of a print product which has to be assembled with a case or a metal or plastic structure (non-print product).
+
+In XJDF, such products are viewed as complex products as well. They consist of three product parts: the first one for the print product, and the second for the non-print product; the third product is the root product and describes the combined final product. In the case of a Roll-up Display or a Beach Banner, the root product contains only an AssemblingIntent element which refers to the print product and the non-print product. AssemblingIntent “specifies the creation of a composite component by providing page location, position and attachment method of the respective child products that shall be assembled with the parent product. The containing Product SHALL be referenced in `AssemblingIntent/@Container`. Note: The parent product is not identical to this product. For instance an empty envelope is not the same thing as a filled envelope” [@xjdf_ip1, chap. 4.3 "AssemblingIntent"].
+
+The print product part describes the print without any technical process details, such as technical margins, etc. In other words, the print product part describes the requirements for the customer's artwork. The non-print product part is a product part definition with only an `@ExternalID`. The `@ExternalID` represents the unique identifier of the third-party component in the warehouse management system (e. g. SAP).
+
+### Product: Roll-up Display
+
+<figure>
+  <Image src={diagramRollupDisplay} alt="Roll-up Display" />
+  <figcaption>Figure: Roll-up Display</figcaption>
+</figure>
+
+The XJDF example below exemplifies a product description of ten 80 cm x 200 cm sized Roll-up Displays printed in four colors on the front side on a 500 gsm PVC substrate. The print has to be inserted in a silver aluminium housing and is produced in-house, whereas the housing (third-party component) is on stock. The reference number of the housing (`@ExternalID`) is the article number of the third-party component in the warehouse management system.
+
+```xml title="Example: product description of a Roll-up Display"
+[...]
+<ProductList>
+    <Product Amount="10" DescriptiveName="Roll-Up Display"
+            IsRoot="true">
+        <Intent Name="AssemblingIntent">
+            <AssemblingIntent Container="HOUSING_ID">
+              <AssemblyItem ChildRef="PRINT_ID" />
+           </AssemblingIntent>
+        </Intent>
+    </Product>
+    <Product ID="PRINT_ID" IsRoot="false">
+        <Intent Name="LayoutIntent">
+            <LayoutIntent FinishedDimensions="2267.72 5669.29 0.0"
+                Pages="2" Sides="OneSided"/>
+        </Intent>
+        <Intent Name="ColorIntent">
+            <ColorIntent>
+                <SurfaceColor ColorsUsed="Cyan Magenta Yellow Black"
+                    Surface="Front"/>
+            </ColorIntent>
+        </Intent>
+        <Intent Name="MediaIntent">
+            <MediaIntent MediaQuality="500_PVC"/>
+        </Intent>
+    </Product>
+    <Product ID="HOUSING_ID" IsRoot="false"
+        ExternalID="ARTICLE_ID_HOUSING_SILVER"/>
+</ProductList>
+[...]
+```
+
+Roll-up Displays with housings can be described using a root product and two child products. The root product describes the combined final product, while both child products specify the print and the housing.
+
+The child product describing the housing only contains an `@ExternalID` attribute which references the silver aluminium housing by its unique warehouse identifier. The warehouse system is an external system from the perspective of XJDF.
+
+The child product describing the print defines all details of how the customer has to create the artwork. Technical margins, such as the gripper edge of the metal housing, are not defined. If a bleed is required, there is an optional attribute `@Bleed` in LayoutIntent for defining a overlapping artwork.
+
+The root product defines the assembled final product. This product description specifies only an AssemblingIntent element. The containing child product (here: the housing) is referenced in the AssemblingIntent element directly using the `@Container` attribute. All items being assembled into the container are referenced using the AssemblyItem subelement. Per item, one AssemblyItem element is needed. The AssemblyItem subelement “describes any individual item that is assembled with the main Product” [@xjdf_ip1, chap. 4.3.1 "AssemblyItem"]. An AssemblyItem requires some kind of undefined (manual) work in order to combine the print product and the non-print product. The exact procedure of how to combine both parts is beyond the scope of XJDF.
+
+
+## Web-To-Print Job Submission
+
+In a real-world scenario, XJDF product descriptions are mainly used in Web-To-Print environments. A webshop or any other kind of external system normally doesn’t possess knowledge about the internal production processes of a printing house. Therefore, in a Web-To-Print scenario, the external system should only define the product details and include some additional information (resources) such as the customer details, the delivery date, and a link to the customer's artwork. Based on this information, the MIS system is able to compute or map the XJDF product description to a pre-configured production workflow. Most MIS systems would be able to do this in a fully automated state.
+
+In a Web-To-Print scenario, the XJDF is technically embedded in a PrintTalk 2.0 document. PrintTalk can be seen as an envelope around the XJDF. “PrintTalk is an XML standard that provides a single format for Print Providers to collaboratively communicate Business Transactions and specifications of Print Product both with their Print Buyers and among themselves. Print industry professionals from a wide range of organizations contributed to the design of PrintTalk. Such organizations include eCommerce companies, print Business Management Systems, print providers, and print equipment manufactures” [@printtalk_2015, chap. 1 "Introduction"].
+
+The communication with external systems is generally based on PrintTalk 2.0. XJDF and PrintTalk 2.0 go hand in hand. Automated status feedback to the external system are standardized with XJDF and PrintTalk 2.0 as well.
+
+The following is a PrintTalk / XJDF example of a Web-To-Print job submission of 1,000 flyers in DIN A6 printed in four colors on a 135gsm glossy substrate. Apart from the product description, the XJDF also contains details about the customer, the delivery date, the job priority, and references to the customer’s artwork:
+
+```xml title="Example: Web-To-Print Job Submission via PrintTalk and XJDF"
+<ptk:PrintTalk xmlns:ptk="http://www.printtalk.org/schema_2_0"
+    xmlns="http://www.CIP4.org/JDFSchema_2_0"
+    Timestamp="2016-10-18T20:03:38Z" payloadID="5b7b63e8" >
+  <ptk:Request>
+    <ptk:PurchaseOrder BusinessID="CART-42">
+      <XJDF JobID="JOB-42" Types="Product">
+          <ProductList>
+              <Product Amount="1000" DescriptiveName="FLYER">
+                  <Intent Name="ColorIntent">
+                      <ColorIntent>
+                          <SurfaceColor
+                                  ColorsUsed="Cyan Magenta Yellow Black"
+                                  Surface="Front"/>
+                          <SurfaceColor
+                                  ColorsUsed="Cyan Magenta Yellow Black"
+                                  Surface="Back"/>
+                      </ColorIntent>
+                  </Intent>
+                  <Intent Name="LayoutIntent">
+                      <LayoutIntent
+                              FinishedDimensions="297.64 419.53 0.0"
+                              Pages="2" Sides="TwoSidedHeadToHead"/>
+                  </Intent>
+                  <Intent Name="MediaIntent">
+                      <MediaIntent MediaQuality="135_GLOSS"/>
+                  </Intent>
+              </Product>
+          </ProductList>
+          <ResourceSet Name="CustomerInfo">
+              <Resource>
+                  <CustomerInfo CustomerID="CUSTOMER-ID"/>
+              </Resource>
+          </ResourceSet>
+          <ResourceSet Name="NodeInfo">
+              <Resource>
+                  <NodeInfo End="2016-10-20T16:00:00Z"
+                      JobPriority="80"/>
+              </Resource>
+          </ResourceSet>
+          <ResourceSet Name="RunList">
+              <Resource>
+                  <RunList>
+                      <FileSpec
+                          URL="http://example.org/artwork.pdf"/>
+                  </RunList>
+              </Resource>
+          </ResourceSet>
+      </XJDF>
+    </ptk:PurchaseOrder>
+  </ptk:Request>
+</ptk:PrintTalk>
+```
+
+The PrintTalk envelop consists of the PrintTalk root element, a Request element, and a PurchaseOrder element. The PurchaseOrder element is referred to as a business object and places the embedded XJDF in the proper context of a job submission. Besides the business object PurchaseOrder, PrintTalk provides further contexts such as RFQ, OrderStatusResponse, etc., for organizing the communication between print buyers and print providers. The attribute `//PurchaseOrder/BusinessID` can be seen as a shopping cart identifier. More details on PrintTalk can be found in the PrintTalk Specification on the CIP4 website (*http://www.cip4.org*).
+
+The embedded XJDF starts with the product description of the flyer. The description of the flyer is identical to that of the one previously explained. Furthermore, the XJDF Document contains resources. “The CustomerInfo resource contains information about the customer who ordered the job” [@xjdf_ip1, chap. 6.24 "CustomerInfo"]. In this example, only the customer’s identifier has been defined. “The NodeInfo resource contains information about planned scheduling. It allows the MIS to plan, schedule and invoice jobs or job parts” [@xjdf_ip1, chap. 6.60 "NodeInfo"]. The RunList resource references the artwork data of the flyer.
+
+This example contains only information which is fundamental to a Web-To-Print job submission. The XJDF Specification provides the ability to define quite a few more details. The delivery address, for instance, can be written in a DeliveryParms resource. Should a very specific production detail be requested by the customer (e.g., a special screening technology), it would also be valid to include an additional resource element for the purpose of describing this detail.
+
+### Status Feedback in a Web-To-Print environment
+
+Job Submission is just the one direction of communication supported by PrintTalk and XJDF. The way back is also standardized by both of these data formats. Within Web-To-Print environments, PrintTalk is being used to transfer XJDF Milestones as well as other relevant information back to the calling external system. XJDF Milestones are a mechanism “to track certain overall milestones concerning the entire job across all resources and processes in order to display this to the operator” [@xjdf_ip1, chap. 7.10.3.3 "Milestone"] or in relation to a Web-To-Print environment connected to the external system which submitted the appropriate print job. PrintTalk also supports DeliveryParams in an OrderStatusResponse business object. DeliveryParams can be used to return tracking codes of the shipping provider, including other shipping information, back to the customer. In the following example, a full PrintTalk OrderStatusResponse is shown which contains the XJDF Milestone “PressCompleted” for the job “JOB-42”. The milestone “PressCompleted” defines that “all press worksteps of the job have been completed” [@xjdf_ip1, chap. A Table A.51: PressCompleted].
+
+```xml title="Example: Web-To-Print Status Feedback via PrintTalk and XJDF"
+<ptk:PrintTalk xmlns:ptk="http://www.printtalk.org/schema_2_0"
+        xmlns="http://www.CIP4.org/JDFSchema_2_0"
+        Timestamp="2016-10-20T22:42:38Z" payloadID="fd891889" >
+    <ptk:Request>
+        <ptk:OrderStatusResponse BusinessID="CART-43"
+                BusinessRefID="CART-42">
+            <Notification JobID="Job-42" Class="Event">
+                <Milestone MilestoneType="PressCompleted" />
+            </Notification>
+        </ptk:OrderStatusResponse>
+    </ptk:Request>
+</ptk:PrintTalk>
+```
+
+Just as the PrintTalk Job Submission begins, so, too begins the status feedback with a PrintTalk and Request element. Both examples differ in the business object. In the former example, the business object was PurchaseOrder; here, it is a OrderStatusResponse. The OrderStatusResponse refers to the origin PurchaseOrder using the attribute `//OrderStatusResponse/@BusinessRefID`. The value of `//PurchaseOrder/@BusinessID` and `//OrderStatusResponse/@BusinessRefID` are identical.
+
+The OrderStatusResponse contains the XJDF Notification element to define the milestone value. In the following table, milestones which are relevant to a WebToPrint environment are listed in chronological order:
+
+| MilestoneType | Description |
+| --- | --- |
+| `DigitalArtArrived` | “Digital content has been received” [@xjdf_ip1, chap. A Table A.51: DigitalArtArrived]. This milestone is sent when all digital data has been transferred successfully to the printing house. |
+| `PrePressInProgress` | “At least one of the Prepress worksteps of the job is in progress status” [@xjdf_ip1, chap. A Table A.51: PrePressInProgress]. This milestone is sent as soon as the first part of the print job is being processed in prepress. |
+| `PrePressCompleted` | “All Prepress worksteps of the job have been completed. [...] In conventional prepress, this is the case when all plates have been made” [@xjdf_ip1, chap. A Table A.51: PrePressCompleted]. |
+| `PressInProgress` | “At least one of the Press worksteps of the job is in progress status” [@xjdf_ip1, chap. A Table A.51: PressInProgress]. This milestone is sent as soon the first part of the print job is printed. |
+| `PressCompleted` | “All Press worksteps of the job have been completed” [@xjdf_ip1, chap. A Table A.51: PressCompleted]. This milestone has been sent as soon as the last part of the print job has printed. |
+| `PostPressInProgress` | “At least one of the Postpress worksteps of the job is in progress status” [@xjdf_ip1, chap. A Table A.51: PostPressInProgress]. This milestone is sent as soon the first part of the print job is being finished. |
+| `PostPressCompleted` | “All Postpress worksteps including packing of the job have been completed“ [@xjdf_ip1, chap. A Table A.51: PostPressCompleted]. This milestone is sent as soon as the last part of the print job has been finished. |
+| `ShippingInProgress` | “Final product is being shipped” [@xjdf_ip1, chap. A Table A.51: ShippingInProgress]. This milestone is sent as soon as the print job is committed to the shipping provider. This milestone feedback may contain an additional DeliveryParams element in order to give feedback about tracking numbers, number of packages or weight. |
+| `ShippingCompleted` | “Final product was delivered to the customer or distributors” [@xjdf_ip1, chap. A Table A.51: ShippingCompleted]. This milestone is sent when shipping has been completed successfully. |
+
+PrintTalk OrderStatusResponse messages containing an XJDF Notification and / or DeliveryParams element, providing an adequate status feedback mechanism to keep external systems up to date on their submitted print jobs.

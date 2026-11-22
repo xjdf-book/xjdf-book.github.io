@@ -28,36 +28,13 @@ Written by **Dr. Stefan Meissner** (*Chairman of the CIP4 XJDF Workgroup*), this
 
 1. **[Introduction](https://xjdf-book.github.io/chap_01_introduction/introduction/)** — History from CIP3/PPF and JDF 1.x to XJDF
 2. **[Major Changes in XJDF](https://xjdf-book.github.io/chap_02_major-changes/major-changes/)** — Data model improvements, XML simplifications, removal of the process network, and technology updates
-3. **[XJDF Essentials](https://xjdf-book.github.io/chap_03_xjdf-essentials/xjdf-essentials/)**
-   - [XJDF Essentials & Common XML Structure](https://xjdf-book.github.io/chap_03_xjdf-essentials/xjdf-essentials/)
-   - [Resources & Partitioning](https://xjdf-book.github.io/chap_03_xjdf-essentials/resources/)
-   - [Extensibility & Foreign Namespaces](https://xjdf-book.github.io/chap_03_xjdf-essentials/extensibility/)
-   - [Identifiers, Units, Data Types & Fold Catalog](https://xjdf-book.github.io/chap_03_xjdf-essentials/identifiers/)
-4. **[Product Description](https://xjdf-book.github.io/chap_04_product-description/product-description/)**
-   - [Product Intents Overview](https://xjdf-book.github.io/chap_04_product-description/product-description/)
-   - [Simple Products (Flyers, Folded Leaflets, Banners)](https://xjdf-book.github.io/chap_04_product-description/simple-products/)
-   - [Complex Products (Magazines, Notepads)](https://xjdf-book.github.io/chap_04_product-description/complex-products/)
-   - [Complex Products with Non-Print Parts (Roll-up Displays)](https://xjdf-book.github.io/chap_04_product-description/non-print-product-parts/)
-   - [Web-To-Print Job Submission & Status Feedback (PrintTalk 2.0)](https://xjdf-book.github.io/chap_04_product-description/web-to-print/)
-5. **[Process Description](https://xjdf-book.github.io/chap_05_process-description/process-description/)**
-   - [Processes & Gray Boxes](https://xjdf-book.github.io/chap_05_process-description/process-description/)
-   - [Combined Processes](https://xjdf-book.github.io/chap_05_process-description/combined-processes/)
-   - [ProcessUsage](https://xjdf-book.github.io/chap_05_process-description/process-usage/)
-   - [CombinedProcessIndex](https://xjdf-book.github.io/chap_05_process-description/combined-process-index/)
-   - [Amounts (Planned vs. Actual)](https://xjdf-book.github.io/chap_05_process-description/amounts/)
-6. **[XJMF – Exchange Job Messaging Format](https://xjdf-book.github.io/chap_06_xjmf/xjmf/)**
-   - [Architecture & XJMF Overview](https://xjdf-book.github.io/chap_06_xjmf/xjmf/)
-   - [Message Families (Query, Response, Command, Signal)](https://xjdf-book.github.io/chap_06_xjmf/message-families/)
-   - [Subscriptions & Persistent Channels](https://xjdf-book.github.io/chap_06_xjmf/subscriptions/)
-   - [Submission of XJDF Documents (Queues)](https://xjdf-book.github.io/chap_06_xjmf/submission/)
-   - [Interchange Protocol, ZIP Packaging & Error Handling](https://xjdf-book.github.io/chap_06_xjmf/interchange-protocol/)
-   - [XJMF Bootstrapping (Service Discovery)](https://xjdf-book.github.io/chap_06_xjmf/bootstrapping/)
-   - [Piping (Overlapping Processing)](https://xjdf-book.github.io/chap_06_xjmf/piping/)
+3. **[XJDF Essentials](https://xjdf-book.github.io/chap_03_xjdf-essentials/xjdf-essentials/)** — Product vs. process view, Gray Boxes, Common XML Structure, Resources & Partitioning, Extensibility, Identifiers, Units, Data Types & Fold Catalog
+4. **[Product Description](https://xjdf-book.github.io/chap_04_product-description/product-description/)** — Product Intents, Simple Products (Flyers, Folded Leaflets, Banners), Complex Products (Magazines, Notepads), Non-Print Parts (Roll-up Displays), and Web-To-Print Job Submission (PrintTalk 2.0)
+5. **[Process Description](https://xjdf-book.github.io/chap_05_process-description/process-description/)** — Processes & Gray Boxes, Combined Processes, ProcessUsage, CombinedProcessIndex, and Amounts (Planned vs. Actual)
+6. **[XJMF – Exchange Job Messaging Format](https://xjdf-book.github.io/chap_06_xjmf/xjmf/)** — Architecture, Message Families (Query, Response, Command, Signal), Subscriptions & Persistent Channels, Submission of XJDF Documents (Queues), Interchange Protocol, ZIP Packaging, Error Handling, Bootstrapping, and Piping
 7. **[ICS – Interoperability Conformance Specification](https://xjdf-book.github.io/chap_07_ics/ics/)**
 8. **[Authoring Process](https://xjdf-book.github.io/chap_08_authoring-process/authoring-process/)** — CIP4 JIRA workflow, meetings, InterOp, and ICS workgroups
-9. **Appendix**
-   - [List of Abbreviations](https://xjdf-book.github.io/chap_09_appendix/abbreviations/)
-   - [Glossary](https://xjdf-book.github.io/chap_09_appendix/glossary/)
+9. **[Appendix](https://xjdf-book.github.io/chap_09_appendix/appendix/)** — List of Abbreviations & Glossary
 
 ---
 

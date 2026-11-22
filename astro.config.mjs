@@ -31,18 +31,10 @@ export default defineConfig({
 				{
 					tag: 'script',
 					attrs: {
+						'data-goatcounter': 'https://xjdf-book.goatcounter.com/count',
 						async: true,
-						src: 'https://www.googletagmanager.com/gtag/js?id=G-PKSFYWL6HW',
+						src: '//gc.zgo.at/count.js',
 					},
-				},
-				{
-					tag: 'script',
-					content: `
-						window.dataLayer = window.dataLayer || [];
-						function gtag(){dataLayer.push(arguments);}
-						gtag('js', new Date());
-						gtag('config', 'G-PKSFYWL6HW');
-					`,
 				},
 			],
 			social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/xjdf-book/xjdf-book.github.io' }],

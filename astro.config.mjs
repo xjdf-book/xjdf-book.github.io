@@ -1,6 +1,7 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
+import starlightThemeRapide from 'starlight-theme-rapide';
 import { unified } from '@astrojs/markdown-remark';
 import rehypeCitation from 'rehype-citation';
 import { pluginLineNumbers } from '@expressive-code/plugin-line-numbers';
@@ -10,6 +11,7 @@ export default defineConfig({
 	integrations: [
 		starlight({
 			title: 'XJDF Book',
+			plugins: [starlightThemeRapide()],
 			components: {
 				Footer: './src/components/footer.astro',
 			},

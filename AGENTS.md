@@ -6,7 +6,7 @@ This repository hosts the online edition of the **XJDF Book** (*XJDF - Exchange 
 The site is built as a static documentation website using **Astro 7** and **Starlight** (`@astrojs/starlight`), originally migrated from a Google Docs HTML export (`raw/XJDFBook.html` and `raw/images/`).
 
 ## Tech Stack & Dependencies
-- **Framework**: Astro (`^7.4.13`) with Starlight (`^0.43.1`)
+- **Framework**: Astro (`^7.4.13`) with Starlight (`^0.43.1`) and `starlight-theme-rapide`
 - **Markdown Processor**: `@astrojs/markdown-remark` (`unified()` pipeline configured in `astro.config.mjs`)
 - **Citations / Bibliography**: `rehype-citation` backed by `src/data/references.bib`
 - **Code Blocks**: Expressive Code with `@expressive-code/plugin-line-numbers`

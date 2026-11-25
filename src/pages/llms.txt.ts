@@ -8,7 +8,7 @@ const content = `# XJDF – Exchange Job Definition Format
 - **Website**: https://xjdf-book.github.io/
 - **Full Book Text (LLM Context)**: https://xjdf-book.github.io/llms-full.txt
 - **License**: Creative Commons Attribution 4.0 International (CC BY 4.0) — https://creativecommons.org/licenses/by/4.0/
-- **Citation**: Meihttps://xjdf-book.github.io/ssner, S. *XJDF – Exchange Job Definition Format*. Online Edition, https://xjdf-book.github.io/ (CC BY 4.0).
+- **Citation**: Meissner, Stefan. *XJDF – Exchange Job Definition Format*. Online Edition, https://xjdf-book.github.io/ (CC BY 4.0).
 
 ## Chapters
 

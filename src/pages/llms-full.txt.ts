@@ -20,11 +20,13 @@ function cleanMdxToMarkdown(raw: string): string {
 	let body = raw.replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n*/, '');
 	// Strip ESM import lines
 	body = body.replace(/^import\s+.*?;?\s*$/gm, '');
-	// Convert <figure> ... <figcaption>Figure: ...</figcaption> </figure> to Markdown blockquote caption
+	// Convert <figure> ... <figcaption>Figure: ...</figcaption> </figure> (including multi-image figures) to Markdown blockquote caption
 	body = body.replace(
-		/<figure>\s*<Image[^>]*alt="([^"]*)"[^>]*\/>\s*<figcaption>([\s\S]*?)<\/figcaption>\s*<\/figure>/g,
-		(_, _alt, caption) => `> *[${caption.trim()}]*`
+		/<figure>[\s\S]*?<figcaption>([\s\S]*?)<\/figcaption>\s*<\/figure>/g,
+		(_, caption) => `> *[${caption.trim()}]*`
 	);
+	// Convert any remaining inline <Image ... alt="..." /> (e.g. inside Markdown tables) to *[Image: alt]*
+	body = body.replace(/<Image[^>]*alt="([^"]*)"[^>]*\/>/g, '*[Image: $1]*');
 	// Collapse 3+ consecutive newlines
 	body = body.replace(/\n{3,}/g, '\n\n');
 	return body.trim();

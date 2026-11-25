@@ -19,6 +19,8 @@ const buildDate =
 		<span title="Build timestamp">{buildDate}</span>
 	</div>
 	<div class="meta-legal">
+		<a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener license">CC BY 4.0</a>
+		<span class="meta-sep">·</span>
 		<a href="https://meixxi.github.io/imprint/" target="_blank" rel="noopener">Imprint &amp; Privacy</a>
 	</div>
 </div>
@@ -61,6 +63,10 @@ const buildDate =
 	}
 
 	.meta-legal {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.35rem;
+		align-items: center;
 		margin-top: 0.15rem;
 		font-size: 0.75rem;
 	}

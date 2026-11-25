@@ -6,7 +6,8 @@
   **The technical guide and introduction to XJDF (JDF 2.0) and XJMF for the graphic arts industry**
 
   [![Read Online](https://img.shields.io/badge/Read_Online-xjdf--book.github.io-blue?style=for-the-badge)](https://xjdf-book.github.io)
-  [![Publish Book](https://img.shields.io/github/actions/workflow/status/xjdf-book/xjdf-book.github.io/publish.yml?branch=main&style=for-the-badge&label=Build_%26_Deploy)](https://github.com/xjdf-book/xjdf-book.github.io/actions/workflows/publish.yml)
+  [![Publish Book](https://img.shields.io/github/actions/workflow/status/xjdf-book/xjdf-book.github.io/publish.yml?style=for-the-badge&label=Build_%26_Deploy)](https://github.com/xjdf-book/xjdf-book.github.io/actions/workflows/publish.yml)
+  [![License: CC BY 4.0](https://img.shields.io/badge/License-CC_BY_4.0-lightgrey.svg?style=for-the-badge)](https://creativecommons.org/licenses/by/4.0/)
   [![Buy Me A Coffee](https://img.shields.io/badge/Buy_Me_A_Coffee-FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black)](https://buymeacoffee.com/meixxi)
 </div>
 
@@ -75,3 +76,4 @@ Please [open an issue](https://github.com/xjdf-book/xjdf-book.github.io/issues) 
 
 - **Title**: *XJDF – Exchange Job Definition Format* (Online Edition)
 - **Author**: [Dr. Stefan Meissner](https://www.linkedin.com/in/meissners)
+- **License**: [Creative Commons Attribution 4.0 International (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/)

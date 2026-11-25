@@ -56,6 +56,17 @@ if (image && 'file' in image) {
 					<span>Version {pkg.version}</span>
 					<span class="hero-meta-sep">·</span>
 					<span title="Build timestamp">{buildDate}</span>
+					<span class="hero-meta-sep">·</span>
+					<a
+						href="https://creativecommons.org/licenses/by/4.0/"
+						target="_blank"
+						rel="noopener license"
+						class="hero-license-badge"
+						title="Creative Commons Attribution 4.0 International"
+					>
+						<span class="badge-label">License</span>
+						<span class="badge-value">CC BY 4.0</span>
+					</a>
 				</div>
 			</div>
 			{actions.length > 0 && (
@@ -143,6 +154,41 @@ if (image && 'file' in image) {
 
 	.hero-meta-sep {
 		opacity: 0.6;
+	}
+
+	.hero-license-badge {
+		display: inline-flex;
+		align-items: center;
+		border-radius: 0.3rem;
+		overflow: hidden;
+		font-size: 0.72rem;
+		font-weight: 600;
+		line-height: 1;
+		text-decoration: none;
+		border: 1px solid var(--sl-color-gray-5);
+		transition: border-color 150ms ease, transform 150ms ease;
+	}
+
+	.hero-license-badge:is(:hover, :focus-visible) {
+		border-color: var(--sl-color-gray-4);
+		transform: translateY(-1px);
+	}
+
+	.hero-license-badge .badge-label {
+		padding: 0.25rem 0.45rem;
+		background-color: var(--sl-color-gray-6);
+		color: var(--sl-color-gray-2);
+	}
+
+	.hero-license-badge .badge-value {
+		padding: 0.25rem 0.5rem;
+		background-color: rgba(52, 143, 46, 0.14);
+		color: #348f2e;
+	}
+
+	:global([data-theme='dark']) .hero-license-badge .badge-value {
+		background-color: rgba(52, 143, 46, 0.22);
+		color: #6bc965;
 	}
 
 	.actions {

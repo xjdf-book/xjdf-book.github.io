@@ -33,9 +33,17 @@ Written by **Dr. Stefan Meissner** (*Chairman of the CIP4 XJDF Workgroup*), this
 4. **[Product Description](https://xjdf-book.github.io/chap_04_product-description/product-description/)** — Product Intents, Simple Products (Flyers, Folded Leaflets, Banners), Complex Products (Magazines, Notepads), Non-Print Parts (Roll-up Displays), and Web-To-Print Job Submission (PrintTalk 2.0)
 5. **[Process Description](https://xjdf-book.github.io/chap_05_process-description/process-description/)** — Processes & Gray Boxes, Combined Processes, ProcessUsage, CombinedProcessIndex, and Amounts (Planned vs. Actual)
 6. **[XJMF – Exchange Job Messaging Format](https://xjdf-book.github.io/chap_06_xjmf/xjmf/)** — Architecture, Message Families (Query, Response, Command, Signal), Subscriptions & Persistent Channels, Submission of XJDF Documents (Queues), Interchange Protocol, ZIP Packaging, Error Handling, Bootstrapping, and Piping
-7. **[ICS – Interoperability Conformance Specification](https://xjdf-book.github.io/chap_07_ics/ics/)**
+7. **[ICS – Interoperability Conformance Specification](https://xjdf-book.github.io/chap_07_ics/ics/)** — Base ICS, domain ICS documents, conformance levels, and system interoperability
 8. **[Authoring Process](https://xjdf-book.github.io/chap_08_authoring-process/authoring-process/)** — CIP4 JIRA workflow, meetings, InterOp, and ICS workgroups
 9. **[Appendix](https://xjdf-book.github.io/chap_09_appendix/appendix/)** — List of Abbreviations & Glossary
+
+---
+
+## AI & LLM Integration
+
+This book provides machine-readable context files following the [llms.txt standard](https://llmstxt.org/):
+- **[`https://xjdf-book.github.io/llms.txt`](https://xjdf-book.github.io/llms.txt)** — Concise index of all chapters and metadata
+- **[`https://xjdf-book.github.io/llms-full.txt`](https://xjdf-book.github.io/llms-full.txt)** — Complete book text in a single Markdown file for LLM context windows and RAG pipelines
 
 ---
 
@@ -44,7 +52,7 @@ Written by **Dr. Stefan Meissner** (*Chairman of the CIP4 XJDF Workgroup*), this
 This site is built with [Astro](https://astro.build/) and [Starlight](https://starlight.astro.build/).
 
 ### Prerequisites
-- [Node.js](https://nodejs.org/) (v22 or newer recommended)
+- [Node.js](https://nodejs.org/) (v24 or newer recommended)
 - `npm`
 
 ### Commands
@@ -75,5 +83,6 @@ Please [open an issue](https://github.com/xjdf-book/xjdf-book.github.io/issues) 
 ## Publication Details
 
 - **Title**: *XJDF – Exchange Job Definition Format* (Online Edition)
-- **Author**: [Dr. Stefan Meissner](https://www.linkedin.com/in/meissners)
+- **Author**: [Dr. Stefan Meissner](https://meixxi.github.io/) ([LinkedIn](https://www.linkedin.com/in/meissners))
 - **License**: [Creative Commons Attribution 4.0 International (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/)
+- **Citation**: Meissner, Stefan. *XJDF – Exchange Job Definition Format*. Online Edition, `https://xjdf-book.github.io` (CC BY 4.0).

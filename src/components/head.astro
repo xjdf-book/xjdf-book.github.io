@@ -1,0 +1,128 @@
+---
+import Default from '@astrojs/starlight/components/Head.astro';
+
+const { entry } = Astro.locals.starlightRoute;
+const isHome = entry.id === 'index' || entry.id === '';
+const pageUrl = new URL(Astro.url.pathname, Astro.site || 'https://xjdf-book.github.io').toString();
+const pageTitle = entry.data.title;
+const pageDescription =
+	entry.data.description ||
+	'The technical guide and introduction to XJDF (JDF 2.0) and XJMF for the graphic arts industry by Dr. Stefan Meissner.';
+
+const authorPerson = {
+	'@type': 'Person',
+	'@id': 'https://meixxi.github.io/#person',
+	name: 'Dr. Stefan Meissner',
+	givenName: 'Stefan',
+	familyName: 'Meissner',
+	honorificPrefix: 'Dr.',
+	jobTitle: 'Chairman of the CIP4 XJDF Workgroup',
+	url: 'https://meixxi.github.io/',
+	sameAs: [
+		'https://meixxi.github.io/',
+		'https://www.linkedin.com/in/meissners',
+		'https://github.com/meixxi',
+	],
+	knowsAbout: [
+		'XJDF',
+		'Exchange Job Definition Format',
+		'JDF',
+		'Job Definition Format',
+		'XJMF',
+		'Exchange Job Messaging Format',
+		'CIP4',
+		'Print Production Automation',
+		'Prepress Workflow Systems',
+		'Software Architecture',
+	],
+};
+
+const bookEntity = {
+	'@type': 'Book',
+	'@id': 'https://xjdf-book.github.io/#book',
+	name: 'XJDF – Exchange Job Definition Format',
+	alternateName: 'XJDF Book',
+	url: 'https://xjdf-book.github.io/',
+	image: 'https://xjdf-book.github.io/og-image.png',
+	description:
+		'A practical introduction and technical implementation guide to the Exchange Job Definition Format (XJDF / JDF 2.0) and Exchange Job Messaging Format (XJMF) for the graphic arts industry.',
+	inLanguage: 'en',
+	bookFormat: 'https://schema.org/EBook',
+	isAccessibleForFree: true,
+	license: 'https://creativecommons.org/licenses/by/4.0/',
+	author: authorPerson,
+	publisher: authorPerson,
+	about: [
+		{ '@type': 'Thing', name: 'Exchange Job Definition Format (XJDF)' },
+		{ '@type': 'Thing', name: 'Job Definition Format (JDF 2.0)' },
+		{ '@type': 'Thing', name: 'Exchange Job Messaging Format (XJMF)' },
+		{ '@type': 'Thing', name: 'Interoperability Conformance Specification (ICS)' },
+		{ '@type': 'Thing', name: 'CIP4 Organization' },
+		{ '@type': 'Thing', name: 'Print Production Automation' },
+	],
+};
+
+const jsonLd = isHome
+	? {
+			'@context': 'https://schema.org',
+			'@graph': [
+				bookEntity,
+				{
+					'@type': 'WebSite',
+					'@id': 'https://xjdf-book.github.io/#website',
+					url: 'https://xjdf-book.github.io/',
+					name: 'XJDF – Exchange Job Definition Format',
+					inLanguage: 'en',
+					author: { '@id': 'https://meixxi.github.io/#person' },
+					license: 'https://creativecommons.org/licenses/by/4.0/',
+				},
+			],
+		}
+	: {
+			'@context': 'https://schema.org',
+			'@graph': [
+				{
+					'@type': ['TechArticle', 'Chapter'],
+					'@id': `${pageUrl}#chapter`,
+					headline: pageTitle,
+					name: pageTitle,
+					description: pageDescription,
+					url: pageUrl,
+					image: 'https://xjdf-book.github.io/og-image.png',
+					inLanguage: 'en',
+					isAccessibleForFree: true,
+					license: 'https://creativecommons.org/licenses/by/4.0/',
+					author: authorPerson,
+					isPartOf: bookEntity,
+					mainEntityOfPage: pageUrl,
+				},
+				{
+					'@type': 'BreadcrumbList',
+					itemListElement: [
+						{
+							'@type': 'ListItem',
+							position: 1,
+							name: 'XJDF Book',
+							item: 'https://xjdf-book.github.io/',
+						},
+						{
+							'@type': 'ListItem',
+							position: 2,
+							name: pageTitle,
+							item: pageUrl,
+						},
+					],
+				},
+			],
+		};
+---
+
+<Default {...Astro.props}><slot /></Default>
+<meta name="citation_title" content={isHome ? 'XJDF – Exchange Job Definition Format' : `${pageTitle} – XJDF Book`} />
+<meta name="citation_author" content="Meissner, Stefan" />
+<meta name="citation_book_title" content="XJDF – Exchange Job Definition Format" />
+<meta name="citation_language" content="en" />
+<meta name="citation_public_url" content={pageUrl} />
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/" />
+<link rel="author" href="https://meixxi.github.io/" />
+<script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />

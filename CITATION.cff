@@ -1,0 +1,25 @@
+cff-version: 1.2.0
+message: "If you use or reference this book, please cite it as below."
+type: software
+title: "XJDF – Exchange Job Definition Format"
+abstract: "A practical introduction and technical implementation guide to the Exchange Job Definition Format (XJDF / JDF 2.0) and Exchange Job Messaging Format (XJMF) for the graphic arts industry."
+authors:
+  - family-names: "Meissner"
+    given-names: "Stefan"
+    name-particle: ""
+    alias: "Dr. Stefan Meissner"
+    website: "https://meixxi.github.io/"
+url: "https://xjdf-book.github.io"
+repository-code: "https://github.com/xjdf-book/xjdf-book.github.io"
+license: CC-BY-4.0
+keywords:
+  - XJDF
+  - JDF 2.0
+  - XJMF
+  - Job Definition Format
+  - Exchange Job Definition Format
+  - Exchange Job Messaging Format
+  - CIP4
+  - ICS
+  - Print Production Automation
+  - Graphic Arts

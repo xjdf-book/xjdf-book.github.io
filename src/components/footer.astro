@@ -14,6 +14,10 @@ import Default from '@astrojs/starlight/components/Footer.astro';
   <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener license">CC BY 4.0</a>
   <span class="legal-sep">·</span>
   <a href="https://meixxi.github.io/imprint/" target="_blank" rel="noopener">Imprint &amp; Privacy</a>
+  <span class="legal-sep">·</span>
+  <a href="/llms.txt">llms.txt</a>
+  <span class="legal-sep">·</span>
+  <a href="/llms-full.txt">llms-full.txt</a>
 </div>
 
 <style>
@@ -28,6 +32,7 @@ import Default from '@astrojs/starlight/components/Footer.astro';
     padding-top: 0.75rem;
     border-top: 1px solid var(--sl-color-gray-6);
     display: flex;
+    flex-wrap: wrap;
     justify-content: center;
     align-items: center;
     gap: 0.5rem;

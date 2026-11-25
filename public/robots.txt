@@ -29,4 +29,8 @@ Allow: /
 User-agent: CCBot
 Allow: /
 
+# LLM Context Files (https://llmstxt.org/)
+# Concise index: https://xjdf-book.github.io/llms.txt
+# Full book Markdown: https://xjdf-book.github.io/llms-full.txt
+
 Sitemap: https://xjdf-book.github.io/sitemap-index.xml

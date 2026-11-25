@@ -52,6 +52,20 @@ const bookEntity = {
 	license: 'https://creativecommons.org/licenses/by/4.0/',
 	author: authorPerson,
 	publisher: authorPerson,
+	encoding: [
+		{
+			'@type': 'MediaObject',
+			name: 'LLMs.txt Index',
+			contentUrl: 'https://xjdf-book.github.io/llms.txt',
+			encodingFormat: 'text/plain',
+		},
+		{
+			'@type': 'MediaObject',
+			name: 'LLMs Full Book Context (Markdown)',
+			contentUrl: 'https://xjdf-book.github.io/llms-full.txt',
+			encodingFormat: 'text/plain',
+		},
+	],
 	about: [
 		{ '@type': 'Thing', name: 'Exchange Job Definition Format (XJDF)' },
 		{ '@type': 'Thing', name: 'Job Definition Format (JDF 2.0)' },
@@ -125,4 +139,6 @@ const jsonLd = isHome
 <meta name="citation_public_url" content={pageUrl} />
 <link rel="license" href="https://creativecommons.org/licenses/by/4.0/" />
 <link rel="author" href="https://meixxi.github.io/" />
+<link rel="alternate" type="text/plain" title="LLMs.txt" href="https://xjdf-book.github.io/llms.txt" />
+<link rel="alternate" type="text/plain" title="LLMs Full Text" href="https://xjdf-book.github.io/llms-full.txt" />
 <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />

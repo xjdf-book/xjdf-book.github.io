@@ -8,9 +8,11 @@ import { pluginLineNumbers } from '@expressive-code/plugin-line-numbers';
 
 // https://astro.build/config
 export default defineConfig({
+	site: 'https://xjdf-book.github.io',
 	integrations: [
 		starlight({
 			title: 'XJDF Book',
+			description: 'The technical guide and introduction to XJDF (JDF 2.0) and XJMF for the graphic arts industry by Dr. Stefan Meissner.',
 			favicon: '/favicon.svg',
 			logo: {
 				light: './src/assets/header-logo-light.png',
@@ -28,6 +30,69 @@ export default defineConfig({
 				plugins: [pluginLineNumbers()],
 			},
 			head: [
+				{
+					tag: 'meta',
+					attrs: {
+						name: 'author',
+						content: 'Dr. Stefan Meissner',
+					},
+				},
+				{
+					tag: 'meta',
+					attrs: {
+						property: 'article:author',
+						content: 'https://www.linkedin.com/in/meissners',
+					},
+				},
+				{
+					tag: 'meta',
+					attrs: {
+						property: 'og:image',
+						content: 'https://xjdf-book.github.io/og-image.png',
+					},
+				},
+				{
+					tag: 'meta',
+					attrs: {
+						property: 'og:image:type',
+						content: 'image/png',
+					},
+				},
+				{
+					tag: 'meta',
+					attrs: {
+						property: 'og:image:width',
+						content: '1200',
+					},
+				},
+				{
+					tag: 'meta',
+					attrs: {
+						property: 'og:image:height',
+						content: '630',
+					},
+				},
+				{
+					tag: 'meta',
+					attrs: {
+						property: 'og:image:alt',
+						content: 'XJDF – Exchange Job Definition Format by Dr. Stefan Meissner',
+					},
+				},
+				{
+					tag: 'meta',
+					attrs: {
+						name: 'twitter:image',
+						content: 'https://xjdf-book.github.io/og-image.png',
+					},
+				},
+				{
+					tag: 'meta',
+					attrs: {
+						name: 'twitter:image:alt',
+						content: 'XJDF – Exchange Job Definition Format by Dr. Stefan Meissner',
+					},
+				},
 				{
 					tag: 'script',
 					attrs: {

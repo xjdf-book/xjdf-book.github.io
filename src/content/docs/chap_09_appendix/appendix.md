@@ -1,5 +1,6 @@
 ---
 title: Appendix
+description: List of abbreviations, acronyms, and glossary of core XJDF and XJMF terminology.
 ---
 
 ## List of Abbreviations

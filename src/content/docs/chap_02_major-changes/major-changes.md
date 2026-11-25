@@ -1,5 +1,6 @@
 ---
 title: Major Changes in XJDF
+description: Key architectural and XML structure improvements in XJDF compared to JDF 1.x, including data model simplifications, removal of the process network, and modern HTTP/ZIP transport.
 ---
 
 XJDF is the successor to JDF and introduces several major architectural and structural changes. This chapter is aimed at readers with prior experience in JDF 1.x; readers new to JDF may safely skip ahead to the next chapter.

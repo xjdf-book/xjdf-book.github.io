@@ -1,6 +1,6 @@
 ---
 title: Introduction
-description: An Introduction to XJDF.
+description: History and evolution of print production standards from CIP3/PPF and JDF 1.x to the Exchange Job Definition Format (XJDF / JDF 2.0).
 ---
 
 “CIP4 was formed in September of 2000. Its predecessor, CIP3, was formed by Heidelberg in 1995 and was managed by the Fraunhofer Institute for Computer Graphics. CIP3 created the Print Production Format (PPF), which has found some success in ink key presetting and postpress operations” [@cip4_2016]. JDF is the successor to PPF and was initially published in 2001. The first version of JDF served as a “straw man” document intended to spark further discussion.

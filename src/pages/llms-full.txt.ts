@@ -15,6 +15,19 @@ const CHAPTER_FILES = [
 	{ slug: 'chap_09_appendix/appendix/', file: 'src/content/docs/chap_09_appendix/appendix.md', label: 'Chapter 9: Appendix' },
 ];
 
+const BIB_LABELS: Record<string, string> = {
+	xjdf_ip1: 'XJDF Specification: IP Review 1 (2016)',
+	prosi_2015: 'Prosi, XJDF - The evolution of JDF (2015)',
+	cip4_2016: 'CIP4 Website (2016)',
+	xml_namespaces_2009: 'W3C Namespaces in XML 1.0 (2009)',
+	printtalk_2015: 'PrintTalk Specification DRAFT 1.6 (2015)',
+	jdf_1_5: 'JDF Specification 1.5 (2013)',
+	cip4_base_ics: 'CIP4 Base ICS 1.5 (2013)',
+	cip4_misfin_ics: 'CIP4 MIS Finishing ICS 1.3 (2011)',
+	cip4_tsc_2005: 'CIP4 TSC Procedures (2005)',
+	cip4_interop_2016: 'CIP4 InterOp (2016)',
+};
+
 function cleanMdxToMarkdown(raw: string): string {
 	// Strip YAML frontmatter
 	let body = raw.replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n*/, '');
@@ -27,6 +40,11 @@ function cleanMdxToMarkdown(raw: string): string {
 	);
 	// Convert any remaining inline <Image ... alt="..." /> (e.g. inside Markdown tables) to *[Image: alt]*
 	body = body.replace(/<Image[^>]*alt="([^"]*)"[^>]*\/>/g, '*[Image: $1]*');
+	// Resolve Pandoc/BibTeX citations [@key, ...] to human-readable citations in llms-full.txt
+	body = body.replace(/\[@([a-zA-Z0-9_]+)(?:,\s*([^\]]+))?\]/g, (match, key, locator) => {
+		const label = BIB_LABELS[key] || key;
+		return locator ? `(${label}, ${locator})` : `(${label})`;
+	});
 	// Collapse 3+ consecutive newlines
 	body = body.replace(/\n{3,}/g, '\n\n');
 	return body.trim();
